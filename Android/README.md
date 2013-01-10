@@ -6,7 +6,7 @@ Interested in advanced usage of the plugin and need assistance?
 
 For further questions visit us on www.wikitude.com or contact us via `phonegap <at> wikitude.com`
 
-#### Important: This plugin runs on latest [PhoneGap 2.2+](http://docs.phonegap.com/en/2.2.0/index.html) only
+#### Important: This plugin runs on latest [PhoneGap 2.2+](http://docs.phonegap.com/index.html) only
 
 
 ## DESCRIPTION 
@@ -22,7 +22,7 @@ The Wikitude PhoneGap Plugin enables web developers to embed an Augmented Realit
 * Includes the full feature set of the Wikitude SDK
 * AR content is purely written in HTML and JavaScript
 
-![image](http://www.wikitude.com/wp-content/uploads/2012/09/Plugin_Phonegap.png)
+![image](http://www.wikitude.com/wp-content/uploads/2012/12/Plugin_Phonegap.png)
 
 ###The Augmented Reality View
 From a technical point of view the SDK adds a UI component, similar to a web view. In contrast to a standard web view this AR view can render Augmented Reality content.
@@ -73,11 +73,11 @@ Note: Content developed for this AR View is written in JavaScript and HTML. The 
 
 
 
-## Optional SETUP - 'Extended' Plugin (incl. Vuforia ImageRecognition)
+## SETUP - 'Extended' Plugin incl. Vuforia ImageRecognition (Optional)
 
-####In case you use ImageRecognition in your project, you need to use this Extended Plugin instead of the Basic One.
+####In case you use immage recognition in your project, you need to use this extended plugin instead of the basic one.
 
-Prerequisites: Having already set-up your [PhoneGap 2.x](http://docs.phonegap.com/en/2.0.0/guide_getting-started_android_index.md.html#Getting%20Started%20with%20Android) project.
+Prerequisites: Having already set-up your [PhoneGap 2.x](http://docs.phonegap.com/guide_getting-started_index.md.html) project.
 
 1. Create a folder called `com/wikitude/phonegap` within your project's `src/` folder and opy `WikitudePlugin.java` and `WikitudePluginVuforia.java` into it.
 
@@ -88,7 +88,7 @@ Prerequisites: Having already set-up your [PhoneGap 2.x](http://docs.phonegap.co
 	`<plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePluginVuforia"/>`
 4. Download the [Wikitude SDK](http://www.wikitude.com), copy the wikitudesdk.jar in the Android-folder to your projects `libs`-folder and add it to your project's build path. Also copy the `libExtensionVuforia.so` into `libs/armeabi`
 
-5.  Download Vuforia SDK from [Qualcomm Vuforia Website](https://ar.qualcomm.at/qdevnet/) and copy `QCAR.jar` to your projects `libs`-folder and add it to your project's build. Also copy Vuforia's `libQCAR.so`  to your `libs/armeabi`-folder
+5.  Download Vuforia SDK from [Qualcomm Vuforia Website](https://developer.vuforia.com/) and copy `QCAR.jar` to your projects `libs`-folder and add it to your project's build. Also copy Vuforia's `libQCAR.so`  to your `libs/armeabi`-folder
 
 6. Visit [Wikitude Developer Site](http://developer.wikitude.com) to find Samples and license your app to get rid of the watermarking
 

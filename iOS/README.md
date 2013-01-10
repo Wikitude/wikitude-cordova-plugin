@@ -6,7 +6,7 @@ Interested in advanced usage of the plugin and need assistance?
 
 For further questions visit us on www.wikitude.com or contact us via `phonegap <at> wikitude.com`
 
-#### Important: This plugin runs on latest [PhoneGap 2.x](http://docs.phonegap.com/en/2.0.0/guide_getting-started_android_index.md.html#Getting%20Started%20with%20Android) only
+#### Important: This plugin runs on latest [PhoneGap 2.2+](http://docs.phonegap.com/index.html) only
 
 
 ## DESCRIPTION 
@@ -22,7 +22,7 @@ The Wikitude PhoneGap Plugin enables web developers to embed an Augmented Realit
 * Includes the full feature set of the Wikitude SDK
 * AR content is purely written in HTML and JavaScript
 
-![image](http://www.wikitude.com/wp-content/uploads/2012/09/Plugin_Phonegap.png)
+![image](http://www.wikitude.com/wp-content/uploads/2012/12/Plugin_Phonegap.png)
 
 ###The Augmented Reality View
 From a technical point of view the SDK adds a UI component, similar to a web view. In contrast to a standard web view this AR view can render Augmented Reality content.
@@ -45,7 +45,7 @@ Note: Content developed for this AR View is written in JavaScript and HTML. The 
 * Add a new entry with key ``` WikitudePlugin ``` and value ``` WTWikitudePlugin ``` to ``` Plugins ``` in ``` Cordova.plist ```
 * Copy the Wikitude SDK for iOS (which you can downloaded from [our website](http://www.wikitude.com/developer/sdk)) into a folder like ```[ProjectFolder/"AppName"/WikitudeSDK] ```in your Xcode project. Make sure that you not only copy the files into the correct destination but that you also add the files to the Xcode project.
 
-	* if you want to use Image Recognition within your App, you need to copy the Vuforia SDK folder into a folder like ```[ProjectFolder/"AppName"/Vuforia]```. Also dont forget to add the files to your Xcode project. You can download the Vuforia SDK from [Qualcomm](https://ar.qualcomm.at/sdk/ios).
+	* if you want to use Image Recognition within your App, you need to copy the Vuforia SDK folder into a folder like ```[ProjectFolder/"AppName"/Vuforia]```. Also don't forget to add the files to your Xcode project. You can download the Vuforia SDK from [Qualcomm](https://developer.vuforia.com/).
 
 	
 * Add the Following Frameworks to your project:
@@ -75,7 +75,7 @@ Note: Content developed for this AR View is written in JavaScript and HTML. The 
 * The last step is to edit the whitelist entries. Open the Cordova.plist and add a new entry to the 'ExternalHosts' Array: * (single Asterisk)
 
 
-## JAVASCRIPT INTERFACE
+## JavaScript INTERFACE
 	
 Its simple to use the Wikitude Plugin within your PhoneGap application.
 
@@ -86,7 +86,7 @@ You will mainly work with the ``` WikitudePlugin ``` where all you have to do is
 If you want to communicate directly via the ```cordova.exec``` JavaScript calls, have a look at the ```Documentation``` folder which includes more information about that.
 	
 
-## Getting STARTED
+## GETTING STARTED
 
 To get started, we prepared two sample projects. You can read through this samples to understand how to use the JavaScript wrapper and how you add your ARchitect World into the project. There is also a ReadMe for both projects which explain you what you have to do to get them running.
 
