@@ -79,7 +79,7 @@
         BOOL success = [WTArchitectView isDeviceSupported];
         if ( success ) {
             
-            NSString *sdkKey = [options objectForKey:@"apiKey"];
+            NSString *sdkKey = [options objectForKey:@"sdkKey"];
             NSString *architectWorldFilePath = [options objectForKey:@"filePath"];
             
             // First, lets check if we need to init a new sdk view
