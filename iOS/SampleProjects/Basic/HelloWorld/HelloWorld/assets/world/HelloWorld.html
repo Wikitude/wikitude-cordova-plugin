@@ -19,9 +19,7 @@ var label = null;
 function createLabelAtLocation(geoLocation)
 {
     label = new AR.Label("No Text", 2, {onClick : function(){
-                                 var url = "https://dl.dropbox.com/u/2748582/WikitudeResources/Videos/Indiana%20Jones%20Theme%20Song%20%5BHD%5D%281080p_H.264-AAC%29.mp4";
-                                 AR.context.startVideoPlayer(url);
-                                document.location = "architectsdk://didClickedOnLabel?text=" + label.text;
+                                document.location = 'architectsdk://labelClick?text='+label.text;
                              }});
     
     var geoObject = new AR.GeoObject(geoLocation, {drawables: {cam: label}});
@@ -34,21 +32,29 @@ function setupScene()
     
 function didReceivedNewTextForLabel(text)
 {
-
     if(label)
     {
         label.text = text;
     }
 }
 
+function clickedClose() {
+	document.location = 'architectsdk://actionButton?action=close';
+}
+
+function clickedHide() {
+    document.location = 'architectsdk://hideButton?status=hide';
+}
    
-
-
 
 </script>
 </head>
     
 <body onLoad="setupScene()">
+
+<!-- Button to close AR view, you may use this to hide arView and navigate back to familiar phoneGap environment -->
+<button title="close" onclick="clickedClose()">Close AR View</button>
+<button title="hide" onclick="clickedHide()">Hide AR View</button>
 </body>
     
 </html>

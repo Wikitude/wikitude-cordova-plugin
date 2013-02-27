@@ -21,6 +21,13 @@ var WikitudePlugin = {
      *	
      */	
     isDeviceSupported : false,
+    
+    /**
+     *
+     *	This variable represents if the current device is capable of running the Wikitude SDK
+     *
+     */
+    arMode : "Geo",
 
     /**
      *
@@ -47,7 +54,7 @@ var WikitudePlugin = {
     
     /**
      *
-     *	This function gets called if PhoneGap reports that it has finished loading successfully.
+     *	This function gets called when PhoneGap reports that it has finished loading successfully.
      *	
      */	
     isDeviceSupported: function(successCallback, errorCallback)
@@ -58,7 +65,7 @@ var WikitudePlugin = {
         
                             
 		// PhoneGap is running, so the first thing we do is to check if the current device is capable of running the Wikitude Plugin
-        cordova.exec(WikitudePlugin.deviceIsARchitectReady, WikitudePlugin.deviceIsNotARchitectReady, "WikitudePlugin", "isDeviceSupported", [""]);
+        cordova.exec(WikitudePlugin.deviceIsARchitectReady, WikitudePlugin.deviceIsNotARchitectReady, "WikitudePlugin", "isDeviceSupported", [WikitudePlugin.arMode]);
         
     },
 
@@ -125,7 +132,7 @@ var WikitudePlugin = {
 			//	@param {String} options.sdkKey License key for the Wikitude SDK
 			//	@param {String} options.filePath The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
 
-            cordova.exec(WikitudePlugin.worldLaunched, WikitudePlugin.worldFailedLaunching, "WikitudePlugin", "open", [{ sdkKey: WikitudePlugin.mySDKKey, filePath: worldPath}]);
+            cordova.exec( WikitudePlugin.worldLaunched, WikitudePlugin.worldFailedLaunching, "WikitudePlugin", "open", [WikitudePlugin.mySDKKey, worldPath] );
             
             
             // We add an event listener on the resume and pause event of the application lifecycle
@@ -264,7 +271,7 @@ var WikitudePlugin = {
     {
         
 		// Every time that PhoneGap did received a location update, we pass the location into the Wikitude SDK
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "setLocation", [{ lat: position.coords.latitude, lon: position.coords.longitude, alt: position.coords.altitude, acc: position.coords.accuracy}]);
+        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "setLocation", [position.coords.latitude, position.coords.longitude, position.coords.altitude, position.coords.accuracy]);
     },
 
     /**

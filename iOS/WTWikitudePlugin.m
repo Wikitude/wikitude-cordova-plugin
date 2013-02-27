@@ -9,99 +9,101 @@
 #import "WTWikitudePlugin.h"
 
 // Wikitude SDK
-#import "WTArchitectView.h"
+#import "WTARViewController.h"
+#import <WikitudeSDK/WTArchitectView.h>
 
 
 
 
 @interface WTWikitudePlugin () <WTArchitectViewDelegate>
 
-@property (nonatomic, strong) WTArchitectView                               *architectView;
+@property (nonatomic, strong) WTARViewController                            *arViewController;
 
 @property (nonatomic, strong) NSString                                      *currentARchitectViewCallbackID;
 @property (nonatomic, strong) NSString                                      *currentPlugInErrorCallback;
 
 @property (nonatomic, assign) BOOL                                          isUsingInjectedLocation;
+@property (nonatomic, assign) BOOL                                          isDeviceSupported;
 
 @end
 
 
 @implementation WTWikitudePlugin
-@synthesize architectView=_architectView;
+
 
 
 #pragma mark - View Lifecycle
 /* View Lifecycle */
-- (void)isDeviceSupported:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options
+- (void)isDeviceSupported:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackId = [arguments objectAtIndex:0];
-    
+        
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
+    
     
     @try {
-        //        NSString* echo = [arguments objectAtIndex:1];
+
+        self.isDeviceSupported = false;
         
-        BOOL isDeviceSupported = [WTArchitectView isDeviceSupported];
+        if ( [command.arguments count] >= 1 ) {
+
+            NSString *geoMode = [command.arguments objectAtIndex:0];
+            if ( [[geoMode lowercaseString] isEqualToString:@"geo"] ) {
+                
+                self.isDeviceSupported = [WTARViewController isGeoSupported];
+            }else if ( [[geoMode lowercaseString] isEqualToString:@"ir"] ) {
+            
+                self.isDeviceSupported = [WTARViewController isIRSupported];
+            }
+        }
         
-        if (isDeviceSupported) {
-        
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:isDeviceSupported];
-            javaScript = [pluginResult toSuccessCallbackString:callbackId];
+ 
+        if (self.isDeviceSupported) {
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:self.isDeviceSupported];
             
         } else {
             
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt:isDeviceSupported];
-            javaScript = [pluginResult toErrorCallbackString:callbackId];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt:self.isDeviceSupported];
         }
                 
         
     } @catch (NSException* exception) {
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:callbackId];
     }
     
-    [self writeJavascript:javaScript];
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 
-- (void)open:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options
+- (void)open:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackId = [arguments objectAtIndex:0];
-    
+
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
+    
     
     @try {
-//        NSString* echo = [arguments objectAtIndex:1];
+
         
-        
-        BOOL success = [WTArchitectView isDeviceSupported];
-        if ( success ) {
+        BOOL enabled = self.isDeviceSupported;
+        if ( enabled && 2 == command.arguments.count ) {
             
-            NSString *sdkKey = [options objectForKey:@"sdkKey"];
-            NSString *architectWorldFilePath = [options objectForKey:@"filePath"];
+            NSString *sdkKey = [command.arguments objectAtIndex:0];
+            NSString *architectWorldFilePath = [command.arguments objectAtIndex:1];
             
-            // First, lets check if we need to init a new sdk view
-            if ( !_architectView ) {
-                self.architectView = [[WTArchitectView alloc] initWithFrame:self.viewController.view.bounds];
-                self.architectView.delegate = self;
-                [self.architectView initializeWithKey:sdkKey motionManager:nil];
+            if (!_arViewController) {
+                self.arViewController = [[WTARViewController alloc] initWithNibName:nil bundle:nil sdkKey:sdkKey motionManager:nil];
+                self.arViewController.architectView.delegate = self;
+                self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             }
             
-            // then add the view in its own navController to the ui. we need a own navController to have a backButton which can be used to dismiss the view
-            UIViewController *viewController = [[UIViewController alloc] init];
-            viewController.view = self.architectView;
-            
-            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
-            navController.navigationBar.tintColor = [UIColor blackColor];
-            navController.navigationBar.topItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissARchitectView)];
-            [self.viewController presentViewController:navController animated:NO completion:^{
+
+            [self.viewController presentViewController:self.arViewController animated:YES completion:^{
                 // completion code
             }];
-                            
             
-            
+                        
             // and finaly load the architect world, specified in the open function in js
             if (architectWorldFilePath) {
                 
@@ -112,221 +114,223 @@
                 NSString *architectWorldDirectoryPath = [architectWorldFilePath stringByDeletingLastPathComponent];
 
                 NSString *loadablePath = [[NSBundle mainBundle] pathForResource:worldName ofType:worldNameExtension inDirectory:architectWorldDirectoryPath];
-                [self.architectView loadArchitectWorldFromUrl:loadablePath];
+                [self.arViewController.architectView loadArchitectWorldFromUrl:loadablePath];
             }
         }
     
         // start the sdk view updates
-        [self.architectView start];
+        [self.arViewController.architectView start];
+        self.arViewController.isARchitectViewRunning = YES;
         
         
-        if ( success ) {
+        if ( enabled ) {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
-            javaScript = [pluginResult toSuccessCallbackString:callbackId];
+
         } else {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-            javaScript = [pluginResult toErrorCallbackString:callbackId];
+
         }
     } @catch (NSException* exception) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:callbackId];
+
     }
     
-    [self writeJavascript:javaScript];
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)close:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options
+- (void)close:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackId = [arguments objectAtIndex:0];
-    
+
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
     
     @try {
-//        NSString* echo = [arguments objectAtIndex:1];
         
-        if (self.architectView) {
+        if (self.arViewController) {
             
-            [self.architectView stop];
-//            [self.architectView removeFromSuperview];
+            [self.arViewController.architectView stop];
+            self.arViewController.isARchitectViewRunning = NO;
+            
+            [self.viewController dismissModalViewControllerAnimated:YES];
+            
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
+        }else
+        {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
-        
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
-        javaScript = [pluginResult toSuccessCallbackString:callbackId];
-    
     
     } @catch (NSException* exception) {
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:callbackId];
     }
     
-    [self writeJavascript:javaScript];
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)show:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options
+- (void)show:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackId = [arguments objectAtIndex:0];
     
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
     
     @try {
-//        NSString* echo = [arguments objectAtIndex:1];
         
-        if (self.architectView) {
-            self.architectView.hidden = NO;
-        }
-        
+        if (self.arViewController) {
 
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
-        javaScript = [pluginResult toSuccessCallbackString:callbackId];
+            [self.viewController presentViewController:self.arViewController animated:YES completion:^{
+                
+            }];
+            
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
+        }else
+        {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_INVALID_ACTION messageAsString:@"Wikitude Plugin not loaded. You first have to call load and then show."];
+            NSLog(@"Wikitude Plugin not loaded. You first have to call load and then show.");
+        }        
+
     } @catch (NSException* exception) {
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:callbackId];
     }
     
-    [self writeJavascript:javaScript];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)hide:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options
+- (void)hide:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackId = [arguments objectAtIndex:0];
     
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
     
     @try {
-        //        NSString* echo = [arguments objectAtIndex:1];
         
-        if (self.architectView) {
-            self.architectView.hidden = YES;
+        if (self.arViewController) {
+            
+            [self.viewController dismissModalViewControllerAnimated:YES];
+
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
+        }else
+        {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
-        
-        
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
-        javaScript = [pluginResult toSuccessCallbackString:callbackId];
+
     } @catch (NSException* exception) {
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:callbackId];
     }
     
-    [self writeJavascript:javaScript];
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)onResume:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options
+- (void)onResume:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackId = [arguments objectAtIndex:0];
     
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
     
     @try {
-        //        NSString* echo = [arguments objectAtIndex:1];
 
-        if (self.architectView) {
-            [self.architectView start];
+        if (self.arViewController && !self.arViewController.isARchitectViewRunning) {
+            [self.arViewController.architectView start];
+            self.arViewController.isARchitectViewRunning = YES;
         }
         
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT messageAsString:nil];
-        javaScript = [pluginResult toSuccessCallbackString:callbackId];
+
     } @catch (NSException* exception) {
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:callbackId];
     }
     
-    [self writeJavascript:javaScript];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)onPause:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options
+- (void)onPause:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackId = [arguments objectAtIndex:0];
     
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
     
     @try {
-        //        NSString* echo = [arguments objectAtIndex:1];
 
-        if (self.architectView) {
-            [self.architectView stop];
+        if (self.arViewController && self.arViewController.isARchitectViewRunning) {
+            [self.arViewController.architectView stop];
+            self.arViewController.isARchitectViewRunning = NO;
         }
         
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT messageAsString:nil];
-        javaScript = [pluginResult toSuccessCallbackString:callbackId];
+        
     } @catch (NSException* exception) {
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:callbackId];
     }
     
-    [self writeJavascript:javaScript];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 #pragma mark - Location Handling
 
-- (void)setLocation:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options
+- (void)setLocation:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackId = [arguments objectAtIndex:0];
     
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
+ 
     
     @try {
-        //        NSString* echo = [arguments objectAtIndex:1];
         
-        if (self.architectView) {
+        if ( self.arViewController && 4 == command.arguments.count ) {
             
-            float latitude = [[options objectForKey:@"lat"] floatValue];
-            float longitude = [[options objectForKey:@"lon"] floatValue];
-            float altitude = [[options objectForKey:@"alt"] floatValue];
-            float accuracy = [[options objectForKey:@"acc"] floatValue];
+            float latitude = [[command.arguments objectAtIndex:0] floatValue];
+            float longitude = [[command.arguments objectAtIndex:1] floatValue];
+            float altitude = [[command.arguments objectAtIndex:2] floatValue];
+            float accuracy = [[command.arguments objectAtIndex:3] floatValue];
+            
             
             if (!self.isUsingInjectedLocation) {
-                [self.architectView setUseInjectedLocation:YES];
+                [self.arViewController.architectView setUseInjectedLocation:YES];
                 self.isUsingInjectedLocation = YES;
             }
             
-            [self.architectView injectLocationWithLatitude:latitude longitude:longitude altitude:altitude accuracy:accuracy];
+            [self.arViewController.architectView injectLocationWithLatitude:latitude longitude:longitude altitude:altitude accuracy:accuracy];
+            
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        }else
+        {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
-        
-        
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        javaScript = [pluginResult toSuccessCallbackString:callbackId];
+    
     } @catch (NSException* exception) {
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:callbackId];
     }
     
-    [self writeJavascript:javaScript];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 
 #pragma mark - Javascript
 
-- (void)callJavascript:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options
+- (void)callJavascript:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackId = [arguments objectAtIndex:0];
-    
+
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
     
     
     @try {
         
-        if (arguments.count >= 1) {
+        if ( 1 == command.arguments.count ) {
             
-            NSMutableString *javascriptToCall = [[arguments objectAtIndex:1] mutableCopy];
-            for (NSUInteger i = 2; i < arguments.count; i++) {
-                [javascriptToCall appendString:[arguments objectAtIndex:i]];
-            }
+            NSMutableString *javascriptToCall = [[command.arguments objectAtIndex:0] mutableCopy];
             
-            if (self.architectView) {
-                [self.architectView callJavaScript:javascriptToCall];
+            if (self.arViewController) {
+                [self.arViewController.architectView callJavaScript:javascriptToCall];
             }
                         
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
-            javaScript = [pluginResult toSuccessCallbackString:callbackId];
             
         }else
         {
@@ -335,68 +339,61 @@
         
         
     } @catch (NSException* exception) {
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:callbackId];
     }
     
-    [self writeJavascript:javaScript];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 
-- (void)onUrlInvoke:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options
+- (void)onUrlInvoke:(CDVInvokedUrlCommand *)command
 {
-    NSString* callbackId = [arguments objectAtIndex:0];
     
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
+    
     
     @try {
 
-        
-        self.currentARchitectViewCallbackID = callbackId;
-        self.currentPlugInErrorCallback = callbackId;
+        self.currentARchitectViewCallbackID = command.callbackId;
+        self.currentPlugInErrorCallback = command.callbackId;
         
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
         [pluginResult setKeepCallbackAsBool:YES];
-        javaScript = [pluginResult toSuccessCallbackString:callbackId];
-
         
     } @catch (NSException* exception) {
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:callbackId];
     }
     
-    [self writeJavascript:javaScript];
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+
 #pragma mark - WTArchitectView Delegate
+
 - (void)urlWasInvoked:(NSString *)url
 {
 
     CDVPluginResult *pluginResult = nil;
-    NSString *javaScriptResult = nil;
     
     
     if (url && self.currentARchitectViewCallbackID) {
+        
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:url];
         [pluginResult setKeepCallbackAsBool:YES];
-        javaScriptResult = [pluginResult toSuccessCallbackString:self.currentARchitectViewCallbackID];
 
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentARchitectViewCallbackID];
         
     }else
     {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-        javaScriptResult = [pluginResult toSuccessCallbackString:self.currentPlugInErrorCallback];
+    
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentPlugInErrorCallback];
     }
     
-    [self writeJavascript:javaScriptResult];
-}
-
-- (void)dismissARchitectView
-{
-    [self.viewController dismissModalViewControllerAnimated:NO];
-    [self.architectView stop];
 }
 
 @end

@@ -7,7 +7,7 @@ This document describes all necessary steps to get the sample running.
 ***
 
 
-* Download the Wikitude SDK from [our website](http://www.wikitude.com/developer/sdk) (You need to register yourself as a Wikitude developer)
+* Download the Wikitude SDK from [our website](http://www.wikitude.com/developer/download-sdk) (You need to register yourself as a Wikitude developer)
 
-* Copy the SDK folder from ``` [DownloadedSDKRoot/iOS/SDK/SDK] ``` into ``` [ProjectFolder/"AppName"/WikitudeSDK] ```
+* Copy the downloaded WikitudeSDK.framework to ```HelloWorld/Frameworks/Wikitude```
 
