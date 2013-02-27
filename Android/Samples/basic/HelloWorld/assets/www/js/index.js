@@ -1,15 +1,31 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 var app = {
-    initialize: function() {
-        this.bind();
-    },
-    bind: function() {
-        document.addEventListener('deviceready', this.deviceready, false);
-    },
     
+    isDeviceSupported : false,
+    
+    // Application Constructor
+    initialize: function() {
+        this.bindEvents();
+    },
     /**
-     *
-     *	This function extracts an url parameter
-     *
+     *  This function extracts an url parameter
      */
     getUrlParameterForKey : function( url, requestedParam )
     {
@@ -17,100 +33,99 @@ var app = {
         var regexS = "[\\?&]"+requestedParam+"=([^&#]*)";
         var regex = new RegExp( regexS );
         var results = regex.exec( url );
+                                                  
         if( results == null )
           return "";
         else
         {
-            var result = decodeURIComponent(results[1]);
-            return result;
+          var result = decodeURIComponent(results[1]);
+          return result;
         }
-
     },
-                                                  
+    // Bind Event Listeners
+    //
+    // Bind any events that are required on startup. Common events are:
+    // 'load', 'deviceready', 'offline', and 'online'.
+    bindEvents: function() {
+        document.addEventListener('deviceready', this.onDeviceReady, false);
+    },
+    // --- Wikitude Plugin ---
     /**
-     *
-     *	This function gets called if you call "document.location = architectsdk://" in your ARchitect World
-     *
-     *
+     *  This function gets called if you call "document.location = architectsdk://" in your ARchitect World
      *  @param url The url which was called in ARchitect World
-     *
-    */
+     */
     onClickInARchitectWorld : function(url)
     {
+        app.report('url: ' + url);
 
-        app.report("you clicked on a label with text: " + app.getUrlParameterForKey(url, 'text'));
-    },
+        if ( app.getUrlParameterForKey(url, 'text') ) {
+            
+            app.report( "you clicked on a label with text: " + app.getUrlParameterForKey(url, 'text') );
+
+        } else if ( app.getUrlParameterForKey(url, 'action') ) {
+
+            WikitudePlugin.onBackButton();
+
+        } else if ( app.getUrlParameterForKey(url, 'status') ) {
+            WikitudePlugin.hide();
+        }
                                                   
-    /**
-     *
-     *	This function gets called it the Wikitude SDK is able to start an ARchitect World (the current device is supported by the Wikitude SDK)
-     *
-     */
-    onDeviceIsReadyCallback : function()
-    {
-        // The device is able to launch ARchitect World, so we load the 'Hello World' example
-        WikitudePlugin.loadARchitectWorld("assets/world/HelloWorld.html");
         
-        // To be able to respond on events inside the ARchitect World, we set a onURLInvoke callback
-        WikitudePlugin.setOnUrlInvokeCallback(app.onClickInARchitectWorld);
-                                                  
-        // This is a example how you can interact with the ARchitect World to pass in additional information
-        // In this example, a JavaScript function gets called which sets a new text for a label
-        WikitudePlugin.callJavaScript("didReceivedNewTextForLabel('Hello World')"); 
     },
-                                                  
-    /**
-    *
-    *	This function gets if the current device is not capable of running ARchitect Worlds
-    *
-    */
-    onDeviceIsUnsupportedCallback : function()
+    // A callback which gets called if the device is able to launch ARchitect Worlds
+    onDeviceSupportedCallback : function()
     {
-        app.report('device is not supported');
+        app.isDeviceSupported = true;
     },
-
-    /**
-    *
-    *	This function gets if the ARchitect World finished loading
-    *
-    */
-    onARchitectWorldLaunchedCallback : function()
+    
+    // A callback which gets called if the device is not able to start ARchitect Worlds
+    onDeviceNotSupportedCallback : function()
     {
-        app.report('ARchitect World launched');
+        app.receivedEvent('Unable to launch ARchitect Worlds on this device');
     },
-                                                  
-    /**
-    *
-    *	This function gets if the ARchitect failed loading
-    *
-    */
-    onARchitectWorldFailedLaunchingCallback : function(err)
+    
+    loadARchitectWorld : function()
     {
-        app.report('ARchitect World failed launching');
+        if ( app.isDeviceSupported ) {
+          
+            // The device is able to launch ARchitect World, so lets do so
+            WikitudePlugin.loadARchitectWorld("assets/world/HelloWorld.html");
+                                                  
+            // To be able to respond on events inside the ARchitect World, we set a onURLInvoke callback
+            WikitudePlugin.setOnUrlInvokeCallback(app.onClickInARchitectWorld);
+          
+            // This is a example how you can interact with the ARchitect World to pass in additional information
+            // In this example, a JavaScript function gets called which sets a new text for a label
+            function updateLabel () { WikitudePlugin.callJavaScript("didReceivedNewTextForLabel('Hello World')"); };
+            
+            /* due to phoneGap-native timings architect-view may not be set up, call very first JS call after >2s */
+            window.setTimeout(updateLabel, 3000);
+        }
     },
-                                                  
-    /**
-    *
-    *	This function gets called when the Wikitude SDK is ready to start an ARchitect World (the current device is supported by the Wikitude SDK)
-    *
-    */
-    deviceready: function() {
-        // note that this is an event handler so the scope is that of the event
-        // so we need to call app.report(), and not this.report()
-        app.report('deviceready');
-                                                  
-        // When PhoneGap finished loading we forward this event into the Wikitude SDK wrapper.
-        // @param {function} A function which gets called if the device is able to launch ARchitect Worlds
-        // @param {function} A function which gets called if the device is not able to launch ARchitect Worlds
-        WikitudePlugin.isDeviceSupported(app.onDeviceIsReadyCallback, app.onDeviceIsUnsupportedCallback);
+    // --- End Wikitude Plugin ---
+    // deviceready Event Handler
+    //
+    // The scope of 'this' is the event. In order to call the 'receivedEvent'
+    // function, we must explicity call 'app.receivedEvent(...);'
+    onDeviceReady: function() {
+    	
+        app.receivedEvent('deviceready');
         
-        // set a callback on the WikitudePlugin to get informed when the ARchitect World finished loading
-        WikitudePlugin.onARchitectWorldLaunchedCallback = app.onARchitectWorldLaunchedCallback;
-
-        // Set a callback on the WikitudePlugin to get informed when the ARchitect World failed loading
-        WikitudePlugin.onARchitectWorldFailedLaunchingCallback = app.onARchitectWorldFailedLaunchingCallback;
+        // check if the current device is able to launch ARchitect Worlds
+        WikitudePlugin.isDeviceSupported(app.onDeviceSupportedCallback, app.onDeviceNotSupportedCallback);
     },
-    report: function(id) { 
-        console.log("report:" + id);
+    // Update DOM on a Received Event
+    receivedEvent: function(id) {
+        var parentElement = document.getElementById(id);
+        var listeningElement = parentElement.querySelector('.listening');
+        var receivedElement = parentElement.querySelector('.received');
+
+        listeningElement.setAttribute('style', 'display:none;');
+        receivedElement.setAttribute('style', 'display:block;');
+
+        console.log('Received Event: ' + id);
+    },
+    report: function(id) {
+      console.log("report:" + id);
     }
 };
