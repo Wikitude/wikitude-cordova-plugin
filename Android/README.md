@@ -6,7 +6,7 @@ Interested in advanced usage of the plugin and need assistance?
 
 For further questions visit us on www.wikitude.com or contact us via `phonegap <at> wikitude.com`
 
-#### Important: This plugin runs on latest [PhoneGap 2.2+](http://docs.phonegap.com/index.html) only
+#### Important: This plugin works together with latest [PhoneGap 2.5.0](http://docs.phonegap.com/index.html) 
 
 
 ## DESCRIPTION 
