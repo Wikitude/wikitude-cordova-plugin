@@ -27,10 +27,14 @@
 
     <!-- <access origin="https://example.com" /> allow any secure requests to example.com -->
     <!-- <access origin="https://example.com" subdomains="true" /> such as above, but including subdomains, such as www -->
-    <!-- <access origin=".*"/> Allow all domains, suggested development use only -->
+    <access origin=".*"/>
+
+    <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
+    <content src="index.html" />
 
     <log level="DEBUG"/>
-    <preference name="useBrowserHistory" value="false" />
+    <preference name="useBrowserHistory" value="true" />
+    <preference name="exit-on-suspend" value="false" />
 <plugins>
     <plugin name="App" value="org.apache.cordova.App"/>
     <plugin name="Geolocation" value="org.apache.cordova.GeoBroker"/>
@@ -44,11 +48,13 @@
     <plugin name="NetworkStatus" value="org.apache.cordova.NetworkManager"/>
     <plugin name="Notification" value="org.apache.cordova.Notification"/>
     <plugin name="Storage" value="org.apache.cordova.Storage"/>
-    <plugin name="Temperature" value="org.apache.cordova.TempListener"/>
     <plugin name="FileTransfer" value="org.apache.cordova.FileTransfer"/>
     <plugin name="Capture" value="org.apache.cordova.Capture"/>
     <plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
     <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
+    <plugin name="Echo" value="org.apache.cordova.Echo" />
+    <plugin name="Globalization" value="org.apache.cordova.Globalization"/>
+    <plugin name="InAppBrowser" value="org.apache.cordova.InAppBrowser"/>
     
     <!-- basic Wikitude plugin  -->
     <plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>
