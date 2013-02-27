@@ -1,14 +1,16 @@
 package com.wikitude.phonegap;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import org.apache.cordova.api.CallbackContext;
 import org.apache.cordova.api.CordovaPlugin;
 import org.apache.cordova.api.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -33,9 +35,10 @@ import com.wikitude.architect.ArchitectView.ArchitectConfig;
  * http://www.apache.org/licenses/LICENSE-2.0.html
  * 
  * Version History: 
- *  version 1.0.0 ... Initial Version (2012-09)
- * 
- * @version 1.1.0 ... PhoneGap 2.2 support (2012-11)
+ *  version 1.0.0 ... Initial Version 		(2012-09)
+ *  version 1.1.0 ... PhoneGap 2.2 support 	(2012-11)
+ *  
+ * @version 1.2.0 ... PhoneGap 2.5 support 	(2013-02)
  * @author Wikitude GmbH; www.wikitude.com
  */
 public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListener {
@@ -43,17 +46,8 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	/** PhoneGap-root to Android-app-assets folder ; e.g. use "assets/foo.html" as source if you want to load foo.html from your android-project's assets-folder */
 	private static final String	LOCAL_ASSETS_PATH_ROOT		= "assets/";
 
-	/* various JSON-Object keys*/
-	private static final String	JSON_KEY_SDKKEY				= "sdkKey";
-	private static final String	JSON_KEY_FILE_PATH			= "filePath";
-
-	private static final String	JSON_KEY_LOCATION_ALTITUDE	= "alt";
-	private static final String	JSON_KEY_LOCATION_ACCURACY	= "acc";
-	private static final String	JSON_KEY_LOCATION_LATITUDE	= "lat";
-	private static final String	JSON_KEY_LOCATION_LONGITUDE	= "lon";
 
 	/* static action strings */
-
 	/**
 	 * opens architect-view (add to view stack)
 	 */
@@ -207,24 +201,39 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		/* set visibility to "visible", return error if view is null */
 		if ( WikitudePlugin.ACTION_SHOW.equals( action ) ) {
 
-			if ( this.architectView != null ) {
-				this.architectView.setVisibility( View.VISIBLE );
-				callContext.success( action + ": architectView is present" );
-			} else {
-				callContext.error( action + ": architectView is not present" );
-			}
+			this.cordova.getActivity().runOnUiThread( new Runnable() {
+
+				@Override
+				public void run() {
+					if ( architectView != null ) {
+						architectView.setVisibility( View.VISIBLE );
+						callContext.success( action + ": architectView is present" );
+					} else {
+						callContext.error( action + ": architectView is not present" );
+					}
+				}
+			} );
+
+
 			return true;
 		}
 
 		/* set visibility to "invisible", return error if view is null */
 		if ( WikitudePlugin.ACTION_HIDE.equals( action ) ) {
 
-			if ( this.architectView != null ) {
-				this.architectView.setVisibility( View.INVISIBLE );
-				callContext.success( action + ": architectView is present" );
-			} else {
-				callContext.error( action + ": architectView is not present" );
-			}
+			this.cordova.getActivity().runOnUiThread( new Runnable() {
+
+				@Override
+				public void run() {
+					if ( architectView != null ) {
+						architectView.setVisibility( View.INVISIBLE );
+						callContext.success( action + ": architectView is present" );
+					} else {
+						callContext.error( action + ": architectView is not present" );
+					}
+				}
+			} );
+
 			return true;
 		}
 
@@ -241,27 +250,29 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		if ( WikitudePlugin.ACTION_SET_LOCATION.equals( action ) ) {
 			if ( this.architectView != null ) {
 				try {
-					String arrStr = args.getString( 0 );
-					JSONObject arr = new JSONObject( arrStr );
-					final double lat = arr.getDouble( WikitudePlugin.JSON_KEY_LOCATION_LATITUDE );
-					final double lon = arr.getDouble( WikitudePlugin.JSON_KEY_LOCATION_LONGITUDE );
-					Object altObj = arr.get( WikitudePlugin.JSON_KEY_LOCATION_ALTITUDE );
+					final double lat = args.getDouble( 0 );
+					final double lon = args.getDouble( 1 );
 					float alt = Float.MIN_VALUE;
-
-					if ( altObj != null && altObj instanceof Double ) {
-						alt = ((Double)altObj).floatValue();
+					try {
+						alt = (float)args.getDouble( 2 );
+					} catch ( Exception e ) {
+						// invalid altitude -> ignore it
 					}
-
 					final float altitude = alt;
-
-					final Double acc = arr.getDouble( WikitudePlugin.JSON_KEY_LOCATION_ACCURACY );
+					Double acc = null;
+					try {
+						acc = args.getDouble( 3 );
+					} catch ( Exception e ) {
+						// invalid accuracy -> ignore it
+					}
+					final Double accuracy = acc;
 					if ( this.cordova != null && this.cordova.getActivity() != null ) {
 						this.cordova.getActivity().runOnUiThread( new Runnable() {
 
 							@Override
 							public void run() {
-								if ( acc != null ) {
-									WikitudePlugin.this.architectView.setLocation( lat, lon, altitude, acc.floatValue() );
+								if ( accuracy != null ) {
+									WikitudePlugin.this.architectView.setLocation( lat, lon, altitude, accuracy.floatValue() );
 								} else {
 									WikitudePlugin.this.architectView.setLocation( lat, lon, altitude );
 								}
@@ -283,27 +294,30 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		}
 
 		if ( WikitudePlugin.ACTION_CALL_JAVASCRIPT.equals( action ) ) {
-			if ( this.architectView != null ) {
-				String logMsg = null;
-				try {
-					final String callJS = args.getString( 0 );
-					logMsg = callJS;
-					this.cordova.getActivity().runOnUiThread( new Runnable() {
 
-						@Override
-						public void run() {
+			String logMsg = null;
+			try {
+				final String callJS = args.getString( 0 );
+				logMsg = callJS;
+
+				this.cordova.getActivity().runOnUiThread( new Runnable() {
+
+					@Override
+					public void run() {
+						if ( architectView != null ) {
 							WikitudePlugin.this.architectView.callJavascript( callJS );
+						} else {
+							callContext.error( action + ": architectView is not present" );
 						}
-					} );
+					}
+				} );
 
-				} catch ( JSONException je ) {
-					callContext.error( action + ": exception thrown, " + je != null ? je.getMessage() : "(exception is NULL)" );
-					return true;
-				}
-				callContext.success( action + ": called js, '" + logMsg + "'" );
-			} else {
-				callContext.error( action + ": architectView is not present" );
+			} catch ( JSONException je ) {
+				callContext.error( action + ": exception thrown, " + je != null ? je.getMessage() : "(exception is NULL)" );
+				return true;
 			}
+			callContext.success( action + ": called js, '" + logMsg + "'" );
+
 			return true;
 		}
 
@@ -312,17 +326,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		if ( WikitudePlugin.ACTION_OPEN.equals( action ) ) {
 			this.openCallback = callContext;
 			PluginResult result = null;
-			String arrStr = null;
-
 			try {
-				arrStr = args.getString( 0 );
-
-				// arrStr = arrStr.substring( 1, arrStr.length() - 1 );
-
-				JSONObject arr = new JSONObject( arrStr );
-
-				final String apiKey = arr.getString( WikitudePlugin.JSON_KEY_SDKKEY );
-				final String filePath = arr.getString( WikitudePlugin.JSON_KEY_FILE_PATH );
+				final String apiKey = args.getString( 0 );
+				final String filePath = args.getString( 1 );
 
 				this.cordova.getActivity().runOnUiThread( new Runnable() {
 
@@ -396,6 +402,15 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			/* fake life-cycle calls, because activity is already up and running */
 			this.architectView.onPause();
 			this.architectView.onDestroy();
+
+			// clean-up used temp-directory
+			try {
+				WikitudePlugin.clearCacheFolder( new File( ArchitectView.getCacheDirectoryAbsoluteFilePath( this.cordova.getActivity() ) ), 0 );
+			} catch ( Exception e ) {
+				// had troubles in clearing files from cache
+				e.printStackTrace();
+			}
+
 			this.architectView.setVisibility( View.INVISIBLE );
 			((ViewManager)this.architectView.getParent()).removeView( this.architectView );
 			this.architectView = null;
@@ -404,6 +419,35 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		return false;
 	}
 
+
+	private static int clearCacheFolder( final File dir, final int numDays ) {
+
+		int deletedFiles = 0;
+		if ( dir != null && dir.isDirectory() ) {
+			try {
+				for ( File child : dir.listFiles() ) {
+
+					//first delete subdirectories recursively
+					if ( child.isDirectory() ) {
+						deletedFiles += clearCacheFolder( child, numDays );
+					}
+
+					//then delete the files and subdirectories in this dir
+					//only empty directories can be deleted, so subdirs have been done first
+					if ( child.lastModified() < new Date().getTime() - numDays * DateUtils.DAY_IN_MILLIS ) {
+						if ( child.delete() ) {
+							deletedFiles++;
+						}
+					}
+				}
+			} catch ( Exception e ) {
+				e.printStackTrace();
+			}
+		}
+		return deletedFiles;
+	}
+
+
 	/**
 	 * Architect-Configuration required for proper set-up
 	 * @param apiKey
@@ -411,7 +455,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 */
 	protected ArchitectConfig getArchitectConfig( final String apiKey ) {
 		/* no special set-up required in default Wikitude-Plugin, further things required in advanced usage (e.g. Vuforia Image Recognition) */
-		return new ArchitectConfig( apiKey );
+		ArchitectConfig config = new ArchitectConfig( apiKey );
+		config.setOrigin( ArchitectConfig.ORIGIN_PHONEGAP );
+		return config;
 	}
 
 	/**
@@ -443,6 +489,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 			/* also a fake-life-cycle call (the last one before it is really shown in UI */
 			this.architectView.onResume();
+
 		}
 	}
 }

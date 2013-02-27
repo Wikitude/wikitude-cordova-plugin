@@ -21,9 +21,8 @@
 <!-- Include the ARchitect library -->
 <script src="architect://architect.js"></script>
 
-<!--
 <script src="../ade.js"></script>
--->
+
 <script>
 
 /* Global variables */
@@ -102,11 +101,23 @@ function arrowWithDirectionality(offsetX, offsetY, roll)
 	return arrow;
 }
 
+function clickedClose() {
+	document.location = 'architectsdk://actionButton?action=close';
+}
+
+function clickedHide() {
+    document.location = 'architectsdk://hideButton?status=hide';
+}
+
+
 </script>
 </head>
 
 <body>
-
+<button title="close" onclick="clickedClose()">CLOSE AR VIEW</button>
+<!-- NOT recommended 
+<button title="hide" onclick="clickedHide()">(hide)</button>
+ -->
 <div class="info" id="messageElement">Loading ...</div>
 
 <script>
