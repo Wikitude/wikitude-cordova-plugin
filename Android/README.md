@@ -1,8 +1,7 @@
 # Augmented Reality - Wikitude SDK Plugin
 by Wikitude GmbH - [www.wikitude.com](http://www.wikitude.com)
 
-Interested in advanced usage of the plugin and need assistance? 
-[Register as a Wikitude developer](http://developer.wikitude.com) and get support in our forum.
+Interested in advanced usage of the plugin or have a question? [Register as a Wikitude developer](http://developer.wikitude.com) and get support in our forum.
 
 For further questions visit us on www.wikitude.com or contact us via `phonegap <at> wikitude.com`
 
@@ -12,22 +11,22 @@ For further questions visit us on www.wikitude.com or contact us via `phonegap <
 ## DESCRIPTION 
 
 
-The Wikitude PhoneGap Plugin enables web developers to embed an Augmented Reality view into their PhoneGap project. One can create a fully featured app with advanced Augmented Reality features, including Image Recognition, purely using HTML, CSS and Javascript.
+The Wikitude PhoneGap Plugin enables web developers to embed an augmented reality view into their PhoneGap project. One can create a fully featured app with advanced Augmented Reality features, including Image Recognition, purely using HTML, CSS and JavaScript.
 
 ###The Wikitude PhoneGap Plugin
 
 * Available for iOS and Android
 * Simple and seamless native PhoneGap integration
-* Fully customizable Augmented Realty view
-* Includes the full feature set of the Wikitude SDK
+* Fully customizable augmented reality (AR) view
+* Full feature set of the Wikitude SDK
 * AR content is purely written in HTML and JavaScript
 
 ![image](http://www.wikitude.com/wp-content/uploads/2012/12/Plugin_Phonegap.png)
 
 ###The Augmented Reality View
-From a technical point of view the SDK adds a UI component, similar to a web view. In contrast to a standard web view this AR view can render Augmented Reality content.
+From a technical point of view the SDK adds a UI component called **AR View**, similar to a web view. In contrast to a standard web view the AR View can render augmented reality content.
 
-Note: Content developed for this AR View is written in JavaScript and HTML. The .html and .js files for this view are different from the PhoneGap .js and .html files. The AR engine working in the background is called ARchitect Engine and is powering the SDK.
+Content developed for the AR View is written in JavaScript and HTML. The .html and .js files for the AR view are different from the PhoneGap .js and .html files. 
 
 ###Further developer resources
 * [Full documentation and additional tutorials](http://forum.wikitude.com/documentation)
@@ -57,9 +56,9 @@ Note: Content developed for this AR View is written in JavaScript and HTML. The 
         
 4. Download the [Wikitude SDK](http://www.wikitude.com), copy the wikitudesdk.jar in the Android-folder to your projects `libs`-folder and add it to your project's build path
  
-5. Visit [Wikitude Developer Site](http://developer.wikitude.com) to find Samples and license your app to get rid of the watermarking 
+5. Visit [Wikitude Developer Site](http://developer.wikitude.com) to find samples and how to license your app to remove the watermark in the camera
 
-6. Optional: In case you are using a mediaplayer in your architect-file you must  use `WikitudePlugin.setOnUrlInvokeCallback` in combination with the `Video Tag in PhoneGap 2.2+` or define the following in your `AndoidManifest.xml` and call `AR.context.startVideoPlayer(videoUri)`:
+6. Optional: In case you are using a media player in your architect file you must use `WikitudePlugin.setOnUrlInvokeCallback` in combination with the `Video Tag in PhoneGap 2.2+` or define the following in your `AndoidManifest.xml` and call `AR.context.startVideoPlayer(videoUri)`:
 
 <!-- launch mediaplayer in architect -->
 		<activity android:name="com.wikitude.tools.activities.MediaPlayerActivity"
@@ -90,15 +89,15 @@ Prerequisites: Having already set-up your [PhoneGap 2.x](http://docs.phonegap.co
 
 5.  Download Vuforia SDK from [Qualcomm Vuforia Website](https://developer.vuforia.com/) and copy `QCAR.jar` to your projects `libs` folder and add it to your project's build. Also copy Vuforia's `libQCAR.so`  to your `libs/armeabi`-folder
 
-6. Visit [Wikitude Developer Site](http://developer.wikitude.com) to find Samples and license your app to get rid of the watermarking
+6. Visit [Wikitude Developer Site](http://developer.wikitude.com) to find samples and how to license your app to remove the watermark in the camera
 
 ## JAVASCRIPT INTERFACE
 	
-Its simple to use the Wikitude Plugin within your PhoneGap application.
+It is straightforward to use the Wikitude Plugin within your PhoneGap application.
 
 We wrapped all `cordova.exec` calls into a separate JavaScript wrapper which handles location updates and some more functionality behind the scenes.
 
-You will mainly work with the `WikitudePlugin` where all you have to do is to call `Wikitude.isDeviceReady(successCallback, errorCallback)` and in your successCallback, you can call `WikitudePlugin.loadARchitectWorld(successCallback, errorCallback, "path/to/your/world")`.
+You will mainly work with the `WikitudePlugin` where all you have to do is to call `Wikitude.isDeviceReady(successCallback, errorCallback)` and in your `successCallback, you can call `WikitudePlugin.loadARchitectWorld(successCallback, errorCallback, "path/to/your/world")`.
 
 
 If you have purchased a Wikitude SDK license, you can enter you SDK Key in the `WikitudePlugin.js` file at line 9.     
@@ -106,7 +105,7 @@ If you have purchased a Wikitude SDK license, you can enter you SDK Key in the `
 
 ## LICENSE
 
-   Copyright 2012 [Wikitude GmbH ](http://www.wikitude.com)
+   Copyright 2012-2013 [Wikitude GmbH ](http://www.wikitude.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.

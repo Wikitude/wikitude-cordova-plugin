@@ -17,4 +17,6 @@ For further questions visit us on [www.wikitude.com](http://www.wikitude.com) or
 For detailed documentation please see the README files in the respective Android or iOS folder
 
 ## Tested PhoneGap versions
-* PhoneGap 2.2 (18.1.2013)
+* PhoneGap 2.5.0rc1 (28.02.2013)
+* PhoneGap 2.4.0 (24.02.2013)
+* PhoneGap 2.2.0 (18.01.2013)
