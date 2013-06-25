@@ -88,7 +88,7 @@ var app = {
         if ( app.isDeviceSupported ) {
           
             // The device is able to launch ARchitect World, so lets do so
-            WikitudePlugin.loadARchitectWorld("assets/world/HelloWorld.html");
+            WikitudePlugin.loadARchitectWorld("assets/world/index.html");
                                                   
             // To be able to respond on events inside the ARchitect World, we set a onURLInvoke callback
             WikitudePlugin.setOnUrlInvokeCallback(app.onClickInARchitectWorld);
