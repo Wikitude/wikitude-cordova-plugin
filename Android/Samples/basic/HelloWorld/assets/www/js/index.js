@@ -89,17 +89,10 @@ var app = {
         if ( app.isDeviceSupported ) {
           
             // The device is able to launch ARchitect World, so lets do so
-            WikitudePlugin.loadARchitectWorld("assets/world/HelloWorld.html");
+            WikitudePlugin.loadARchitectWorld("assets/world/4_ObtainPoiData_1_FromWebservice/index.html");
                                                   
-            // To be able to respond on events inside the ARchitect World, we set a onURLInvoke callback
-            WikitudePlugin.setOnUrlInvokeCallback(app.onClickInARchitectWorld);
-          
-            // This is a example how you can interact with the ARchitect World to pass in additional information
-            // In this example, a JavaScript function gets called which sets a new text for a label
-            function updateLabel () { WikitudePlugin.callJavaScript("didReceivedNewTextForLabel('Hello World')"); };
-            
-            /* due to phoneGap-native timings architect-view may not be set up, call very first JS call after >2s */
-            window.setTimeout(updateLabel, 3000);
+            // if you want to listen to document.location = architectsdk://yourhost?param1=foo&param2=bar simply set the onUrlInvoceCallback
+            // WikitudePlugin.setOnUrlInvokeCallback( yourcallback);
         }
     },
     // --- End Wikitude Plugin ---
