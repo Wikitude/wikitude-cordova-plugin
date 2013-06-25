@@ -39,7 +39,13 @@
         // Custom initialization
         
         if ( !_architectView ) {
-            self.architectView = [[WTArchitectView alloc] initWithFrame:self.view.bounds];;
+            self.architectView = [[WTArchitectView alloc] initWithFrame:self.view.bounds];
+            
+            
+            if ([self.architectView respondsToSelector:@selector(setSDKOrigin:)]) {
+                [self.architectView performSelector:@selector(setSDKOrigin:) withObject:@"ORIGIN_PHONEGAP"];
+            }
+            
             [self.architectView initializeWithKey:sdkKeyorNil motionManager:cmMotionManagerOrNil];
             
             self.view = self.architectView;
