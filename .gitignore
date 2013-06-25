@@ -3,8 +3,8 @@ Android/Samples/extended/HelloImageRecognition/libs/wikitudesdk.jar
 Android/Samples/extended/HelloImageRecognition/libs/armeabi/libQCAR.so
 Android/Samples/extended/HelloImageRecognition/libs/QCAR.jar
 
-iOS/SampleProjects/Basic/HelloWorld/HelloWorld/Frameworks
-iOS/SampleProjects/Extended/HelloImageRecognition/HelloImageRecognition/Frameworks
+iOS/SampleProjects/Basic/HelloWorld/HelloWorld/Frameworks/WikitudeSDK.framework/**
+iOS/SampleProjects/Extended/HelloImageRecognition/HelloImageRecognition/Frameworks/WikitudeSDK.framework/**
 
 # Xcode
 .DS_Store
@@ -25,3 +25,6 @@ profile
 DerivedData
 .idea/
 
+
+/iOS/SampleProjects/Extended/HelloImageRecognition/HelloImageRecognition/Frameworks/Wikitude/WikitudeSDK.framework/
+/iOS/SampleProjects/Basic/HelloWorld/HelloWorld/Frameworks/Wikitude/WikitudeSDK.framework/
