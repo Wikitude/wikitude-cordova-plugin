@@ -33,13 +33,6 @@ import com.wikitude.architect.ArchitectView.ArchitectConfig;
  * Note:
  * This plug-in is written under Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0.html
- * 
- * Version History: 
- *  version 1.0.0 ... Initial Version 		(2012-09)
- *  version 1.1.0 ... PhoneGap 2.2 support 	(2012-11)
- *  
- * @version 1.2.0 ... PhoneGap 2.5 support 	(2013-02)
- * @author Wikitude GmbH; www.wikitude.com
  */
 public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListener {
 
