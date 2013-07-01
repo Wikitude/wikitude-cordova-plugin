@@ -36,11 +36,16 @@
 /* View Lifecycle */
 - (void)isDeviceSupported:(CDVInvokedUrlCommand *)command
 {
+<<<<<<< HEAD
         
+=======
+    
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     CDVPluginResult* pluginResult = nil;
     
     
     @try {
+<<<<<<< HEAD
 
         self.isDeviceSupported = false;
         
@@ -59,13 +64,33 @@
  
         if (self.isDeviceSupported) {
 
+=======
+        
+        self.isDeviceSupported = false;
+        
+        if ( [command.arguments count] >= 1 ) {
+            
+            NSString *geoMode = [command.arguments objectAtIndex:0];
+            if ( [[geoMode lowercaseString] isEqualToString:@"geo"] ) {
+                
+                self.isDeviceSupported = [WTARViewController isGeoSupported];
+            }else if ( [[geoMode lowercaseString] isEqualToString:@"ir"] ) {
+                
+                self.isDeviceSupported = [WTARViewController isIRSupported];
+            }
+        }
+        
+        
+        if (self.isDeviceSupported) {
+            
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:self.isDeviceSupported];
             
         } else {
             
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt:self.isDeviceSupported];
         }
-                
+        
         
     } @catch (NSException* exception) {
         
@@ -79,12 +104,20 @@
 
 - (void)open:(CDVInvokedUrlCommand *)command
 {
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     CDVPluginResult* pluginResult = nil;
     
     
     @try {
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
         
         BOOL enabled = self.isDeviceSupported;
         if ( enabled && 2 == command.arguments.count ) {
@@ -98,26 +131,52 @@
                 self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
             }
             
+<<<<<<< HEAD
 
             [self.viewController presentViewController:self.arViewController animated:YES completion:^{
                 // completion code
             }];
+=======
+            
+            [self.viewController presentViewController:self.arViewController animated:YES completion:^{
+                // completion code
+            }];
+            
+            
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
             
                         
             // and finaly load the architect world, specified in the open function in js
             if (architectWorldFilePath) {
                 
-                NSString *worldName = [architectWorldFilePath lastPathComponent];
-                worldName = [worldName stringByDeletingPathExtension];
-                NSString *worldNameExtension = [architectWorldFilePath pathExtension];
+                NSURL *architectWorldURL;
+                if ([architectWorldFilePath hasPrefix:@"http"]) {
+                    
+                    architectWorldURL = [NSURL URLWithString:architectWorldFilePath];
+                    
+                } else {
+                    
+                    NSString *worldName = [architectWorldFilePath lastPathComponent];
+                    worldName = [worldName stringByDeletingPathExtension];
+                    NSString *worldNameExtension = [architectWorldFilePath pathExtension];
+                    
+                    NSString *architectWorldDirectoryPath = [architectWorldFilePath stringByDeletingLastPathComponent];
+                    
+                    architectWorldURL = [[NSBundle mainBundle] URLForResource:worldName withExtension:worldNameExtension subdirectory:architectWorldDirectoryPath];
+                    
+                }
                 
+<<<<<<< HEAD
                 NSString *architectWorldDirectoryPath = [architectWorldFilePath stringByDeletingLastPathComponent];
 
                 NSString *loadablePath = [[NSBundle mainBundle] pathForResource:worldName ofType:worldNameExtension inDirectory:architectWorldDirectoryPath];
                 [self.arViewController.architectView loadArchitectWorldFromUrl:loadablePath];
+=======
+                [self.arViewController.architectView loadArchitectWorldFromUrl:architectWorldURL];
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
             }
         }
-    
+        
         // start the sdk view updates
         [self.arViewController.architectView start];
         self.arViewController.isARchitectViewRunning = YES;
@@ -125,6 +184,7 @@
         
         if ( enabled ) {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
+<<<<<<< HEAD
 
         } else {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
@@ -133,6 +193,16 @@
     } @catch (NSException* exception) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
 
+=======
+            
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            
+        }
+    } @catch (NSException* exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     }
     
     
@@ -141,7 +211,11 @@
 
 - (void)close:(CDVInvokedUrlCommand *)command
 {
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     CDVPluginResult* pluginResult = nil;
     
     @try {
@@ -158,7 +232,11 @@
         {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
+<<<<<<< HEAD
     
+=======
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     } @catch (NSException* exception) {
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
@@ -174,6 +252,7 @@
     CDVPluginResult* pluginResult = nil;
     
     @try {
+<<<<<<< HEAD
         
         if (self.arViewController) {
 
@@ -188,12 +267,32 @@
             NSLog(@"Wikitude Plugin not loaded. You first have to call load and then show.");
         }        
 
+=======
+        
+        if (self.arViewController) {
+            
+            [self.viewController presentViewController:self.arViewController animated:YES completion:^{
+                
+            }];
+            
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
+        }else
+        {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_INVALID_ACTION messageAsString:@"Wikitude Plugin not loaded. You first have to call load and then show."];
+            NSLog(@"Wikitude Plugin not loaded. You first have to call load and then show.");
+        }
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     } @catch (NSException* exception) {
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
     }
     
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -207,13 +306,21 @@
         if (self.arViewController) {
             
             [self.viewController dismissModalViewControllerAnimated:YES];
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
         }else
         {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     } @catch (NSException* exception) {
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
@@ -229,7 +336,11 @@
     CDVPluginResult* pluginResult = nil;
     
     @try {
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
         if (self.arViewController && !self.arViewController.isARchitectViewRunning) {
             [self.arViewController.architectView start];
             self.arViewController.isARchitectViewRunning = YES;
@@ -237,13 +348,21 @@
         
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT messageAsString:nil];
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     } @catch (NSException* exception) {
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
     }
     
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -253,7 +372,11 @@
     CDVPluginResult* pluginResult = nil;
     
     @try {
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
         if (self.arViewController && self.arViewController.isARchitectViewRunning) {
             [self.arViewController.architectView stop];
             self.arViewController.isARchitectViewRunning = NO;
@@ -267,7 +390,11 @@
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
     }
     
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -277,7 +404,11 @@
 {
     
     CDVPluginResult* pluginResult = nil;
+<<<<<<< HEAD
  
+=======
+    
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     
     @try {
         
@@ -301,13 +432,21 @@
         {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
+<<<<<<< HEAD
     
+=======
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     } @catch (NSException* exception) {
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
     }
     
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -316,7 +455,11 @@
 
 - (void)callJavascript:(CDVInvokedUrlCommand *)command
 {
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
     CDVPluginResult* pluginResult = nil;
     
     
@@ -329,7 +472,7 @@
             if (self.arViewController) {
                 [self.arViewController.architectView callJavaScript:javascriptToCall];
             }
-                        
+            
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
             
         }else
@@ -354,7 +497,11 @@
     
     
     @try {
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
         self.currentARchitectViewCallbackID = command.callbackId;
         self.currentPlugInErrorCallback = command.callbackId;
         
@@ -376,7 +523,7 @@
 
 - (void)urlWasInvoked:(NSString *)url
 {
-
+    
     CDVPluginResult *pluginResult = nil;
     
     
@@ -384,13 +531,21 @@
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:url];
         [pluginResult setKeepCallbackAsBool:YES];
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentARchitectViewCallbackID];
         
     }else
     {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+<<<<<<< HEAD
     
+=======
+        
+>>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentPlugInErrorCallback];
     }
     

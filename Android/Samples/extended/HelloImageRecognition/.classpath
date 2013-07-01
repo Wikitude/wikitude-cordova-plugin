@@ -5,6 +5,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="lib" path="libs/wikitudesdk.jar"/>
-	<classpathentry kind="lib" path="libs/QCAR.jar"/>
+	<classpathentry kind="lib" path="libs/cordova-2.8.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

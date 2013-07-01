@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wikitude.phonegapsamplehelloimagerecognition"
-    android:versionCode="1100"
-    android:versionName="1.1.0" >
+    android:versionCode="2800"
+    android:versionName="2.8.0" >
 
     <uses-sdk android:minSdkVersion="8"/>
     
@@ -12,20 +12,6 @@
     android:smallScreens="true" 
     android:resizeable="true" 
     android:anyDensity="true" />
- 
-	<!-- 
-	
-	Please check: Wikitude's AR does not need these permissions, maybe you need them anyway
-	<uses-permission android:name="android.permission.VIBRATE" />
-	<uses-permission android:name="android.permission.RECEIVE_SMS" />
-	<uses-permission android:name="android.permission.RECORD_AUDIO" />
-	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-	<uses-permission android:name="android.permission.READ_CONTACTS" />
-	<uses-permission android:name="android.permission.WRITE_CONTACTS" />
-	<uses-permission android:name="android.permission.GET_ACCOUNTS" />
-	<uses-permission android:name="android.permission.BROADCAST_STICKY" /> 
-	
-	-->
 
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -36,9 +22,9 @@
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-
-<!-- AHAU: required hardware components -->
+	
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+	
 	<uses-feature android:name="android.hardware.camera" android:required="true" />
 
 	<!-- you need to have a way to find users location -->
@@ -52,7 +38,7 @@
 
     <application
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" android:debuggable="true">
+        android:label="@string/app_name">
         <activity
             android:name="com.wikitude.phonegap.PhonegapSampleActivity"
             android:label="@string/app_name" android:configChanges="orientation|keyboardHidden|screenSize">
