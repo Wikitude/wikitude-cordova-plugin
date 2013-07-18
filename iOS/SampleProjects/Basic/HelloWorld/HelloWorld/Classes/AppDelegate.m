@@ -65,15 +65,11 @@
 {
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld/Classes/AppDelegate.m
-    self.window = [[[UIWindow alloc] initWithFrame:screenBounds] autorelease];
-=======
 #if __has_feature(objc_arc)
         self.window = [[UIWindow alloc] initWithFrame:screenBounds];
 #else
         self.window = [[[UIWindow alloc] initWithFrame:screenBounds] autorelease];
 #endif
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/Classes/AppDelegate.m
     self.window.autoresizesSubviews = YES;
 
 #if __has_feature(objc_arc)
@@ -115,13 +111,8 @@
 }
 
 // repost the localnotification using the default NSNotificationCenter so multiple plugins may respond
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld/Classes/AppDelegate.m
-- (void)           application:(UIApplication*)application
-   didReceiveLocalNotification:(UILocalNotification*)notification
-=======
 - (void)            application:(UIApplication*)application
     didReceiveLocalNotification:(UILocalNotification*)notification
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/Classes/AppDelegate.m
 {
     // re-post ( broadcast )
     [[NSNotificationCenter defaultCenter] postNotificationName:CDVLocalNotification object:notification];

@@ -348,14 +348,6 @@ static NSSet* org_apache_cordova_validArrowDirections;
             } else {
                 result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[data base64EncodedString]];
             }
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVCamera.m
-        } else if (cameraPicker.returnType == DestinationTypeNativeUri) {
-            NSString* nativeUri = [(NSURL*)[info objectForKey:UIImagePickerControllerReferenceURL] absoluteString];
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nativeUri];
-        } else {
-            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[data base64EncodedString]];
-=======
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVCamera.m
         }
     }
     // NOT IMAGE TYPE (MOVIE)

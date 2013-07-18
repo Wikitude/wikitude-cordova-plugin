@@ -1246,11 +1246,7 @@ static NSDictionary* org_apache_cordova_contacts_defaultFields = nil;
                 bFound = CFDictionaryGetValueIfPresent(dict, kABPersonInstantMessageServiceKey, (void*)&value);
                 if (bFound && (value != NULL)) {
                     CFRetain(value);
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVContact.m
-                    [newDict setObject:(id)[[CDVContact class] convertPropertyLabelToContactType:(__bridge NSString*)value] forKey:kW3ContactFieldType];
-=======
                     [newDict setObject:(id)[[CDVContact class] convertPropertyLabelToContactType : (__bridge NSString*)value] forKey:kW3ContactFieldType];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVContact.m
                     CFRelease(value);
                 } else {
                     [newDict setObject:[NSNull null] forKey:kW3ContactFieldType];

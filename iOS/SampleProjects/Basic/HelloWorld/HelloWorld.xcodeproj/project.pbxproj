@@ -40,19 +40,6 @@
 		30A0434814DC770100060A13 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30A0434314DC770100060A13 /* Localizable.strings */; };
 		30A0434914DC770100060A13 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 30A0434614DC770100060A13 /* Localizable.strings */; };
 		30E5649213A7FCAF007403D8 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30E5649113A7FCAF007403D8 /* CoreMedia.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-		A98183B216D230D900A655EC /* WTARViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A98183AF16D230D900A655EC /* WTARViewController.m */; };
-		A98183B316D230D900A655EC /* WTWikitudePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = A98183B116D230D900A655EC /* WTWikitudePlugin.m */; };
-		A98183B516D231B200A655EC /* WikitudeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98183B416D231B200A655EC /* WikitudeSDK.framework */; };
-		A98183B716D231E200A655EC /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A98183B616D231E200A655EC /* libc++.dylib */; };
-		A98183B916D2334700A655EC /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98183B816D2334700A655EC /* Security.framework */; };
-		A98183BB16D2336500A655EC /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98183BA16D2336500A655EC /* OpenGLES.framework */; };
-		A98183BD16D2339000A655EC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A98183BC16D2339000A655EC /* libsqlite3.dylib */; };
-		A98183BF16D234F600A655EC /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98183BE16D234F600A655EC /* CoreVideo.framework */; };
-		A98183C116D2351500A655EC /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A98183C016D2351500A655EC /* CoreMotion.framework */; };
-		A98183CB16D23BAF00A655EC /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A98183CA16D23BAF00A655EC /* libz.dylib */; };
-		A98183D016D25C0100A655EC /* assets in Resources */ = {isa = PBXBuildFile; fileRef = A98183CF16D25C0000A655EC /* assets */; };
-=======
 		30FC414916E50CA1004E6F35 /* icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30FC414816E50CA1004E6F35 /* icon-72@2x.png */; };
 		5AA0E66D1729F45B000DC89A /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AA0E66C1729F45B000DC89A /* OpenAL.framework */; };
 		5AA0E66F1729F460000DC89A /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AA0E66E1729F460000DC89A /* ImageIO.framework */; };
@@ -68,7 +55,6 @@
 		A9CFD95D1778B6F200326EEA /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A9CFD9571778B6F200326EEA /* libz.dylib */; };
 		A9CFD95E1778B6F200326EEA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9CFD9581778B6F200326EEA /* OpenGLES.framework */; };
 		A9CFD95F1778B6F200326EEA /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9CFD9591778B6F200326EEA /* Security.framework */; };
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 		D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */; };
 		F840E1F1165FE0F500CFE078 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = F840E1F0165FE0F500CFE078 /* config.xml */; };
 /* End PBXBuildFile section */
@@ -135,21 +121,6 @@
 		5AEE5B34173C68D80009041E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* HelloWorld-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "HelloWorld-Info.plist"; path = "../HelloWorld-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-		A98183AE16D230D900A655EC /* WTARViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WTARViewController.h; sourceTree = "<group>"; };
-		A98183AF16D230D900A655EC /* WTARViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WTARViewController.m; sourceTree = "<group>"; };
-		A98183B016D230D900A655EC /* WTWikitudePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WTWikitudePlugin.h; sourceTree = "<group>"; };
-		A98183B116D230D900A655EC /* WTWikitudePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WTWikitudePlugin.m; sourceTree = "<group>"; };
-		A98183B416D231B200A655EC /* WikitudeSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WikitudeSDK.framework; path = HelloWorld/Frameworks/Wikitude/WikitudeSDK.framework; sourceTree = "<group>"; };
-		A98183B616D231E200A655EC /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
-		A98183B816D2334700A655EC /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		A98183BA16D2336500A655EC /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		A98183BC16D2339000A655EC /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		A98183BE16D234F600A655EC /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
-		A98183C016D2351500A655EC /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		A98183CA16D23BAF00A655EC /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		A98183CF16D25C0000A655EC /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
-=======
 		A9CFD9491778B63B00326EEA /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		A9CFD94C1778B65300326EEA /* WTARViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WTARViewController.h; sourceTree = "<group>"; };
 		A9CFD94D1778B65300326EEA /* WTARViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WTARViewController.m; sourceTree = "<group>"; };
@@ -162,7 +133,6 @@
 		A9CFD9571778B6F200326EEA /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		A9CFD9581778B6F200326EEA /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		A9CFD9591778B6F200326EEA /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 		D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = HelloWorld/config.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -172,16 +142,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-				A98183CB16D23BAF00A655EC /* libz.dylib in Frameworks */,
-				A98183C116D2351500A655EC /* CoreMotion.framework in Frameworks */,
-				A98183BF16D234F600A655EC /* CoreVideo.framework in Frameworks */,
-				A98183BD16D2339000A655EC /* libsqlite3.dylib in Frameworks */,
-				A98183BB16D2336500A655EC /* OpenGLES.framework in Frameworks */,
-				A98183B916D2334700A655EC /* Security.framework in Frameworks */,
-				A98183B716D231E200A655EC /* libc++.dylib in Frameworks */,
-				A98183B516D231B200A655EC /* WikitudeSDK.framework in Frameworks */,
-=======
 				A9CFD95A1778B6F200326EEA /* CoreMotion.framework in Frameworks */,
 				A9CFD95B1778B6F200326EEA /* CoreVideo.framework in Frameworks */,
 				A9CFD95C1778B6F200326EEA /* libc++.dylib in Frameworks */,
@@ -193,7 +153,6 @@
 				5AA0E66F1729F460000DC89A /* ImageIO.framework in Frameworks */,
 				5AA0E66D1729F45B000DC89A /* OpenAL.framework in Frameworks */,
 				5B1594DD16A7569C00FEF299 /* AssetsLibrary.framework in Frameworks */,
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 				301BF552109A68D80062928A /* libCordova.a in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
@@ -208,10 +167,7 @@
 				301BF5C5109A6A2B0062928A /* SystemConfiguration.framework in Frameworks */,
 				305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */,
 				30E5649213A7FCAF007403D8 /* CoreMedia.framework in Frameworks */,
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-=======
 				5AEE5B35173C68D80009041E /* CoreLocation.framework in Frameworks */,
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,13 +214,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-				A98183CF16D25C0000A655EC /* assets */,
-				F840E1F0165FE0F500CFE078 /* config.xml */,
-=======
 				F840E1F0165FE0F500CFE078 /* config.xml */,
 				A9CFD9491778B63B00326EEA /* assets */,
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 				301BF56E109A69640062928A /* www */,
 				301BF52D109A57CC0062928A /* CordovaLib.xcodeproj */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -306,14 +257,8 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-				A98183B616D231E200A655EC /* libc++.dylib */,
-				A98183BC16D2339000A655EC /* libsqlite3.dylib */,
-				A98183CA16D23BAF00A655EC /* libz.dylib */,
-=======
 				A9CFD9561778B6F200326EEA /* libc++.dylib */,
 				A9CFD9571778B6F200326EEA /* libz.dylib */,
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 				301BF5B4109A6A2B0062928A /* AddressBook.framework */,
 				301BF5B6109A6A2B0062928A /* AddressBookUI.framework */,
 				5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */,
@@ -321,21 +266,6 @@
 				301BF5BA109A6A2B0062928A /* AVFoundation.framework */,
 				301BF5BC109A6A2B0062928A /* CFNetwork.framework */,
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-				301BF5BE109A6A2B0062928A /* CoreLocation.framework */,
-				30E5649113A7FCAF007403D8 /* CoreMedia.framework */,
-				A98183C016D2351500A655EC /* CoreMotion.framework */,
-				A98183BE16D234F600A655EC /* CoreVideo.framework */,
-				1D30AB110D05D00D00671497 /* Foundation.framework */,
-				301BF5C0109A6A2B0062928A /* MediaPlayer.framework */,
-				305D5FD0115AB8F900A74A75 /* MobileCoreServices.framework */,
-				A98183BA16D2336500A655EC /* OpenGLES.framework */,
-				301BF5C2109A6A2B0062928A /* QuartzCore.framework */,
-				A98183B816D2334700A655EC /* Security.framework */,
-				301BF5C4109A6A2B0062928A /* SystemConfiguration.framework */,
-				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
-				A98183B416D231B200A655EC /* WikitudeSDK.framework */,
-=======
 				5AEE5B34173C68D80009041E /* CoreLocation.framework */,
 				30E5649113A7FCAF007403D8 /* CoreMedia.framework */,
 				A9CFD9541778B6F200326EEA /* CoreMotion.framework */,
@@ -352,7 +282,6 @@
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				A9CFD9521778B6AF00326EEA /* WikitudeSDK.framework */,
 				301BF5BE109A6A2B0062928A /* CoreLocation.framework */,
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -368,11 +297,7 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-				A98183AD16D230D900A655EC /* Wikitude */,
-=======
 				A9CFD94B1778B65300326EEA /* Wikitude */,
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 			);
 			name = Plugins;
 			path = HelloWorld/Plugins;
@@ -419,15 +344,6 @@
 			path = se.lproj;
 			sourceTree = "<group>";
 		};
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-		A98183AD16D230D900A655EC /* Wikitude */ = {
-			isa = PBXGroup;
-			children = (
-				A98183AE16D230D900A655EC /* WTARViewController.h */,
-				A98183AF16D230D900A655EC /* WTARViewController.m */,
-				A98183B016D230D900A655EC /* WTWikitudePlugin.h */,
-				A98183B116D230D900A655EC /* WTWikitudePlugin.m */,
-=======
 		A9CFD94B1778B65300326EEA /* Wikitude */ = {
 			isa = PBXGroup;
 			children = (
@@ -435,7 +351,6 @@
 				A9CFD94D1778B65300326EEA /* WTARViewController.m */,
 				A9CFD94E1778B65300326EEA /* WTWikitudePlugin.h */,
 				A9CFD94F1778B65300326EEA /* WTWikitudePlugin.m */,
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 			);
 			path = Wikitude;
 			sourceTree = "<group>";
@@ -515,10 +430,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F840E1F1165FE0F500CFE078 /* config.xml in Resources */,
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-				301BF570109A69640062928A /* www in Resources */,
-=======
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 				308D05371370CCF300D202BF /* icon-72.png in Resources */,
 				308D05381370CCF300D202BF /* icon.png in Resources */,
 				308D05391370CCF300D202BF /* icon@2x.png in Resources */,
@@ -535,12 +446,8 @@
 				3088BBC1154F3926009F9C59 /* Default@2x~iphone.png in Resources */,
 				3088BBC2154F3926009F9C59 /* Default~iphone.png in Resources */,
 				D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */,
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-				A98183D016D25C0100A655EC /* assets in Resources */,
-=======
 				30FC414916E50CA1004E6F35 /* icon-72@2x.png in Resources */,
 				A9CFD94A1778B63B00326EEA /* assets in Resources */,
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -571,13 +478,8 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
-				A98183B216D230D900A655EC /* WTARViewController.m in Sources */,
-				A98183B316D230D900A655EC /* WTWikitudePlugin.m in Sources */,
-=======
 				A9CFD9501778B65300326EEA /* WTARViewController.m in Sources */,
 				A9CFD9511778B65300326EEA /* WTWikitudePlugin.m in Sources */,
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/HelloWorld.xcodeproj/project.pbxproj
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

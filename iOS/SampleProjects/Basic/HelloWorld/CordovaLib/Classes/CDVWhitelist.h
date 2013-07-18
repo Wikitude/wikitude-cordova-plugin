@@ -23,12 +23,6 @@ extern NSString* const kCDVDefaultWhitelistRejectionString;
 
 @interface CDVWhitelist : NSObject
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVWhitelist.h
-@property (nonatomic, readonly, strong) NSArray* whitelist;
-@property (nonatomic, readonly, strong) NSArray* expandedWhitelist;
-@property (nonatomic, readonly, assign) BOOL allowAll;
-=======
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVWhitelist.h
 @property (nonatomic, copy) NSString* whitelistRejectionFormatString;
 
 - (id)initWithArray:(NSArray*)array;

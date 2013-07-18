@@ -130,22 +130,6 @@
     CDVAddressBookHelper* abHelper = [[CDVAddressBookHelper alloc] init];
     CDVContacts* __weak weakSelf = self;  // play it safe to avoid retain cycles
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVContacts.m
-    [abHelper createAddressBook: ^(ABAddressBookRef addrBook, CDVAddressBookAccessError * errCode) {
-            if (addrBook == NULL) {
-                // permission was denied or other error - return error
-                CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageToErrorObject:errCode ? errCode.errorCode:UNKNOWN_ERROR];
-                [weakSelf.commandDelegate sendPluginResult:result callbackId:callbackId];
-                return;
-            }
-            ABRecordRef rec = ABAddressBookGetPersonWithRecordID (addrBook, recordID);
-
-            if (rec) {
-                CDVDisplayContactViewController* personController = [[CDVDisplayContactViewController alloc] init];
-                personController.displayedPerson = rec;
-                personController.personViewDelegate = self;
-                personController.allowsEditing = NO;
-=======
     [abHelper createAddressBook: ^(ABAddressBookRef addrBook, CDVAddressBookAccessError* errCode) {
         if (addrBook == NULL) {
             // permission was denied or other error - return error
@@ -154,7 +138,6 @@
             return;
         }
         ABRecordRef rec = ABAddressBookGetPersonWithRecordID(addrBook, recordID);
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVContacts.m
 
         if (rec) {
             CDVDisplayContactViewController* personController = [[CDVDisplayContactViewController alloc] init];
@@ -301,21 +284,6 @@
     NSDictionary* findOptions = [command.arguments objectAtIndex:1 withDefault:[NSNull null]];
 
     [self.commandDelegate runInBackground:^{
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVContacts.m
-            // from Apple:  Important You must ensure that an instance of ABAddressBookRef is used by only one thread.
-            // which is why address book is created within the dispatch queue.
-            // more details here: http: //blog.byadrian.net/2012/05/05/ios-addressbook-framework-and-gcd/
-            CDVAddressBookHelper* abHelper = [[CDVAddressBookHelper alloc] init];
-            CDVContacts* __weak weakSelf = self; // play it safe to avoid retain cycles
-            // it gets uglier, block within block.....
-            [abHelper createAddressBook: ^(ABAddressBookRef addrBook, CDVAddressBookAccessError * errCode) {
-                    if (addrBook == NULL) {
-                        // permission was denied or other error - return error
-                        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageToErrorObject:errCode ? errCode.errorCode:UNKNOWN_ERROR];
-                        [weakSelf.commandDelegate sendPluginResult:result callbackId:callbackId];
-                        return;
-                    }
-=======
         // from Apple:  Important You must ensure that an instance of ABAddressBookRef is used by only one thread.
         // which is why address book is created within the dispatch queue.
         // more details here: http: //blog.byadrian.net/2012/05/05/ios-addressbook-framework-and-gcd/
@@ -329,7 +297,6 @@
                 [weakSelf.commandDelegate sendPluginResult:result callbackId:callbackId];
                 return;
             }
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVContacts.m
 
             NSArray* foundRecords = nil;
             // get the findOptions values
@@ -416,84 +383,8 @@
     NSDictionary* contactDict = [command.arguments objectAtIndex:0];
 
     [self.commandDelegate runInBackground:^{
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVContacts.m
-            CDVAddressBookHelper* abHelper = [[CDVAddressBookHelper alloc] init];
-            CDVContacts* __weak weakSelf = self; // play it safe to avoid retain cycles
-
-            [abHelper createAddressBook: ^(ABAddressBookRef addrBook, CDVAddressBookAccessError * errorCode) {
-                    CDVPluginResult* result = nil;
-                    if (addrBook == NULL) {
-                        // permission was denied or other error - return error
-                        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt:errorCode ? errorCode.errorCode:UNKNOWN_ERROR];
-                        [weakSelf.commandDelegate sendPluginResult:result callbackId:callbackId];
-                        return;
-                    }
-
-                    bool bIsError = FALSE, bSuccess = FALSE;
-                    BOOL bUpdate = NO;
-                    CDVContactError errCode = UNKNOWN_ERROR;
-                    CFErrorRef error;
-                    NSNumber* cId = [contactDict valueForKey:kW3ContactId];
-                    CDVContact* aContact = nil;
-                    ABRecordRef rec = nil;
-                    if (cId && ![cId isKindOfClass:[NSNull class]]) {
-                        rec = ABAddressBookGetPersonWithRecordID (addrBook, [cId intValue]);
-                        if (rec) {
-                            aContact = [[CDVContact alloc] initFromABRecord:rec];
-                            bUpdate = YES;
-                        }
-                    }
-                    if (!aContact) {
-                        aContact = [[CDVContact alloc] init];
-                    }
-
-                    bSuccess = [aContact setFromContactDict:contactDict asUpdate:bUpdate];
-                    if (bSuccess) {
-                        if (!bUpdate) {
-                            bSuccess = ABAddressBookAddRecord (addrBook, [aContact record], &error);
-                        }
-                        if (bSuccess) {
-                            bSuccess = ABAddressBookSave (addrBook, &error);
-                        }
-                        if (!bSuccess) { // need to provide error codes
-                            bIsError = TRUE;
-                            errCode = IO_ERROR;
-                        } else {
-                            // give original dictionary back?  If generate dictionary from saved contact, have no returnFields specified
-                            // so would give back all fields (which W3C spec. indicates is not desired)
-                            // for now (while testing) give back saved, full contact
-                            NSDictionary* newContact = [aContact toDictionary:[CDVContact defaultFields]];
-                            // NSString* contactStr = [newContact JSONRepresentation];
-                            result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:newContact];
-                        }
-                    } else {
-                        bIsError = TRUE;
-                        errCode = IO_ERROR;
-                    }
-                    CFRelease (addrBook);
-
-                    if (bIsError) {
-                        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt:errCode];
-                    }
-
-                    if (result) {
-                        [weakSelf.commandDelegate sendPluginResult:result callbackId:callbackId];
-                    }
-                }];
-        }]; // end of  queue
-}
-
-- (void)remove:(CDVInvokedUrlCommand*)command
-{
-    NSString* callbackId = command.callbackId;
-    NSNumber* cId = [command.arguments objectAtIndex:0];
-
-    CDVAddressBookHelper* abHelper = [[CDVAddressBookHelper alloc] init];
-    CDVContacts* __weak weakSelf = self;  // play it safe to avoid retain cycles
-=======
         CDVAddressBookHelper* abHelper = [[CDVAddressBookHelper alloc] init];
         CDVContacts* __weak weakSelf = self;     // play it safe to avoid retain cycles
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVContacts.m
 
         [abHelper createAddressBook: ^(ABAddressBookRef addrBook, CDVAddressBookAccessError* errorCode) {
             CDVPluginResult* result = nil;
@@ -678,13 +569,8 @@
             addressBook = ABAddressBookCreateWithOptions(NULL, &error);
             // NSLog(@"addressBook access: %lu", status);
             ABAddressBookRequestAccessWithCompletion(addressBook, ^(bool granted, CFErrorRef error) {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVContacts.m
-                // callback can occur in background, address book must be accessed on thread it was created on
-                dispatch_sync (dispatch_get_main_queue (), ^{
-=======
                     // callback can occur in background, address book must be accessed on thread it was created on
                     dispatch_sync(dispatch_get_main_queue(), ^{
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVContacts.m
                         if (error) {
                             workerBlock(NULL, [[CDVAddressBookAccessError alloc] initWithCode:UNKNOWN_ERROR]);
                         } else if (!granted) {
@@ -694,11 +580,7 @@
                             workerBlock(addressBook, [[CDVAddressBookAccessError alloc] initWithCode:UNKNOWN_ERROR]);
                         }
                     });
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVContacts.m
-            });
-=======
                 });
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVContacts.m
         } else
 #endif
     {

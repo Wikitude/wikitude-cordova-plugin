@@ -82,31 +82,16 @@
 
 - (void)sendPluginResult:(CDVPluginResult*)result callbackId:(NSString*)callbackId
 {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVCommandDelegateImpl.m
-    // This occurs when there is are no win/fail callbacks for the call.
-    if ([@"INVALID" isEqualToString:callbackId]) {
-=======
     CDV_EXEC_LOG(@"Exec(%@): Sending result. Status=%@", callbackId, result.status);
     // This occurs when there is are no win/fail callbacks for the call.
     if ([@"INVALID" isEqualToString : callbackId]) {
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVCommandDelegateImpl.m
         return;
     }
     int status = [result.status intValue];
     BOOL keepCallback = [result.keepCallback boolValue];
     NSString* argumentsAsJSON = [result argumentsAsJSON];
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVCommandDelegateImpl.m
-    // Use an array to encode the message as JSON.
-    message = [NSArray arrayWithObject:message];
-    NSString* encodedMessage = [message JSONString];
-    // And then strip off the outer []s.
-    encodedMessage = [encodedMessage substringWithRange:NSMakeRange(1, [encodedMessage length] - 2)];
-    NSString* js = [NSString stringWithFormat:@"cordova.require('cordova/exec').nativeCallback('%@',%d,%@,%d)",
-        callbackId, status, encodedMessage, keepCallback];
-=======
     NSString* js = [NSString stringWithFormat:@"cordova.require('cordova/exec').nativeCallback('%@',%d,%@,%d)", callbackId, status, argumentsAsJSON, keepCallback];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVCommandDelegateImpl.m
 
     [self evalJsHelper:js];
 }
@@ -155,11 +140,6 @@
 - (NSDictionary*)settings
 {
     return _viewController.settings;
-}
-
-- (NSString*)userAgent
-{
-    return [_viewController userAgent];
 }
 
 @end
