@@ -131,21 +131,12 @@ id messageFromMultipart(NSArray* theMessages)
 
 + (CDVPluginResult*)resultWithStatus:(CDVCommandStatus)statusOrdinal messageAsArrayBuffer:(NSData*)theMessage
 {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVPluginResult.m
-    NSDictionary* arrDict = [NSDictionary dictionaryWithObjectsAndKeys:
-        @"ArrayBuffer", @"CDVType",
-        [theMessage base64EncodedString], @"data",
-        nil];
-
-    return [[self alloc] initWithStatus:statusOrdinal message:arrDict];
-=======
     return [[self alloc] initWithStatus:statusOrdinal message:messageFromArrayBuffer(theMessage)];
 }
 
 + (CDVPluginResult*)resultWithStatus:(CDVCommandStatus)statusOrdinal messageAsMultipart:(NSArray*)theMessages
 {
     return [[self alloc] initWithStatus:statusOrdinal message:messageFromMultipart(theMessages)];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVPluginResult.m
 }
 
 + (CDVPluginResult*)resultWithStatus:(CDVCommandStatus)statusOrdinal messageToErrorObject:(int)errorCode

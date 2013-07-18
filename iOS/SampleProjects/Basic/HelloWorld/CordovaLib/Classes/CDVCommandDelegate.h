@@ -30,10 +30,6 @@
 
 - (NSString*)pathForResource:(NSString*)resourcepath;
 - (id)getCommandInstance:(NSString*)pluginName;
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVCommandDelegate.h
-- (void)registerPlugin:(CDVPlugin*)plugin withClassName:(NSString*)className CDV_DEPRECATED(2.2, "Use CDVViewController to register plugins, or use config.xml.");
-=======
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVCommandDelegate.h
 
 // Plugins should not be using this interface to call other plugins since it
 // will result in bogus callbacks being made.
@@ -52,10 +48,7 @@
 - (void)runInBackground:(void (^)())block;
 // Returns the User-Agent of the associated UIWebView.
 - (NSString*)userAgent;
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVCommandDelegate.h
-=======
 // Returns whether the given URL passes the white-list.
 - (BOOL)URLIsWhitelisted:(NSURL*)url;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVCommandDelegate.h
 
 @end

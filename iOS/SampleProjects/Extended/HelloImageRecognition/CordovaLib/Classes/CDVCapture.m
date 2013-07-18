@@ -531,10 +531,6 @@
         // delegate to CVDAudioRecorderViewController
         return [self.topViewController supportedInterfaceOrientations];
     }
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVCapture.m
-
-=======
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVCapture.m
 #endif
 
 @end
@@ -698,18 +694,10 @@
     {
         NSUInteger orientation = UIInterfaceOrientationMaskPortrait; // must support portrait
         NSUInteger supported = [captureCommand.viewController supportedInterfaceOrientations];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVCapture.m
 
         orientation = orientation | (supported & UIInterfaceOrientationMaskPortraitUpsideDown);
         return orientation;
     }
-
-=======
-
-        orientation = orientation | (supported & UIInterfaceOrientationMaskPortraitUpsideDown);
-        return orientation;
-    }
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVCapture.m
 #endif
 
 - (void)viewDidUnload

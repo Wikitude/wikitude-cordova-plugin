@@ -126,19 +126,6 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
     // arguments order from js: [filePath, server, fileKey, fileName, mimeType, params, debug, chunkedMode]
     // however, params is a JavaScript object and during marshalling is put into the options dict,
     // thus debug and chunkedMode are the 6th and 7th arguments
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFileTransfer.m
-    NSArray* arguments = command.arguments;
-    NSString* target = (NSString*)[arguments objectAtIndex:0];
-    NSString* server = (NSString*)[arguments objectAtIndex:1];
-    NSString* fileKey = [arguments objectAtIndex:2 withDefault:@"file"];
-    NSString* fileName = [arguments objectAtIndex:3 withDefault:@"no-filename"];
-    NSString* mimeType = [arguments objectAtIndex:4 withDefault:nil];
-    NSDictionary* options = [arguments objectAtIndex:5 withDefault:nil];
-    //    BOOL trustAllHosts = [[arguments objectAtIndex:6 withDefault:[NSNumber numberWithBool:YES]] boolValue]; // allow self-signed certs
-    BOOL chunkedMode = [[arguments objectAtIndex:7 withDefault:[NSNumber numberWithBool:YES]] boolValue];
-    NSDictionary* headers = [arguments objectAtIndex:8 withDefault:nil];
-
-=======
     NSString* target = [command argumentAtIndex:0];
     NSString* server = [command argumentAtIndex:1];
     NSString* fileKey = [command argumentAtIndex:2 withDefault:@"file"];
@@ -152,7 +139,6 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
     // for allowed methods, currently PUT or POST (forces POST for
     // unrecognised values)
     NSString* httpMethod = [command argumentAtIndex:10 withDefault:@"POST"];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFileTransfer.m
     CDVPluginResult* result = nil;
     CDVFileTransferError errorCode = 0;
 
@@ -333,15 +319,6 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
 
 - (void)upload:(CDVInvokedUrlCommand*)command
 {
-    NSString* argPath = [command.arguments objectAtIndex:0];
-
-    // return unsupported result for assets-library URLs
-    if ([argPath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"upload not supported for assets-library URLs."];
-        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-        return;
-    }
-
     // fileData and req are split into helper functions to ease the unit testing of delegateForUpload.
     // First, get the file data.  This method will call `uploadData:command`.
     [self fileDataForUploadCommand:command];
@@ -390,10 +367,7 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
     NSString* filePath = [command.arguments objectAtIndex:1];
     BOOL trustAllHosts = [[command.arguments objectAtIndex:2 withDefault:[NSNumber numberWithBool:YES]] boolValue]; // allow self-signed certs
     NSString* objectId = [command.arguments objectAtIndex:3];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFileTransfer.m
-=======
     NSDictionary* headers = [command.arguments objectAtIndex:4 withDefault:nil];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFileTransfer.m
 
     // return unsupported result for assets-library URLs
     if ([filePath hasPrefix:kCDVAssetsLibraryPrefix]) {
@@ -610,14 +584,11 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
 
         self.responseCode = [httpResponse statusCode];
         self.bytesExpected = [response expectedContentLength];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFileTransfer.m
-=======
         if ((self.direction == CDV_TRANSFER_DOWNLOAD) && (self.responseCode == 200) && (self.bytesExpected == NSURLResponseUnknownLength)) {
             // Kick off HEAD request to server to get real length
             // bytesExpected will be updated when that response is returned
             self.entityLengthRequest = [[CDVFileTransferEntityLengthRequest alloc] initWithOriginalRequest:connection.currentRequest andDelegate:self];
         }
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFileTransfer.m
     } else if ([response.URL isFileURL]) {
         NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:[response.URL path] error:nil];
         self.responseCode = 200;
@@ -625,8 +596,6 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
     } else {
         self.responseCode = 200;
         self.bytesExpected = NSURLResponseUnknownLength;
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFileTransfer.m
-=======
     }
     if ((self.direction == CDV_TRANSFER_DOWNLOAD) && (self.responseCode >= 200) && (self.responseCode < 300)) {
         // Download response is okay; begin streaming output to file
@@ -652,7 +621,6 @@ static CFIndex WriteDataToStream(NSData* data, CFWriteStreamRef stream)
             [self cancelTransferWithError:connection errorMessage:@"Could not open target file for writing"];
         }
         DLog(@"Streaming to file %@", target);
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFileTransfer.m
     }
 }
 

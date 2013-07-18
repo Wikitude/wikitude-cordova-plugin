@@ -22,8 +22,6 @@
 #import "CDVCommandQueue.h"
 #import "CDVViewController.h"
 #import "CDVCommandDelegateImpl.h"
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVCommandQueue.m
-=======
 
 @interface CDVCommandQueue () {
     NSInteger _lastCommandQueueFlushRequestId;
@@ -32,7 +30,6 @@
     BOOL _currentlyExecuting;
 }
 @end
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVCommandQueue.m
 
 @implementation CDVCommandQueue
 

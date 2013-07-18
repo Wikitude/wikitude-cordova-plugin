@@ -22,27 +22,17 @@
 #import "CDVCommandDelegateImpl.h"
 #import "CDVConfigParser.h"
 #import "CDVUserAgentUtil.h"
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-=======
 #import "CDVWebViewDelegate.h"
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 
 #define degreesToRadian(x) (M_PI * (x) / 180.0)
 
 @interface CDVViewController () {
     NSInteger _userAgentLockToken;
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-}
-
-@property (nonatomic, readwrite, strong) NSXMLParser* configParser;
-@property (nonatomic, readwrite, strong) NSDictionary* settings;
-=======
     CDVWebViewDelegate* _webViewDelegate;
 }
 
 @property (nonatomic, readwrite, strong) NSXMLParser* configParser;
 @property (nonatomic, readwrite, strong) NSMutableDictionary* settings;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 @property (nonatomic, readwrite, strong) CDVWhitelist* whitelist;
 @property (nonatomic, readwrite, strong) NSMutableDictionary* pluginObjects;
 @property (nonatomic, readwrite, strong) NSArray* startupPluginNames;
@@ -59,15 +49,9 @@
 @implementation CDVViewController
 
 @synthesize webView, supportedOrientations;
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-@synthesize pluginObjects, pluginsMap, whitelist;
-@synthesize configParser, settings, loadFromString;
-@synthesize imageView, activityView, useSplashScreen;
-=======
 @synthesize pluginObjects, pluginsMap, whitelist, startupPluginNames;
 @synthesize configParser, settings, loadFromString;
 @synthesize useSplashScreen;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 @synthesize wwwFolderName, startPage, initialized, openURL;
 @synthesize commandDelegate = _commandDelegate;
 @synthesize commandQueue = _commandQueue;
@@ -100,10 +84,7 @@
 
         // load config.xml settings
         [self loadSettings];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-=======
         useSplashScreen = YES;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
     }
 }
 
@@ -201,17 +182,10 @@
 - (void)loadSettings
 {
     CDVConfigParser* delegate = [[CDVConfigParser alloc] init];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
 
     // read from config.xml in the app bundle
     NSString* path = [[NSBundle mainBundle] pathForResource:@"config" ofType:@"xml"];
 
-=======
-
-    // read from config.xml in the app bundle
-    NSString* path = [[NSBundle mainBundle] pathForResource:@"config" ofType:@"xml"];
-
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
     if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
         NSAssert(NO, @"ERROR: config.xml does not exist. Please run cordova-ios/bin/cordova_plist_to_config_xml path/to/project.");
         return;
@@ -226,20 +200,6 @@
     }
     [configParser setDelegate:((id < NSXMLParserDelegate >)delegate)];
     [configParser parse];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-
-    // Get the plugin dictionary, whitelist and settings from the delegate.
-    self.pluginsMap = [delegate.pluginsDict dictionaryWithLowercaseKeys];
-    self.whitelist = [[CDVWhitelist alloc] initWithArray:delegate.whitelistHosts];
-    self.settings = delegate.settings;
-
-    // And the start folder/page.
-    self.wwwFolderName = @"www";
-    self.startPage = [delegate getStartPage];
-
-    // Initialize the plugin objects dict.
-    self.pluginObjects = [[NSMutableDictionary alloc] initWithCapacity:4];
-=======
 
     // Get the plugin dictionary, whitelist and settings from the delegate.
     self.pluginsMap = delegate.pluginsDict;
@@ -256,7 +216,6 @@
 
     // Initialize the plugin objects dict.
     self.pluginObjects = [[NSMutableDictionary alloc] initWithCapacity:20];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -322,9 +281,6 @@
      */
 
     if ([enableLocation boolValue]) {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-        [[self.commandDelegate getCommandInstance:@"Geolocation"] getLocation:[CDVInvokedUrlCommand new]];
-=======
         NSLog(@"Deprecated: The 'EnableLocation' boolean property is deprecated in 2.5.0, and will be removed in 3.0.0. Use the 'onload' boolean attribute (of the CDVLocation plugin.");
         [[self.commandDelegate getCommandInstance:@"Geolocation"] getLocation:[CDVInvokedUrlCommand new]];
     }
@@ -338,21 +294,14 @@
             // we can't hide it here because the accessory bar hasn't been created yet, so we delay on the queue
             [weakSelf performSelector:@selector(hideKeyboardFormAccessoryBar) withObject:nil afterDelay:0];
         }];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
     }
 
     /*
      * Fire up CDVLocalStorage to work-around WebKit storage limitations: on all iOS 5.1+ versions for local-only backups, but only needed on iOS 5.1 for cloud backup.
      */
     if (IsAtLeastiOSVersion(@"5.1") && (([backupWebStorageType isEqualToString:@"local"]) ||
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-            ([backupWebStorageType isEqualToString:@"cloud"] && !IsAtLeastiOSVersion(@"6.0")))) {
-        [self registerPlugin:[[CDVLocalStorage alloc] initWithWebView:self.webView settings:[NSDictionary dictionaryWithObjectsAndKeys:
-                    @"backupType", backupWebStorageType, nil]] withClassName:NSStringFromClass([CDVLocalStorage class])];
-=======
         ([backupWebStorageType isEqualToString:@"cloud"] && !IsAtLeastiOSVersion(@"6.0")))) {
         [self registerPlugin:[[CDVLocalStorage alloc] initWithWebView:self.webView] withClassName:NSStringFromClass([CDVLocalStorage class])];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
     }
 
     /*
@@ -377,11 +326,7 @@
     }
 
     // prevent webView from bouncing
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-    // based on UIWebViewBounce key in config.xml
-=======
     // based on the DisallowOverscroll/UIWebViewBounce key in config.xml
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
     if (!bounceAllowed) {
         if ([self.webView respondsToSelector:@selector(scrollView)]) {
             ((UIScrollView*)[self.webView scrollView]).bounces = NO;
@@ -423,20 +368,6 @@
         }
     }
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-    // /////////////////
-    [CDVUserAgentUtil acquireLock:^(NSInteger lockToken) {
-            _userAgentLockToken = lockToken;
-            [CDVUserAgentUtil setUserAgent:self.userAgent lockToken:lockToken];
-            if (!loadErr) {
-                NSURLRequest* appReq = [NSURLRequest requestWithURL:appURL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:20.0];
-                [self.webView loadRequest:appReq];
-            } else {
-                NSString* html = [NSString stringWithFormat:@"<html><body> %@ </body></html>", loadErr];
-                [self.webView loadHTMLString:html baseURL:nil];
-            }
-        }];
-=======
     if ([self.startupPluginNames count] > 0) {
         [CDVTimer start:@"TotalPluginStartup"];
 
@@ -494,7 +425,6 @@
             }
         }
     }
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 }
 
 - (NSArray*)parseInterfaceOrientations:(NSArray*)orientations
@@ -620,12 +550,8 @@
         [self.view addSubview:self.webView];
         [self.view sendSubviewToBack:self.webView];
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-        self.webView.delegate = self;
-=======
         _webViewDelegate = [[CDVWebViewDelegate alloc] initWithDelegate:self];
         self.webView.delegate = _webViewDelegate;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 
         // register this viewcontroller with the NSURLProtocol, only after the User-Agent is set
         [CDVURLProtocol registerViewController:self];
@@ -685,16 +611,9 @@
  */
 - (void)webViewDidFinishLoad:(UIWebView*)theWebView
 {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-    if (_userAgentLockToken != 0) {
-        [CDVUserAgentUtil releaseLock:_userAgentLockToken];
-        _userAgentLockToken = 0;
-    }
-=======
     NSLog(@"Finished load of: %@", theWebView.request.URL);
     // It's safe to release the lock even if this is just a sub-frame that's finished loading.
     [CDVUserAgentUtil releaseLock:&_userAgentLockToken];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 
     /*
      * Hide the Top Activity THROBBER in the Battery Bar
@@ -703,31 +622,12 @@
 
     [self processOpenUrl];
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-    // The .onNativeReady().fire() will work when cordova.js is already loaded.
-    // The _nativeReady = true; is used when this is run before cordova.js is loaded.
-    NSString* nativeReady = @"try{cordova.require('cordova/channel').onNativeReady.fire();}catch(e){window._nativeReady = true;}";
-    // Don't use [commandDelegate evalJs] here since it relies on cordova.js being loaded already.
-    [self.webView stringByEvaluatingJavaScriptFromString:nativeReady];
-
-    [self processOpenUrl];
-=======
     [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVPageDidLoadNotification object:self.webView]];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 }
 
 - (void)webView:(UIWebView*)theWebView didFailLoadWithError:(NSError*)error
 {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-    if (_userAgentLockToken != 0) {
-        [CDVUserAgentUtil releaseLock:_userAgentLockToken];
-        _userAgentLockToken = 0;
-    }
-
-    NSLog(@"Failed to load webpage with error: %@", [error localizedDescription]);
-=======
     [CDVUserAgentUtil releaseLock:&_userAgentLockToken];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 
     NSLog(@"Failed to load webpage with error: %@", [error localizedDescription]);
 }
@@ -785,11 +685,6 @@
      * Handle all other types of urls (tel:, sms:), and requests to load a url in the main webview.
      */
     else {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-        // BOOL isIFrame = ([theWebView.request.mainDocumentURL absoluteString] == nil);
-
-=======
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
         if ([self.whitelist schemeIsAllowed:[url scheme]]) {
             return [self.whitelist URLIsAllowed:url];
         } else {
@@ -840,100 +735,7 @@
     return basePath;
 }
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-- (void)showSplashScreen
-{
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    NSString* launchImageFile = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UILaunchImageFile"];
-
-    if (launchImageFile == nil) { // fallback if no launch image was specified
-        if (CDV_IsIPhone5()) {
-            // iPhone 5 or iPod Touch 6th-gen
-            launchImageFile = @"Default-568h";
-        } else {
-            launchImageFile = @"Default";
-        }
-    }
-
-    NSString* orientedLaunchImageFile = nil;
-    CGAffineTransform startupImageTransform = CGAffineTransformIdentity;
-    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
-    CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
-    UIInterfaceOrientation statusBarOrientation = [UIApplication sharedApplication].statusBarOrientation;
-    UIImage* launchImage = nil;
-
-    // default to center of screen as in the original implementation. This will produce the 20px jump
-    CGPoint center = CGPointMake((screenBounds.size.width / 2), (screenBounds.size.height / 2));
-
-    if (CDV_IsIPad()) {
-        if (!UIDeviceOrientationIsValidInterfaceOrientation(deviceOrientation)) {
-            deviceOrientation = (UIDeviceOrientation)statusBarOrientation;
-        }
-
-        switch (deviceOrientation) {
-            case UIDeviceOrientationLandscapeLeft: // this is where the home button is on the right (yeah, I know, confusing)
-                {
-                    orientedLaunchImageFile = [NSString stringWithFormat:@"%@-Landscape", launchImageFile];
-                    startupImageTransform = CGAffineTransformMakeRotation(degreesToRadian(90));
-                    center.x -= MIN(statusBarFrame.size.width, statusBarFrame.size.height) / 2;
-                }
-                break;
-
-            case UIDeviceOrientationLandscapeRight: // this is where the home button is on the left (yeah, I know, confusing)
-                {
-                    orientedLaunchImageFile = [NSString stringWithFormat:@"%@-Landscape", launchImageFile];
-                    startupImageTransform = CGAffineTransformMakeRotation(degreesToRadian(-90));
-                    center.x += MIN(statusBarFrame.size.width, statusBarFrame.size.height) / 2;
-                }
-                break;
-
-            case UIDeviceOrientationPortraitUpsideDown:
-                {
-                    orientedLaunchImageFile = [NSString stringWithFormat:@"%@-Portrait", launchImageFile];
-                    startupImageTransform = CGAffineTransformMakeRotation(degreesToRadian(180));
-                    center.y -= MIN(statusBarFrame.size.width, statusBarFrame.size.height) / 2;
-                }
-                break;
-
-            case UIDeviceOrientationPortrait:
-            default:
-                {
-                    orientedLaunchImageFile = [NSString stringWithFormat:@"%@-Portrait", launchImageFile];
-                    startupImageTransform = CGAffineTransformIdentity;
-                    center.y += MIN(statusBarFrame.size.width, statusBarFrame.size.height) / 2;
-                }
-                break;
-        }
-    } else { // not iPad
-        orientedLaunchImageFile = launchImageFile;
-    }
-
-    launchImage = [UIImage imageNamed:[[self class] resolveImageResource:orientedLaunchImageFile]];
-    if (launchImage == nil) {
-        NSLog(@"WARNING: Splash-screen image '%@' was not found. Orientation: %d, iPad: %d", orientedLaunchImageFile, deviceOrientation, CDV_IsIPad());
-    }
-
-    self.imageView = [[UIImageView alloc] initWithImage:launchImage];
-    self.imageView.tag = 1;
-    self.imageView.center = center;
-
-    self.imageView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin);
-    [self.imageView setTransform:startupImageTransform];
-    [self.view.superview addSubview:self.imageView];
-
-    /*
-     * The Activity View is the top spinning throbber in the status/battery bar. We init it with the default Grey Style.
-     *
-     *     whiteLarge = UIActivityIndicatorViewStyleWhiteLarge
-     *     white      = UIActivityIndicatorViewStyleWhite
-     *     gray       = UIActivityIndicatorViewStyleGray
-     *
-     */
-    NSString* topActivityIndicator = [self.settings objectForKey:@"TopActivityIndicator"];
-    UIActivityIndicatorViewStyle topActivityIndicatorStyle = UIActivityIndicatorViewStyleGray;
-=======
 #pragma mark CordovaCommands
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 
 - (void)registerPlugin:(CDVPlugin*)plugin withClassName:(NSString*)className
 {
@@ -1119,17 +921,7 @@
 - (void)dealloc
 {
     [CDVURLProtocol unregisterViewController:self];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVViewController.m
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSCurrentLocaleDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:CDVPluginHandleOpenURLNotification object:nil];
-=======
     [[NSNotificationCenter defaultCenter] removeObserver:self];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVViewController.m
 
     self.webView.delegate = nil;
     self.webView = nil;

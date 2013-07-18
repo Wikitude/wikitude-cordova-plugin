@@ -60,19 +60,6 @@ NSString* const CDVLocalNotification = @"CDVLocalNotification";
 
     // NOTE: if you want to use these, make sure you uncomment the corresponding notification handler
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVPlugin.m
-         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPause) name:UIApplicationDidEnterBackgroundNotification object:nil];
-         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onResume) name:UIApplicationWillEnterForegroundNotification object:nil];
-         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onOrientationWillChange) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
-         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onOrientationDidChange) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-         
-         // Added in 2.3.0+
-         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveLocalNotification:) name:CDVLocalNotification object:nil]; 
-         
-         */
-    }
-    return self;
-=======
     // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onPause) name:UIApplicationDidEnterBackgroundNotification object:nil];
     // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onResume) name:UIApplicationWillEnterForegroundNotification object:nil];
     // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onOrientationWillChange) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
@@ -83,7 +70,6 @@ NSString* const CDVLocalNotification = @"CDVLocalNotification";
 
     // Added in 2.5.0
     // [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pageDidLoad:) name:CDVPageDidLoadNotification object:self.webView];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVPlugin.m
 }
 
 - (void)dispose
@@ -158,16 +144,9 @@ NSString* const CDVLocalNotification = @"CDVLocalNotification";
 }
 
 // default implementation does nothing, ideally, we are not registered for notification if we aren't going to do anything.
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVPlugin.m
-//- (void)didReceiveLocalNotification:(NSNotification *)notification
-//{    
-//    // UILocalNotification* localNotification = [notification object]; // get the payload as a LocalNotification
-//}
-=======
 // - (void)didReceiveLocalNotification:(NSNotification *)notification
 // {
 //    // UILocalNotification* localNotification = [notification object]; // get the payload as a LocalNotification
 // }
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVPlugin.m
 
 @end

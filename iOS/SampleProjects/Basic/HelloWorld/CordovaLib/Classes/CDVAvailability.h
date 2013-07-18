@@ -38,13 +38,10 @@
 #define __CORDOVA_2_2_0 20200
 #define __CORDOVA_2_3_0 20300
 #define __CORDOVA_2_4_0 20400
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVAvailability.h
-=======
 #define __CORDOVA_2_5_0 20500
 #define __CORDOVA_2_6_0 20600
 #define __CORDOVA_2_7_0 20700
 #define __CORDOVA_2_8_0 20800
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVAvailability.h
 #define __CORDOVA_NA 99999      /* not available */
 
 /*
@@ -55,11 +52,7 @@
  #endif
  */
 #ifndef CORDOVA_VERSION_MIN_REQUIRED
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVAvailability.h
-    #define CORDOVA_VERSION_MIN_REQUIRED __CORDOVA_2_4_0
-=======
     #define CORDOVA_VERSION_MIN_REQUIRED __CORDOVA_2_8_0
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVAvailability.h
 #endif
 
 /*
