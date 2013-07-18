@@ -388,11 +388,7 @@
             // bug in AVAudioPlayer when playing downloaded data in NSData - we have to download the file and play from disk
             CFUUIDRef uuidRef = CFUUIDCreate(kCFAllocatorDefault);
             CFStringRef uuidString = CFUUIDCreateString(kCFAllocatorDefault, uuidRef);
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVSound.m
-            NSString* filePath = [NSString stringWithFormat:@"%@/%@", [NSTemporaryDirectory ()stringByStandardizingPath], uuidString];
-=======
             NSString* filePath = [NSString stringWithFormat:@"%@/%@", [NSTemporaryDirectory()stringByStandardizingPath], uuidString];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVSound.m
             CFRelease(uuidString);
             CFRelease(uuidRef);
 
@@ -465,10 +461,7 @@
     double position = [[command.arguments objectAtIndex:1] doubleValue];
 
     if ((audioFile != nil) && (audioFile.player != nil)) {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVSound.m
-=======
         NSString* jsString;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVSound.m
         double posInSeconds = position / 1000;
         if (posInSeconds >= audioFile.player.duration) {
             // The seek is past the end of file.  Stop media and reset to beginning instead of seeking past the end.

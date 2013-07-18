@@ -22,17 +22,7 @@
 @class CDVInvokedUrlCommand;
 @class CDVViewController;
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVCommandQueue.h
-@interface CDVCommandQueue : NSObject {
-    @private
-    NSInteger _lastCommandQueueFlushRequestId;
-    __weak CDVViewController* _viewController;
-    NSMutableArray* _queue;
-    BOOL _currentlyExecuting;
-}
-=======
 @interface CDVCommandQueue : NSObject
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVCommandQueue.h
 
 @property (nonatomic, readonly) BOOL currentlyExecuting;
 

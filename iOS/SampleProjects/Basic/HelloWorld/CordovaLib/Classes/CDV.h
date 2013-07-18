@@ -46,10 +46,7 @@
 #import "CDVLocalStorage.h"
 #import "CDVInAppBrowser.h"
 #import "CDVScreenOrientationDelegate.h"
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDV.h
-=======
 #import "CDVTimer.h"
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDV.h
 
 #import "NSArray+Comparisons.h"
 #import "NSData+Base64.h"

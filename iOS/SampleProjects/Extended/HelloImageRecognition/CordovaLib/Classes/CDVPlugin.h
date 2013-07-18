@@ -23,24 +23,14 @@
 #import "NSMutableArray+QueueAdditions.h"
 #import "CDVCommandDelegate.h"
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVPlugin.h
-#define CDVPluginHandleOpenURLNotification @"CDVPluginHandleOpenURLNotification"
-#define CDVPluginResetNotification @"CDVPluginResetNotification"
-#define CDVLocalNotification @"CDVLocalNotification"
-=======
 extern NSString* const CDVPageDidLoadNotification;
 extern NSString* const CDVPluginHandleOpenURLNotification;
 extern NSString* const CDVPluginResetNotification;
 extern NSString* const CDVLocalNotification;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVPlugin.h
 
 @interface CDVPlugin : NSObject {}
 
 @property (nonatomic, weak) UIWebView* webView;
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVPlugin.h
-@property (nonatomic, strong) NSDictionary* settings;
-=======
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVPlugin.h
 @property (nonatomic, weak) UIViewController* viewController;
 @property (nonatomic, weak) id <CDVCommandDelegate> commandDelegate;
 

@@ -442,15 +442,9 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
     // arguments are URL encoded
     NSString* fullPath = [command.arguments objectAtIndex:0];
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-    // return unsupported result for assets-library URLs
-    if ([fullPath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"remove not supported for assets-library URLs."];
-=======
     // we don't (yet?) support getting the parent of an asset
     if ([fullPath hasPrefix:kCDVAssetsLibraryPrefix]) {
         CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:NOT_READABLE_ERR];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
         [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
         return;
     }
@@ -491,13 +485,6 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
 {
     // arguments
     NSString* argPath = [command.arguments objectAtIndex:0];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-
-    // return unsupported result for assets-library URLs
-    if ([argPath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"getMetadata not supported for assets-library URLs."];
-        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-=======
     __block CDVPluginResult* result = nil;
 
     if ([argPath hasPrefix:kCDVAssetsLibraryPrefix]) {
@@ -525,7 +512,6 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
 
         ALAssetsLibrary* assetsLibrary = [[ALAssetsLibrary alloc] init];
         [assetsLibrary assetForURL:[NSURL URLWithString:argPath] resultBlock:resultBlock failureBlock:failureBlock];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
         return;
     }
 
@@ -567,17 +553,6 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
     // arguments
     NSString* filePath = [command.arguments objectAtIndex:0];
     NSDictionary* options = [command.arguments objectAtIndex:1 withDefault:nil];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-
-    // return unsupported result for assets-library URLs
-    if ([filePath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"setMetadata not supported for assets-library URLs."];
-        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-        return;
-    }
-
-=======
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
     CDVPluginResult* result = nil;
     BOOL ok = NO;
 
@@ -626,17 +601,6 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
 {
     // arguments
     NSString* fullPath = [command.arguments objectAtIndex:0];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-
-    // return unsupported result for assets-library URLs
-    if ([fullPath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"remove not supported for assets-library URLs."];
-        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-        return;
-    }
-
-=======
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
     CDVPluginResult* result = nil;
     CDVFileError errorCode = 0;  // !! 0 not currently defined
 
@@ -793,18 +757,7 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
     // optional argument
     NSString* newName = ([arguments count] > 2) ? [arguments objectAtIndex:2] : [srcFullPath lastPathComponent];          // use last component from appPath if new name not provided
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-    // return unsupported result for assets-library URLs
-    if ([srcFullPath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"moveTo/copyTo not supported for assets-library URLs."];
-        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-        return;
-    }
-
-    CDVPluginResult* result = nil;
-=======
     __block CDVPluginResult* result = nil;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
     CDVFileError errCode = 0;  // !! Currently 0 is not defined, use this to signal error !!
 
     /*NSString* destRootPath = nil;
@@ -996,18 +949,7 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
     // arguments
     NSString* argPath = [command.arguments objectAtIndex:0];
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-    // return unsupported result for assets-library URLs
-    if ([argPath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"getFileMetadata not supported for assets-library URLs."];
-        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-        return;
-    }
-
-    CDVPluginResult* result = nil;
-=======
     __block CDVPluginResult* result = nil;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
 
     NSString* fullPath = argPath; // [self getFullPath: argPath];
 
@@ -1177,58 +1119,13 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
  * IN:
  * NSArray* arguments
  *	0 - NSString* fullPath
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
- *	1 - NSString* encoding - NOT USED,  iOS reads and writes using UTF8!
- *	2 - NSString* start - OPTIONAL, only provided when not == 0.
- *	3 - NSString* end - OPTIONAL, only provided when not == length.
-=======
  *	1 - NSString* encoding
  *	2 - NSString* start
  *	3 - NSString* end
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
  */
 - (void)readAsText:(CDVInvokedUrlCommand*)command
 {
     // arguments
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-    NSString* argPath = [command.arguments objectAtIndex:0];
-    NSInteger start = 0;
-    NSInteger end = -1;
-
-    if ([command.arguments count] >= 3) {
-        start = [[command.arguments objectAtIndex:2] integerValue];
-    }
-    if ([command.arguments count] >= 4) {
-        end = [[command.arguments objectAtIndex:3] integerValue];
-    }
-
-    // return unsupported result for assets-library URLs
-    if ([argPath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"readAsText not supported for assets-library URLs."];
-        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-        return;
-    }
-
-    // NSString* encoding = [command.arguments objectAtIndex:2];   // not currently used
-    CDVPluginResult* result = nil;
-
-    NSFileHandle* file = [NSFileHandle fileHandleForReadingAtPath:argPath];
-
-    if (!file) {
-        // invalid path entry
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:NOT_FOUND_ERR];
-    } else {
-        if (start > 0) {
-            [file seekToFileOffset:start];
-        }
-
-        NSData* readData;
-        if (end < 0) {
-            readData = [file readDataToEndOfFile];
-        } else {
-            readData = [file readDataOfLength:(end - start)];
-        }
-=======
     NSString* path = [command argumentAtIndex:0];
     NSString* encoding = [command argumentAtIndex:1];
     NSInteger start = [[command argumentAtIndex:2] integerValue];
@@ -1241,7 +1138,6 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
         [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
         return;
     }
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
 
     [self readFileWithPath:path start:start end:end callback:^(NSData* data, NSString* mimeType, CDVFileError errorCode) {
         CDVPluginResult* result = nil;
@@ -1259,14 +1155,8 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:errorCode];
         }
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:pNStrBuff];
-    }
-    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-=======
         [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
     }];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
 }
 
 /* Read content of text file and return as base64 encoded data url.
@@ -1281,26 +1171,6 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
 
 - (void)readAsDataURL:(CDVInvokedUrlCommand*)command
 {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-    // arguments
-    NSString* argPath = [command.arguments objectAtIndex:0];
-    NSInteger start = 0;
-    NSInteger end = -1;
-
-    if ([command.arguments count] >= 2) {
-        start = [[command.arguments objectAtIndex:1] integerValue];
-    }
-    if ([command.arguments count] >= 3) {
-        end = [[command.arguments objectAtIndex:2] integerValue];
-    }
-
-    // return unsupported result for assets-library URLs
-    if ([argPath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"readAsDataURL not supported for assets-library URLs."];
-        [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
-        return;
-    }
-=======
     NSString* path = [command argumentAtIndex:0];
     NSInteger start = [[command argumentAtIndex:1] integerValue];
     NSInteger end = [[command argumentAtIndex:2] integerValue];
@@ -1314,7 +1184,6 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
         } else {
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:errorCode];
         }
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
 
         [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
     }];
@@ -1339,29 +1208,7 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
         if (data != nil) {
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArrayBuffer:data];
         } else {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-            NSFileHandle* file = [NSFileHandle fileHandleForReadingAtPath:argPath];
-            if (start > 0) {
-                [file seekToFileOffset:start];
-            }
-
-            NSData* readData;
-            if (end < 0) {
-                readData = [file readDataToEndOfFile];
-            } else {
-                readData = [file readDataOfLength:(end - start)];
-            }
-
-            [file closeFile];
-            if (readData) {
-                NSString* output = [NSString stringWithFormat:@"data:%@;base64,%@", mimeType, [readData base64EncodedString]];
-                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:output];
-            } else {
-                errCode = NOT_FOUND_ERR;
-            }
-=======
             result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:errorCode];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
         }
 
         [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
@@ -1422,15 +1269,9 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
     NSString* argPath = [command.arguments objectAtIndex:0];
     unsigned long long pos = (unsigned long long)[[command.arguments objectAtIndex:1] longLongValue];
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-    // return unsupported result for assets-library URLs
-    if ([argPath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"truncate not supported for assets-library URLs."];
-=======
     // assets-library files can't be truncated
     if ([argPath hasPrefix:kCDVAssetsLibraryPrefix]) {
         CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:NO_MODIFICATION_ALLOWED_ERR];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
         [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
         return;
     }
@@ -1475,15 +1316,9 @@ NSString* const kCDVAssetsLibraryPrefix = @"assets-library://";
     NSString* argData = [arguments objectAtIndex:1];
     unsigned long long pos = (unsigned long long)[[arguments objectAtIndex:2] longLongValue];
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVFile.m
-    // return unsupported result for assets-library URLs
-    if ([argPath hasPrefix:kCDVAssetsLibraryPrefix]) {
-        CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_MALFORMED_URL_EXCEPTION messageAsString:@"write not supported for assets-library URLs."];
-=======
     // text can't be written into assets-library files
     if ([argPath hasPrefix:kCDVAssetsLibraryPrefix]) {
         CDVPluginResult* result = [CDVPluginResult resultWithStatus:CDVCommandStatus_IO_EXCEPTION messageAsInt:NO_MODIFICATION_ALLOWED_ERR];
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVFile.m
         [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
         return;
     }

@@ -58,10 +58,7 @@
     NSDictionary* temp = [CDVViewController getBundlePlist:@"Settings"];
 
     if ([temp respondsToSelector:@selector(JSONString)]) {
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVDevice.m
-=======
         NSLog(@"Deprecation warning: window.Setting will be removed Aug 2013. Refer to https://issues.apache.org/jira/browse/CB-2433");
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVDevice.m
         NSString* js = [NSString stringWithFormat:@"window.Settings = %@;", [temp JSONString]];
         [self.commandDelegate evalJs:js];
     }
@@ -78,10 +75,6 @@
     [devProps setObject:@"iOS" forKey:@"platform"];
     [devProps setObject:[device systemVersion] forKey:@"version"];
     [devProps setObject:[device uniqueAppInstanceIdentifier] forKey:@"uuid"];
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVDevice.m
-    [devProps setObject:[device model] forKey:@"name"];
-=======
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Extended/HelloImageRecognition/CordovaLib/Classes/CDVDevice.m
     [devProps setObject:[[self class] cordovaVersion] forKey:@"cordova"];
 
     NSDictionary* devReturn = [NSDictionary dictionaryWithDictionary:devProps];

@@ -20,10 +20,7 @@
 #import "CDVWhitelist.h"
 
 NSString* const kCDVDefaultWhitelistRejectionString = @"ERROR whitelist rejection: url='%@'";
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVWhitelist.m
-=======
 NSString* const kCDVDefaultSchemeName = @"cdv-default-scheme";
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVWhitelist.m
 
 @interface CDVWhitelist ()
 
@@ -36,23 +33,14 @@ NSString* const kCDVDefaultSchemeName = @"cdv-default-scheme";
 
 @implementation CDVWhitelist
 
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVWhitelist.m
-@synthesize whitelist, expandedWhitelist, allowAll, whitelistRejectionFormatString;
-=======
 @synthesize whitelist, expandedWhitelists, whitelistRejectionFormatString;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVWhitelist.m
 
 - (id)initWithArray:(NSArray*)array
 {
     self = [super init];
     if (self) {
         self.whitelist = array;
-<<<<<<< HEAD:iOS/SampleProjects/Basic/HelloWorld/HelloWorld/CordovaLib/Classes/CDVWhitelist.m
-        self.expandedWhitelist = nil;
-        self.allowAll = NO;
-=======
         self.expandedWhitelists = nil;
->>>>>>> Updates iOS PhoneGap package to Wikitude SDK 3.0 and PhoneGap 2.8;:iOS/SampleProjects/Basic/HelloWorld/CordovaLib/Classes/CDVWhitelist.m
         self.whitelistRejectionFormatString = kCDVDefaultWhitelistRejectionString;
         [self processWhitelist];
     }
