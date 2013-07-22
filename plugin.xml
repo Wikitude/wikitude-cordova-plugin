@@ -19,7 +19,7 @@
     
     <!-- android -->
     <platform name="android">
-        <asset src="Android/WikitudePlugin.js" target="WikitudePlugin.js" />
+        <asset src="Android/WikitudePlugin.js" target="platforms/android/assets/www/WikitudePlugin.js" />
         
 
         <config-file target="res/xml/config.xml" parent="plugins">
