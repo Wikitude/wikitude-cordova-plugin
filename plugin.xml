@@ -26,8 +26,8 @@
             <plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>
         </config-file>
 
-        <source-file src="platforms/android/assets/www/WikitudePlugin.java"
-                target-dir="src/com/wikitude/phonegap" />
+        <source-file src="Android/WikitudePlugin.java"
+                target-dir="platforms/android/src/com/wikitude/phonegap" />
 
         <config-file target="platforms/android/AndroidManifest.xml" parent="/manifest/application">
             <uses-permission android:name="android.permission.INTERNET" />
