@@ -19,14 +19,19 @@
     
     <!-- android -->
     <platform name="android">
-        <asset src="Android/foo.js" target="WikitudePlugin.js" />
+        <asset src="Android/WikitudePlugin.js" target="WikitudePlugin.js" />
 
         <config-file target="res/xml/config.xml" parent="/widget/plugins">
             <plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>
         </config-file>
 
         <source-file src="Android/WikitudePlugin.java"
-                target-dir="platforms/android/src/com/wikitude/phonegap" />
+                target-dir="src/com/wikitude/phonegap" />
+
+
+        <js-module src="WikitudePlugin.js" name="WikitudePlugin">
+            <clobbers target="src.com.wikitude.phonegap" />
+        </js-module>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <uses-permission android:name="android.permission.INTERNET" />
