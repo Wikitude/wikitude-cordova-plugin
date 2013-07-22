@@ -19,10 +19,9 @@
     
     <!-- android -->
     <platform name="android">
-        <asset src="Android/WikitudePlugin.js" target="platforms/android/assets/www/WikitudePlugin.js" />
-        
+        <asset src="Android/foo.js" target="WikitudePlugin.js" />
 
-        <config-file target="res/xml/config.xml" parent="plugins">
+        <config-file target="res/xml/config.xml" parent="/widget/plugins">
             <plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>
         </config-file>
 
