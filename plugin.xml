@@ -29,7 +29,7 @@
         <source-file src="Android/WikitudePlugin.java"
                 target-dir="src/com/wikitude/phonegap" />
 
-        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+        <config-file target="platforms/android/AndroidManifest.xml" parent="/manifest/application">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
