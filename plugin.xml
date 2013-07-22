@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="com.wikitude.phonegap.WikitudePlugin"
+    version="1.3.0">
+
+    <name>Augmented Reality - Wikitude SDK Plugin</name>
+    
+	<description>
+		The Wikitude PhoneGap Plugin enables developers to embed an augmented reality view into their PhoneGap project. You can create a fully featured app with advanced augmented reality features, including image recognition, purely using HTML, CSS and JavaScript.
+	</description>
+
+	<license>Apache 2.0</license>
+    
+    
+	<engines>
+      <engine name="cordova" version=">=2.8.1" />
+    </engines>	
+    
+    <!-- android -->
+    <platform name="android">
+        <asset src="Android/WikitudePlugin.js" target="WikitudePlugin.js" />
+        
+
+        <config-file target="res/xml/config.xml" parent="plugins">
+            <plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>
+        </config-file>
+
+        <source-file src="Android/WikitudePlugin.java"
+                target-dir="src/com/wikitude/phonegap" />
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_GPS" />
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <!-- Tell the system this app requires OpenGL ES 2.0. -->
+            <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+            <!-- rear facing cam -->
+            <uses-feature android:name="android.hardware.camera" android:required="true" />
+            <!-- users location -->
+            <uses-feature android:name="android.hardware.location" android:required="true" />
+            <!-- accelerometer -->
+            <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+            <!-- compass -->
+            <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
+        </config-file>
+
+        <info>
+            Ensure wikitudesdk.jar is available in libs directory of Android Project, check: http://goo.gl/eexP2 for download and registration.
+        </info>
+
+        <!--
+        <source-file src="YOUR-DOWNLOADED-FILES/wikitudesdk.jar"
+                target-dir="libs" />
+        <preference name="SDK_KEY"/>
+        -->
+
+    </platform>
+    
+    <!-- ios
+    <platform name="ios">
+	   <asset src="iOS/WikitudePlugin.js" target="WikitudePlugin.js" />
+        <plugins-plist key="GAPlugin" string="GAPlugin" />
+		<config-file target="config.xml" parent="plugins">
+			<plugin name="GAPlugin" value="GAPlugin"/>
+		</config-file>  
+                    
+        <source-file src="src/ios/GAPlugin.m" />
+		<source-file src="src/ios/GoogleAnalytics.a" framework="true" />
+
+        <header-file src="src/ios/GAITransactionItem.h" />
+        <header-file src="src/ios/GAITransaction.h" />
+        <header-file src="src/ios/GAITracker.h" />
+        <header-file src="src/ios/GAITrackedViewController.h" />
+        <header-file src="src/ios/GAI.h" />
+        <header-file src="src/ios/GAPlugin.h" />
+
+        <framework src="CoreData.framework" />
+        <framework src="SystemConfiguration.framework" />
+    </platform>
+     -->
+</plugin>
