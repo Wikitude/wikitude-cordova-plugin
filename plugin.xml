@@ -36,6 +36,21 @@
             <clobbers target="src.com.wikitude.phonegap" />
         </js-module>
 
+        <uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+        <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+        <uses-permission android:name="android.permission.ACCESS_GPS" />
+        <uses-permission android:name="android.permission.CAMERA" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+        <uses-feature android:name="android.hardware.camera" android:required="true" />
+        <uses-feature android:name="android.hardware.location" android:required="true" />
+        <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+        <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
+
+        <!--    
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -51,7 +66,7 @@
             <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
-
+        -->
 
         <info>
             Ensure wikitudesdk.jar is available in libs directory of Android Project, check: http://goo.gl/eexP2 for download and registration.
