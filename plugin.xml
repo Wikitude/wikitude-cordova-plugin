@@ -19,6 +19,9 @@
     
     <!-- android -->
     <platform name="android">
+
+        <preference name="SDK_KEY" />
+
         <asset src="Android/WikitudePlugin.js" target="WikitudePlugin.js" />
 
         <config-file target="res/xml/config.xml" parent="/widget/plugins">
