@@ -29,7 +29,7 @@
                 target-dir="src/com/wikitude/phonegap" />
 
 
-        <js-module src="WikitudePlugin.js" name="WikitudePlugin">
+        <js-module src="Android/WikitudePlugin.js" name="WikitudePlugin">
             <clobbers target="src.com.wikitude.phonegap" />
         </js-module>
 
