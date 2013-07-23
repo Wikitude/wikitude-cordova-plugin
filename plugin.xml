@@ -34,10 +34,6 @@
         </js-module>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-        </config-file>
-
-        <!--
-        <config-file target="platforms/android/AndroidManifest.xml" parent="/manifest/application">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -52,7 +48,7 @@
             <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
-        -->
+
 
         <info>
             Ensure wikitudesdk.jar is available in libs directory of Android Project, check: http://goo.gl/eexP2 for download and registration.
