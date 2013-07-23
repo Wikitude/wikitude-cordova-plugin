@@ -33,6 +33,9 @@
             <clobbers target="src.com.wikitude.phonegap" />
         </js-module>
 
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+        </config-file>
+
         <!--
         <config-file target="platforms/android/AndroidManifest.xml" parent="/manifest/application">
             <uses-permission android:name="android.permission.INTERNET" />
