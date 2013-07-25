@@ -29,6 +29,7 @@
         <source-file src="src/android/WikitudePlugin.java"
                 target-dir="src/com/wikitude/phonegap" />
 
+        <!--
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -44,6 +45,7 @@
             <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
+        -->
 
         <lib-file src="wikitudesdk.jar" arch="device" />
 
