@@ -20,22 +20,16 @@
     <!-- android -->
     <platform name="android">
 
-        <asset src="Android/WikitudePlugin.js" target="WikitudePlugin.js" />
+        <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
 
-        <config-file target="res/xml/config.xml" parent="/widget/plugins">
-            <plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>
-        </config-file>
-
-        <source-file src="Android/WikitudePlugin.java"
-                target-dir="src/com/wikitude/phonegap" />
-
-
-        <js-module src="Android/WikitudePlugin.js" name="WikitudePlugin">
+        <js-module src="www/WikitudePlugin.js" name="WikitudePlugin">
             <clobbers target="src.com.wikitude.phonegap" />
         </js-module>
 
-        <!--    
-        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+        <source-file src="src/android/WikitudePlugin.java"
+                target-dir="src/com/wikitude/phonegap" />
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -50,40 +44,15 @@
             <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
-        -->
+
+        <lib-file src="wikitudesdk.jar" arch="device" />
 
         <info>
             Ensure wikitudesdk.jar is available in libs directory of Android Project, check: http://goo.gl/eexP2 for download and registration.
         </info>
 
-        <!--
-        <source-file src="YOUR-DOWNLOADED-FILES/wikitudesdk.jar"
-                target-dir="libs" />
-        <preference name="SDK_KEY"/>
-        -->
+        <preference name="SDK_KEY" />
 
     </platform>
     
-    <!-- ios
-    <platform name="ios">
-	   <asset src="iOS/WikitudePlugin.js" target="WikitudePlugin.js" />
-        <plugins-plist key="GAPlugin" string="GAPlugin" />
-		<config-file target="config.xml" parent="plugins">
-			<plugin name="GAPlugin" value="GAPlugin"/>
-		</config-file>  
-                    
-        <source-file src="src/ios/GAPlugin.m" />
-		<source-file src="src/ios/GoogleAnalytics.a" framework="true" />
-
-        <header-file src="src/ios/GAITransactionItem.h" />
-        <header-file src="src/ios/GAITransaction.h" />
-        <header-file src="src/ios/GAITracker.h" />
-        <header-file src="src/ios/GAITrackedViewController.h" />
-        <header-file src="src/ios/GAI.h" />
-        <header-file src="src/ios/GAPlugin.h" />
-
-        <framework src="CoreData.framework" />
-        <framework src="SystemConfiguration.framework" />
-    </platform>
-     -->
 </plugin>

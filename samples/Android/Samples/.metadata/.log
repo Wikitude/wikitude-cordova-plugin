@@ -1,0 +1,118 @@
+!SESSION 2013-07-22 13:54:17.604 -----------------------------------------------
+eclipse.buildId=M20120208-0800
+java.version=1.6.0_45
+java.vendor=Apple Inc.
+BootLoader constants: OS=macosx, ARCH=x86, WS=cocoa, NL=en_US
+Framework arguments:  -keyring /Users/mobilizy/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86 -data /Users/mobilizy/wikitude-phonegap/Android/Samples -keyring /Users/mobilizy/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2013-07-22 13:55:46.817
+!MESSAGE No repository found at http://www.eclipse.org/downloads/packages/eclipse-ide-javascript-web-developers/heliossr1.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 13:55:57.678
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1002 2013-07-22 13:55:58.124
+!MESSAGE Unable to read repository at http://archive.eclipse.org/eclipse/downloads/index.php.
+!STACK 0
+java.io.IOException: http://archive.eclipse.org/eclipse/downloads/index.php is not a valid repository location.
+	at org.eclipse.equinox.internal.p2.metadata.repository.SimpleMetadataRepositoryFactory.load(SimpleMetadataRepositoryFactory.java:102)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.factoryLoad(MetadataRepositoryManager.java:57)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:749)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:651)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:96)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:92)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.getAvailableRepositories(UpdateChecker.java:150)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.checkForUpdates(UpdateChecker.java:128)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:72)
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2013-07-22 13:56:45.621
+!MESSAGE No repository found at http://tweedo.com/mirror/apache/.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:21.487
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:33.397
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:34.763
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:36.071
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:37.389
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:38.749
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:40.103
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:41.462
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:42.830
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:44.148
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:45.667
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:47.007
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:48.318
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:00:50.674
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:01:02.139
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:01:04.598
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:01:07.574
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:01:10.301
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:01:13.776
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:01:15.908
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:01:17.508
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:01:18.966
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2013-07-22 14:01:20.871
+!MESSAGE Server returned lastModified <= 0 for http://archive.eclipse.org/eclipse/downloads/index.php/content.jar
+!SESSION 2013-07-23 12:47:47.609 -----------------------------------------------
+eclipse.buildId=M20120208-0800
+java.version=1.6.0_45
+java.vendor=Apple Inc.
+BootLoader constants: OS=macosx, ARCH=x86, WS=cocoa, NL=en_US
+Framework arguments:  -keyring /Users/mobilizy/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86 -keyring /Users/mobilizy/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 0 2013-07-23 12:49:28.418
+!MESSAGE Extension registry not found
+!STACK 0
+java.lang.RuntimeException
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.getAllSuffixes(AbstractRepositoryManager.java:427)
+	at org.eclipse.equinox.internal.p2.repository.helpers.AbstractRepositoryManager.loadRepository(AbstractRepositoryManager.java:642)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:96)
+	at org.eclipse.equinox.internal.p2.metadata.repository.MetadataRepositoryManager.loadRepository(MetadataRepositoryManager.java:92)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.getAvailableRepositories(UpdateChecker.java:150)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker.checkForUpdates(UpdateChecker.java:128)
+	at org.eclipse.equinox.internal.p2.updatechecker.UpdateChecker$UpdateCheckThread.run(UpdateChecker.java:72)
