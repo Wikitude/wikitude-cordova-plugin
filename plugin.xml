@@ -30,7 +30,7 @@
                 target-dir="src/com/wikitude/phonegap" />
 
 
-        <config-file target="AndroidManifest.xml">
+        <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
