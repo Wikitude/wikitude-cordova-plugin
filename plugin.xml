@@ -29,6 +29,8 @@
         <source-file src="src/android/WikitudePlugin.java"
                 target-dir="src/com/wikitude/phonegap" />
 
+        <lib-file src="wikitudesdk.jar" arch="device" />
+
         <!--
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.INTERNET" />
@@ -47,10 +49,10 @@
         </config-file>
         
 
-        <lib-file src="wikitudesdk.jar" arch="device" />
+        
     
         <preference name="SDK_KEY" />
-        
+
         -->
 
 
