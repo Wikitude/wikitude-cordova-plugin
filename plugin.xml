@@ -29,9 +29,28 @@
         <source-file src="src/android/WikitudePlugin.java"
                 target-dir="src/com/wikitude/phonegap" />
 
-        <lib-file src="wikitudesdk.jar" arch="device" />
+
+        <config-file target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_GPS" />
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+            <uses-feature android:name="android.hardware.camera" android:required="true" />
+            <uses-feature android:name="android.hardware.location" android:required="true" />
+            <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+            <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
+        </config-file>
 
         <!--
+
+        <lib-file src="wikitudesdk.jar" arch="device" />
+
+        
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
