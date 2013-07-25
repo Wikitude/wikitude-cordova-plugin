@@ -45,15 +45,20 @@
             <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
-        -->
+        
 
         <lib-file src="wikitudesdk.jar" arch="device" />
+    
+        <preference name="SDK_KEY" />
+        
+        -->
+
 
         <info>
             Ensure wikitudesdk.jar is available in libs directory of Android Project, check: http://goo.gl/eexP2 for download and registration.
         </info>
 
-        <preference name="SDK_KEY" />
+        
 
     </platform>
     
