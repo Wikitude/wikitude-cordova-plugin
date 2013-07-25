@@ -22,12 +22,18 @@
 
         <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
 
+        <!-- copy sample apps too -->
+        <asset src="www/world" target="world" />
+
+
         <js-module src="www/WikitudePlugin.js" name="WikitudePlugin">
             <clobbers target="src.com.wikitude.phonegap" />
         </js-module>
 
         <source-file src="src/android/WikitudePlugin.java"
                 target-dir="src/com/wikitude/phonegap" />
+
+
 
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
