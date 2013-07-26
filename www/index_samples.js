@@ -79,11 +79,16 @@ var app = {
         app.receivedEvent('Unable to launch ARchitect Worlds on this device');
     },
 
-    loadARchitectWorld: function() {
+    loadARchitectWorld: function(sample) {
         if (app.isDeviceSupported) {
 
             // The device is able to launch ARchitect World, so lets do so
-            WikitudePlugin.loadARchitectWorld("assets/www/world/4_ObtainPoiData_1_FromWebservice/index.html");
+            if (sample == 1) {
+                WikitudePlugin.loadARchitectWorld("assets/www/world/4_ObtainPoiData_1_FromWebservice/index.html");
+            } else {
+                WikitudePlugin.loadARchitectWorld("assets/www/world/1_ImageRecognition_1_ImageOnTarget(index.html");
+            }
+
 
             // if you want to listen to document.location = architectsdk://yourhost?param1=foo&param2=bar simply set the onUrlInvoceCallback
             // WikitudePlugin.setOnUrlInvokeCallback( yourcallback);

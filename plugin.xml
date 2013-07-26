@@ -26,11 +26,9 @@
         <!-- copy sample apps too, contains ARchitect implementation of samples -->
         <asset src="www/world" target="world" />
 
-        <!-- copy sample phoneGap implementation too -->
-        <asset src="www/index_ar_imagerecognition.html" target="index_ar_imagerecognition.html" />
-        <asset src="www/index_ar_imagerecognition.js" target="index_ar_imagerecognition.js" />
-        <asset src="www/index_ar_pois.html" target="index_ar_pois.html" />
-        <asset src="www/index_ar_pois.js" target="index_ar_pois.js" />
+        <!-- copy sample phoneGap implementation too, just rename default implementation to e.g. "_index.html" and rename "index_samples.html" to "index.html" -->
+        <asset src="www/index_samples.html" target="index_samples.html" />
+        <asset src="www/index_samples.js" target="index_samples.js" />
 
         <!-- declare implementation of WikitudePlugin -->
         <source-file src="src/android/WikitudePlugin.java"

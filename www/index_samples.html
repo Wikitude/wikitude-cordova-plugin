@@ -61,17 +61,17 @@
         <div class="app">
             <h1>Apache Cordova</h1>
             <script type="text/javascript" src="cordova.js"></script>
-            <script type="text/javascript" src="index_ar_imagerecognition.js"></script>
+            <script type="text/javascript" src="index_samples.js"></script>
             <script type="text/javascript" src="WikitudePlugin.js"></script>
             <script type="text/javascript">
                 app.initialize();
                 
-                function loadAR(){
+                function loadAR(sample){
                 	// when user presses back-button -> execute default function -> close AR-view
                 	document.removeEventListener("backbutton", WikitudePlugin.onBackButton, false);
                 	document.addEventListener("backbutton", WikitudePlugin.onBackButton, false);
                 	
-                    app.loadARchitectWorld();
+                    app.loadARchitectWorld(sample);
                 }
                 function showAR(){
                     WikitudePlugin.show();
@@ -82,6 +82,9 @@
                 <p class="event received"">Device is ready</p>
             </div>
         </div>
-        <button value="Load AR" type="button" onclick="loadAR()" class="arbutton">LAUNCH AR</button>
+        <button value="Load AR" type="button" onclick="loadAR(1)" class="arbutton">POI Sample</button>
+        <br/>
+        <br/>
+        <button value="Load IR" type="button" onclick="loadAR(2)" class="arbutton">IR Sample</button>
     </body>
 </html>

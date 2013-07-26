@@ -20,8 +20,17 @@ For detailed documentation including a setup and getting started guide please se
 * Android 
 * iOS
 
+### Installation via plugman
+
+* [Follow phoneGap install instructions](http://docs.phonegap.com/en/3.0.0rc1/guide_cli_index.md.html#The%20Command-line%20Interface)
+* For Android: execute `sudo plugman --platform android --project {PATH/TO/YOUR/PROJECT}/platforms/android --plugin https://github.com/Wikitude/wikitude-phonegap.git`. This will then install all required components and even copy an index_samples.html file so you can test ImageRecognition and POI-Loading right away.
+
+### Samles
+A Sample project per supported platform is in the `samples` folder, you solely need to dowload wikitudesdk.jar for Android and the Wikitude-Framework for iOS upfront via [Wikitude's website](http://www.wikitude.com) and copy the files to the right folder.
+
 
 ### Tested PhoneGap versions
+* PhoneGap 3.0.0 (26.07.2013), Wikitude SDK 3.0.1
 * PhoneGap 2.8.1 (04.07.2013), Wikitude SDK 3.0
 * PhoneGap 2.5.0 (28.02.2013), Wikitude SDK 2.0
 * PhoneGap 2.4.0 (24.02.2013), Wikitude SDK 2.0
