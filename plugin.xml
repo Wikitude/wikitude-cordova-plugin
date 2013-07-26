@@ -25,16 +25,8 @@
         <!-- copy sample apps too -->
         <asset src="www/world" target="world" />
 
-
-        <!--
-        <js-module src="www/WikitudePlugin.js" name="WikitudePlugin">
-            <clobbers target="src.com.wikitude.phonegap" />
-        </js-module>
-        -->
-
         <source-file src="src/android/WikitudePlugin.java"
                 target-dir="src/com/wikitude/phonegap" />
-
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.INTERNET" />
@@ -52,9 +44,11 @@
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
 
-        <!--
+        <!-- absolute paths not working...
+
         <preference name="WIKITUDESDK_JAR_PATH" />
         <source-file src="$WIKITUDESDK_JAR_PATH" target-dir="libs" />
+        
         -->
 
         <config-file target="res/xml/config.xml" parent="/*">
@@ -65,7 +59,7 @@
 
         <info>
             Ensure wikitudesdk.jar is copied into libs older of Android platform, file is available via Wikitude website http://goo.gl/eexP2 for download and registration.
-            SDK-Key matching your package-identifier ($PACKAGE_NAME) required to get rid of the watermark and intro-animation, see "Store" at www.wikitude.com
+            SDK-Key matching your package-identifier (e.g. "com.yourapp.id" )required to get rid of the watermark and intro-animation, see "Store" at www.wikitude.com
         </info>
 
         
