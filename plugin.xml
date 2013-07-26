@@ -57,8 +57,10 @@
         <source-file src="$WIKITUDESDK_JAR_PATH" target-dir="libs" />
         -->
 
-        <config-file target="res/xml/config.xml" parent="/widget/plugins">
-            <plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="WikitudePlugin">
+                <param name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>
+            </feature>
         </config-file>
 
         <info>
