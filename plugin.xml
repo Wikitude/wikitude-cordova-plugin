@@ -26,14 +26,14 @@
         <asset src="www/world" target="world" />
 
 
+        <!--
         <js-module src="www/WikitudePlugin.js" name="WikitudePlugin">
             <clobbers target="src.com.wikitude.phonegap" />
         </js-module>
+        -->
 
         <source-file src="src/android/WikitudePlugin.java"
                 target-dir="src/com/wikitude/phonegap" />
-
-
 
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
@@ -52,10 +52,15 @@
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
 
-        <!--
-        <lib-file src="wikitudesdk.jar" arch="device" />
+        <!-- TODO: maybe use variable for passing sdk-path 
         <preference name="SDK_KEY" />
+        <source-file src="wikitudesdk.jar"
+                target-dir="libs" />
         -->
+
+        <config-file target="res/xml/config.xml" parent="plugins">
+            <plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>
+        </config-file>
 
 
         <info>
