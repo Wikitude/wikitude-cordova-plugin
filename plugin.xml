@@ -65,6 +65,7 @@
 
         <info>
             Ensure wikitudesdk.jar is copied into libs older of Android platform, file is available via Wikitude website http://goo.gl/eexP2 for download and registration.
+            SDK-Key matching your package-identifier ($PACKAGE_NAME) required to get rid of the watermark and intro-animation, see "Store" at www.wikitude.com
         </info>
 
         
