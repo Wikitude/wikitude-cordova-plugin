@@ -52,20 +52,17 @@
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
 
-        <!-- TODO: maybe use variable for passing sdk-path 
-        <preference name="SDK_KEY" />
-        -->
-
+        <!--
         <preference name="WIKITUDESDK_JAR_PATH" />
         <source-file src="$WIKITUDESDK_JAR_PATH" target-dir="libs" />
-
+        -->
 
         <config-file target="res/xml/config.xml" parent="/widget/plugins">
             <plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>
         </config-file>
 
         <info>
-            Ensure wikitudesdk.jar is available at $WIKITUDESDK_JAR_PATH, file is available via Wikitude website http://goo.gl/eexP2 for download and registration.
+            Ensure wikitudesdk.jar is copied into libs older of Android platform, file is available via Wikitude website http://goo.gl/eexP2 for download and registration.
         </info>
 
         
