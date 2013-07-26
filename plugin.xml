@@ -20,14 +20,23 @@
     <!-- android -->
     <platform name="android">
 
+        <!-- copy helper file into www-folder -->
         <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
 
-        <!-- copy sample apps too -->
+        <!-- copy sample apps too, contains ARchitect implementation of samples -->
         <asset src="www/world" target="world" />
 
+        <!-- copy sample phoneGap implementation too -->
+        <asset src="www/index_ar_imagerecognition.html" target="index_ar_imagerecognition.html" />
+        <asset src="www/index_ar_imagerecognition.js" target="index_ar_imagerecognition.js" />
+        <asset src="www/index_ar_pois.html" target="index_ar_pois.html" />
+        <asset src="www/index_ar_pois.js" target="index_ar_pois.js" />
+
+        <!-- declare implementation of WikitudePlugin -->
         <source-file src="src/android/WikitudePlugin.java"
                 target-dir="src/com/wikitude/phonegap" />
 
+        <!-- add permissions and requirements -->
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -48,15 +57,17 @@
 
         <preference name="WIKITUDESDK_JAR_PATH" />
         <source-file src="$WIKITUDESDK_JAR_PATH" target-dir="libs" />
-        
+
         -->
 
+        <!-- adds Wikitudeplugin in project's config.xml -->
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="WikitudePlugin">
                 <param name="android-package" value="com.wikitude.phonegap.WikitudePlugin"/>
             </feature>
         </config-file>
 
+        <!-- visible after installation -->
         <info>
             Ensure wikitudesdk.jar is copied into libs older of Android platform, file is available via Wikitude website http://goo.gl/eexP2 for download and registration.
             SDK-Key matching your package-identifier (e.g. "com.yourapp.id" )required to get rid of the watermark and intro-animation, see "Store" at www.wikitude.com
