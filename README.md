@@ -16,23 +16,27 @@ The Wikitude PhoneGap Plugin enables web developers to embed an augmented realit
 
 For detailed documentation including a setup and getting started guide please see the official documentation under: [http://developer.wikitude.com/documentation/phonegap](http://developer.wikitude.com/documentation/phonegap)
 
-### Supported mobile operating systems
+## Supported mobile operating systems
 * Android 
 * iOS
 
-### Installation via plugman
+## Installation via plugman
 
-#### Android 
+### Android 
 execute 
 
 	sudo plugman --platform android --project {PROJECT/PATH}/platforms/android --plugin https://github.com/Wikitude/wikitude-phonegap.git
 	
 This will install all required components and even copy an index_samples.html file so you can test ImageRecognition and POI-Loading right away.
 
-Find details on how to set-up project with latest PhoneGap version and command-line at the [phoneGap website]([Follow phoneGap install instructions](http://docs.phonegap.com/en/3.0.0rc1/guide_cli_index.md.html#The%20Command-line%20Interface)
+Find details on how to set-up project with latest PhoneGap version and command-line at the [phoneGap website](http://docs.phonegap.com/en/3.0.0rc1/guide_cli_index.md.html)
 
-### Manual installation
-#### Android 
+### iOS
+
+TODO
+
+## Manual installation
+### Android 
 * Create a folder called com/wikitude/phonegap within your project's src- folder and copy `WikitudePlugin.java` into it
 * Add following line to your `res/xml/config.xml`
 
@@ -43,12 +47,16 @@ Find details on how to set-up project with latest PhoneGap version and command-l
 * Download the Wikitude SDK, copy the `wikitudesdk.jar` in the Android-folder to your projects libs-folder and add it to your project's build path
 * Visit [Wikitude Developer Site
  ](http://developer.wikitude.com/) to find samples and how to license your app to remove the watermark in the camera
+ 
+### iOS
 
-### Samples
+TODO 
+
+## Samples
 A Sample project per supported platform is in the `samples` folder, you solely need to download `wikitudesdk.jar` for Android and the Wikitude-Framework for iOS upfront via [Wikitude's website](http://www.wikitude.com) and copy the files to the right folder.
 
 
-### Tested PhoneGap versions
+## Tested PhoneGap versions
 * PhoneGap 3.0.0 (26.07.2013), Wikitude SDK 3.0.1
 * PhoneGap 2.8.1 (04.07.2013), Wikitude SDK 3.0
 * PhoneGap 2.5.0 (28.02.2013), Wikitude SDK 2.0
@@ -56,13 +64,13 @@ A Sample project per supported platform is in the `samples` folder, you solely n
 * PhoneGap 2.2.0 (18.01.2013), Wikitude SDK 2.0
 
 
-###The Augmented Reality View
+##The Augmented Reality View
 From a technical point of view the Wikitude SDK adds a UI component called **AR View**, similar to a web view. In contrast to a standard web view the `AR View` can render augmented reality content.
 
 Content developed for the AR View is written in JavaScript and HTML. The HTML and JavaScript files for the AR view are different from the PhoneGap `.js` and `.html` files.
 
 
-###Further developer resources
+##Further developer resources
 * [Full documentation and additional tutorials](http://developer.wikitude.com/documentation)
 * [Developer Forum](http://developer.wikitude.com/developer-forum)
 * [Wikitude SDK Download](http://developer.wikitude.com/download)
