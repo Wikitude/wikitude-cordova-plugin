@@ -391,13 +391,29 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	}
 
 	/**
+	 * workaround required until SDK Version 3.1, upcoming version will fix this issue
+	 */
+	private void pluginLifecycleWorkaround() {
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	/**
 	 * hides/removes ARchitect-View completely
 	 * @return true if successful, false otherwise
 	 */
 	private boolean removeArchitectView() {
 		if ( this.architectView != null ) {
 			/* fake life-cycle calls, because activity is already up and running */
+
+			this.pluginLifecycleWorkaround();
 			this.architectView.onPause();
+
+			this.pluginLifecycleWorkaround();
 			this.architectView.onDestroy();
 
 			// clean-up used temp-directory
