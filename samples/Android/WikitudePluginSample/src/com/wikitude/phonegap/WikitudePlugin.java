@@ -1,25 +1,27 @@
 package com.wikitude.phonegap;
 
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
-
+import java.util.Scanner;
+import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewManager;
-
 import com.wikitude.architect.ArchitectUrlListener;
 import com.wikitude.architect.ArchitectView;
 import com.wikitude.architect.ArchitectView.ArchitectConfig;
-
 
 
 /**
@@ -427,6 +429,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			this.architectView.setVisibility( View.INVISIBLE );
 			((ViewManager)this.architectView.getParent()).removeView( this.architectView );
 			this.architectView = null;
+
+			WikitudePlugin.handleResumeInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
+
 			return true;
 		}
 		return false;
@@ -505,4 +510,21 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 		}
 	}
+
+
+	/**
+	 * To avoid JavaScript in Cordova staying paused after CordovaWebView lost focus call "handleResume" of the CordovaView in current Activity
+	 * @param rootView the root view to search recursively for a CordovaWebView
+	 */
+	private static void handleResumeInCordovaWebView(final View rootView) {
+		if (rootView instanceof CordovaWebView) { 
+			((CordovaWebView)rootView).handleResume(true, true);
+		}
+		else if (rootView instanceof ViewGroup) {
+			final int childCount = ((ViewGroup)rootView).getChildCount();
+			for (int i=0; i< childCount; i++) {
+				WikitudePlugin.handleResumeInCordovaWebView(((ViewGroup)rootView).getChildAt(i));
+			}
+		}
+	
 }
