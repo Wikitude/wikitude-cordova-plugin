@@ -1,44 +1,43 @@
 package com.wikitude.phonegap;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Scanner;
-import org.apache.cordova.CordovaWebView;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
+
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewManager;
+
 import com.wikitude.architect.ArchitectUrlListener;
 import com.wikitude.architect.ArchitectView;
 import com.wikitude.architect.ArchitectView.ArchitectConfig;
 
 
+
 /**
+ * Basic PhoneGap Wikitude ARchitect Plugin
  * 
- * Ensure to have wikitudesdk.jar in your libs folder and build path
+ * You must add "<plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>"
+ * in config.xml to enable this plug-in in your project
+ * 
+ * Also ensure to have wikitudesdk.jar in your libs folder
  * 
  * Note:
  * This plug-in is written under Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0.html
- * 
- * Version History: 
- *  version 1.0.0 ... Initial Version 		(2012-09)
- *  version 1.1.0 ... PhoneGap 2.2 support 	(2012-11)
- *  version 1.2.0 ... PhoneGap 2.5 support 	(2013-02)
- *  
- * @version 1.3.0 ... PhoneGap 3.0 support 	(2013-07)
- * @author Wikitude GmbH; www.wikitude.com
  */
 public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListener {
 
@@ -116,6 +115,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 * callback-id of "open"-action method
 	 */
 	private CallbackContext		openCallback				= null;
+	
 
 	@Override
 	public boolean execute( final String action, final JSONArray args, final CallbackContext callContext ) {
@@ -150,7 +150,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 		/* return success only if view is opened (no matter if visible or not) */
 		if ( WikitudePlugin.ACTION_IS_DEVICE_SUPPORTED.equals( action ) ) {
-			if ( ArchitectView.isDeviceSupported( this.cordova.getActivity() ) ) {
+			if ( ArchitectView.isDeviceSupported( this.cordova.getActivity() ) && hasNeonSupport() ) {
 				callContext.success( action + ": this device is ARchitect-ready" );
 			} else {
 				callContext.error( action + action + ":Sorry, this device is NOT ARchitect-ready" );
@@ -169,10 +169,11 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 					@Override
 					public void run() {
 						WikitudePlugin.this.architectView.onResume();
+						callContext.success( action + ": architectView is present" );
 					}
 				} );
 
-				callContext.success( action + ": architectView is present" );
+				// callContext.success( action + ": architectView is present" );
 			} else {
 				callContext.error( action + ": architectView is not present" );
 			}
@@ -266,7 +267,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 					}
 					final Double accuracy = acc;
 					if ( this.cordova != null && this.cordova.getActivity() != null ) {
-						this.cordova.getActivity().runOnUiThread( new Runnable() {
+						cordova.getActivity().runOnUiThread(
+//						this.cordova.getThreadPool().execute( 
+								new Runnable() {
 
 							@Override
 							public void run() {
@@ -391,13 +394,13 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		}
 		return false;
 	}
-
+	
 	/**
 	 * workaround required until SDK Version 3.1, upcoming version will fix this issue
 	 */
 	private void pluginLifecycleWorkaround() {
 		try {
-			Thread.sleep(300);
+			Thread.sleep(500);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -410,12 +413,14 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 */
 	private boolean removeArchitectView() {
 		if ( this.architectView != null ) {
+
+			pluginLifecycleWorkaround();
+						
 			/* fake life-cycle calls, because activity is already up and running */
-
-			this.pluginLifecycleWorkaround();
 			this.architectView.onPause();
-
-			this.pluginLifecycleWorkaround();
+			
+			pluginLifecycleWorkaround();
+			
 			this.architectView.onDestroy();
 
 			// clean-up used temp-directory
@@ -429,9 +434,8 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			this.architectView.setVisibility( View.INVISIBLE );
 			((ViewManager)this.architectView.getParent()).removeView( this.architectView );
 			this.architectView = null;
-
+			
 			WikitudePlugin.handleResumeInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
-
 			return true;
 		}
 		return false;
@@ -510,8 +514,60 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 		}
 	}
+	
+	
+	/**
+	 * 
+	 * @return true if device chip has neon-command support
+	 */
+	private boolean hasNeonSupport() {
+		/* Read cpu info */
 
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream("/proc/cpuinfo");
 
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return false;
+		}
+
+		Scanner scanner = new Scanner(fis);
+
+		boolean neonSupport = false;
+
+		try {
+
+			while (scanner.hasNextLine()) {
+
+				if (!neonSupport && (scanner.findInLine("neon") != null)) {
+
+					neonSupport = true;
+
+				}
+
+				scanner.nextLine();
+
+			}
+
+		} catch (Exception e) {
+
+			Log.i("Wikitudeplugin",
+					"error while getting info about neon support"
+							+ e.getMessage());
+			e.printStackTrace();
+
+		} finally {
+
+			scanner.close();
+
+		}
+
+		return neonSupport;
+	}
+	
+	
 	/**
 	 * To avoid JavaScript in Cordova staying paused after CordovaWebView lost focus call "handleResume" of the CordovaView in current Activity
 	 * @param rootView the root view to search recursively for a CordovaWebView
@@ -526,5 +582,6 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 				WikitudePlugin.handleResumeInCordovaWebView(((ViewGroup)rootView).getChildAt(i));
 			}
 		}
+	}
 	
 }
