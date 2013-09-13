@@ -29,11 +29,17 @@ execute
 	
 This will install all required components and even copy an index_samples.html file so you can test ImageRecognition and POI-Loading right away.
 
-Find details on how to set-up project with latest PhoneGap version and command-line at the [phoneGap website](http://docs.phonegap.com/en/3.0.0rc1/guide_cli_index.md.html)
 
 ### iOS
 
-TODO
+execute
+	plugmain --platfrom ios --project {PROJECT/PATH}/platforms/ios --plugin https://github.com/AndreasSchacherbauerWikitude/wikitude-phonegap.git
+	
+This will install all required components and configure the project.	
+
+### Info
+
+Find details on how to set-up project with latest PhoneGap version and command-line at the [phoneGap website](http://docs.phonegap.com/en/3.0.0rc1/guide_cli_index.md.html)
 
 ## Manual installation
 ### Android 
@@ -50,7 +56,20 @@ TODO
  
 ### iOS
 
-TODO 
+* Create a folder called com.wikitude.phonegap.WikitudePlugin within your project's 'Plugins' folder.
+* Copy WTArchitectView.h/.m, WTARViewController.h/.m and WTWikitudePlugin.h/.m into the previously created folder.
+* Add the static library 'libWikitudeSDK.a' to your Xcode projects 'Link Binary With Libraries' build phase.
+* Add the follwoing 'Other Linker Flag' to your Xcode project settings: -ObjC, -lWikitudeSDK.
+* Add the following iOS SDK Frameworks and Libraries to your project: CoreMotion.framework, CoreVideo.framework, OpenGLES.framework, Security.framework, libc++.dylib, libz.dylib
+* Add following lines to your `res/xml/config.xml`
+	
+		<feature name="WikitudePlugin">
+			<param name="ios-package" value="WTWikitudePlugin"/>
+		</feature>
+		 		
+        <access origin="*" />
+        
+* Copy `WikitudePlugin.js` in assets/www-folder and ensure to include it in the related HTMLs.        
 
 ## Samples
 A Sample project per supported platform is in the `samples` folder, you solely need to download `wikitudesdk.jar` for Android and the Wikitude-Framework for iOS upfront via [Wikitude's website](http://www.wikitude.com) and copy the files to the right folder.
