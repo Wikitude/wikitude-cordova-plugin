@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    id="com.wikitude.phonegap.WikitudePlugin"
+    version="1.3.0">
+
+    <name>Augmented Reality - Wikitude SDK Plugin</name>
+    
+    <author>Wikitude GmbH</author>
+    <keywords>AR,Augmented Reality,Wikitude</keywords>
+
+	<description>
+		The Wikitude PhoneGap Plugin enables developers to embed an augmented reality view into their PhoneGap project. You can create a fully featured app with advanced augmented reality features, including image recognition, purely using HTML, CSS and JavaScript.
+	</description>
+
+	<license>Apache 2.0</license>
+    
+    
+	<engines>
+      <engine name="cordova" version=">=2.8.1" />
+    </engines>	
+    
+    <!-- android -->
+    <platform name="android">
+
+        <!-- copy helper file into www-folder -->
+        <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
+
+        <!-- copy sample apps too, contains ARchitect implementation of samples -->
+        <asset src="www/world" target="world" />
+
+        <!-- copy sample phoneGap implementation too, just rename default implementation to e.g. "_index.html" and rename "index_samples.html" to "index.html" -->
+        <asset src="www/index_samples.html" target="index_samples.html" />
+        <asset src="www/index_samples.js" target="index_samples.js" />
+
+        <!-- declare implementation of WikitudePlugin -->
+        <source-file src="src/android/WikitudePlugin.java"
+                target-dir="src/com/wikitude/phonegap" />
+
+        <!-- add permissions and requirements -->
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <uses-permission android:name="android.permission.ACCESS_GPS" />
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+            <uses-feature android:name="android.hardware.camera" android:required="true" />
+            <uses-feature android:name="android.hardware.location" android:required="true" />
+            <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
+            <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
+        </config-file>
+
+        <!-- absolute paths not working...
+
+        <preference name="WIKITUDESDK_JAR_PATH" />
+        <source-file src="$WIKITUDESDK_JAR_PATH" target-dir="libs" />
+
+        -->
+
+        <!-- adds Wikitudeplugin in project's config.xml -->
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="WikitudePlugin">
+                <param name="android-package" value="com.wikitude.phonegap.WikitudePlugin"/>
+            </feature>
+        </config-file>
+
+        <!-- visible after installation -->
+        <info>
+            Ensure wikitudesdk.jar is copied into libs older of Android platform, file is available via Wikitude website http://goo.gl/eexP2 for download and registration.
+            SDK-Key matching your package-identifier (e.g. "com.yourapp.id" )required to get rid of the watermark and intro-animation, see "Store" at www.wikitude.com
+        </info>
+
+        
+
+    </platform>
+
+    <!-- iOS -->
+    <platform name="ios">
+        
+        <!-- copy helper file into www-folder -->
+        <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
+                
+        <!-- WikitudePlugin Source -->
+        <header-file src="src/ios/WTWikitudePlugin.h" />
+        <source-file src="src/ios/WTWikitudePlugin.m" />
+
+        <header-file src="src/ios/WTARViewController.h" />
+        <source-file src="src/ios/WTARViewController.m" />
+
+        <header-file src="src/ios/WTArchitectView.h" />
+        <source-file src="src/ios/libWikitudeSDK.a" framework="true" />
+
+        <!-- Additioanl WikitudePlugin libraries and frameworkd -->
+        <framework src="CoreMotion.framework" />
+        <framework src="CoreVideo.framework" />
+        <framework src="OpenGLES.framework" />
+        <framework src="Security.framework" />        
+        
+        <framework src="libc++.dylib" />
+        <framework src="libz.dylib" />
+        
+        <!-- Adopts project's config.xml to include the WikitudPlugin and domain whitelists -->
+        <config-file target="config.xml" parent="/*/plugins">
+            <feature name="WikitudePlugin">
+                <param name="ios-package" value="WTWikitudePlugin"/>
+            </feature>
+        </config-file>
+        <config-file target="config.xml" parent="/*">
+            <access origin="*" />
+        </config-file>
+        
+        <!-- visible after installation -->
+        <info>
+            Ensure SDK-Key matching your package-identifier (e.g. "com.yourapp.id" )required to get rid of the watermark and intro-animation, see Store at http://www.wikitude.com/store
+        </info>
+        
+    </platform>    
+    
+</plugin>
