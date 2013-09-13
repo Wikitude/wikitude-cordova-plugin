@@ -6,6 +6,9 @@
 
     <name>Augmented Reality - Wikitude SDK Plugin</name>
     
+    <author>Wikitude GmbH</author>
+    <keywords>AR,Augmented Reality,Wikitude</keywords>
+
 	<description>
 		The Wikitude PhoneGap Plugin enables developers to embed an augmented reality view into their PhoneGap project. You can create a fully featured app with advanced augmented reality features, including image recognition, purely using HTML, CSS and JavaScript.
 	</description>
@@ -74,5 +77,47 @@
         
 
     </platform>
+
+    <!-- iOS -->
+    <platform name="ios">
+        
+        <!-- copy helper file into www-folder -->
+        <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
+                
+        <!-- WikitudePlugin Source -->
+        <header-file src="src/ios/WTWikitudePlugin.h" />
+        <source-file src="src/ios/WTWikitudePlugin.m" />
+
+        <header-file src="src/ios/WTARViewController.h" />
+        <source-file src="src/ios/WTARViewController.m" />
+
+        <header-file src="src/ios/WTArchitectView.h" />
+        <source-file src="src/ios/libWikitudeSDK.a" framework="true" />
+
+        <!-- Additioanl WikitudePlugin libraries and frameworkd -->
+        <framework src="CoreMotion.framework" />
+        <framework src="CoreVideo.framework" />
+        <framework src="OpenGLES.framework" />
+        <framework src="Security.framework" />        
+        
+        <framework src="libc++.dylib" />
+        <framework src="libz.dylib" />
+        
+        <!-- Adopts project's config.xml to include the WikitudPlugin and domain whitelists -->
+        <config-file target="config.xml" parent="/*/plugins">
+            <feature name="WikitudePlugin">
+                <param name="ios-package" value="WTWikitudePlugin"/>
+            </feature>
+        </config-file>
+        <config-file target="config.xml" parent="/*">
+            <access origin="*" />
+        </config-file>
+        
+        <!-- visible after installation -->
+        <info>
+            Ensure SDK-Key matching your package-identifier (e.g. "com.yourapp.id" )required to get rid of the watermark and intro-animation, see Store at http://www.wikitude.com/store
+        </info>
+        
+    </platform>    
     
 </plugin>
