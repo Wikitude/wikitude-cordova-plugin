@@ -54,12 +54,19 @@
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
 
-        <!-- absolute paths not working...
 
-        <preference name="WIKITUDESDK_JAR_PATH" />
-        <source-file src="$WIKITUDESDK_JAR_PATH" target-dir="libs" />
+        <!-- adds MediaPlayerActivity, required for startVideo feature-->
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:name="com.wikitude.tools.activities.MediaPlayerActivity" android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            </activity>
+        </config-file>
 
-        -->
+        <!-- copy wikitude sdk -->
+        <source-file src="src/android/libs/wikitudesdk_3_1.jar" target-dir="libs/" />
 
         <!-- adds Wikitudeplugin in project's config.xml -->
         <config-file target="res/xml/config.xml" parent="/*">
@@ -70,8 +77,11 @@
 
         <!-- visible after installation -->
         <info>
-            Ensure wikitudesdk.jar is copied into libs older of Android platform, file is available via Wikitude website http://goo.gl/eexP2 for download and registration.
-            SDK-Key matching your package-identifier (e.g. "com.yourapp.id" )required to get rid of the watermark and intro-animation, see "Store" at www.wikitude.com
+            Have fun using World's first AR Plugin for PhoneGap. Visit developer.wikitude.com for technical support.
+
+            SDK-Key matching your package-identifier (e.g. "com.yourapp.id" ) required to get rid of the watermark and intro-animation, see "Store" at www.wikitude.com
+
+            If you want to contribute to the open source project, please visit us at github, http://github.com/Wikitude
         </info>
 
         
