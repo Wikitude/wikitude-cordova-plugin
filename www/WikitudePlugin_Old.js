@@ -241,7 +241,6 @@ var WikitudePlugin = {
      */
     startLocationUpdates: function() {
 
-    	/*
         WikitudePlugin.watchID = navigator.geolocation.watchPosition(WikitudePlugin.onReceivedLocation, WikitudePlugin.onWikitudeError, {
             frequency: WikitudePlugin.locationUpdateRate,
             maximumAge: 30 * 1000,
@@ -251,7 +250,6 @@ var WikitudePlugin = {
             maximumAge: 30 * 1000,
             enableHighAccuracy: true
         });
-        */
     },
 
     /**
@@ -262,7 +260,7 @@ var WikitudePlugin = {
     onReceivedLocation: function(position) {
 
         // Every time that PhoneGap did received a location update, we pass the location into the Wikitude SDK
-        // cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "setLocation", [position.coords.latitude, position.coords.longitude, position.coords.altitude, position.coords.accuracy]);
+        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "setLocation", [position.coords.latitude, position.coords.longitude, position.coords.altitude, position.coords.accuracy]);
     },
 
     /**
@@ -272,10 +270,9 @@ var WikitudePlugin = {
      */
     stopLocationUpdates: function() {
 
-        /*
+        // We clear the location update watch which was responsible for updating the location in a specific time interval
         navigator.geolocation.clearWatch(WikitudePlugin.watchID);
         WikitudePlugin.watchID = null;
-        */
     },
 
     /**

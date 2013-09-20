@@ -1,0 +1,31 @@
+.ui-body-c, .ui-overlay-c {
+	border: 0px solid 		#aaa /*{c-body-border}*/;
+	color: 					#333 /*{c-body-color}*/;
+	text-shadow: 0 /*{c-body-shadow-x}*/ 1px /*{c-body-shadow-y}*/ 0 /*{c-body-shadow-radius}*/ #fff /*{c-body-shadow-color}*/;
+	
+	
+	/* background: transparent; */
+	background-color: transparent;
+	background-image:none;
+	background: none;
+}
+
+/* in case you want to change color of selector-circle 
+.ui-btn {
+	background: red; 
+	background-color: red;
+	background-image:none;
+}
+*/
+
+.ui-slider-input {
+	background: lightgrey; 
+	background-color: lightgrey;
+	background-image:none;
+}
+
+.ui-slider-popup {
+	background: lightgrey; 
+	background-color: lightgrey;
+	background-image:none;
+}
