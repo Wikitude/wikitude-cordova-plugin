@@ -1,4 +1,3 @@
-
 # Augmented Reality - Wikitude SDK Plugin
 by Wikitude GmbH - [www.wikitude.com](http://www.wikitude.com)
 
@@ -25,7 +24,7 @@ For detailed documentation including a setup and getting started guide please se
 ### Android 
 execute 
 
-	sudo plugman --platform android --project {PROJECT/PATH}/platforms/android --plugin https://github.com/Wikitude/wikitude-phonegap.git
+	sudo plugman install --platform android --project {PROJECT/PATH}/platforms/android --plugin https://github.com/Wikitude/wikitude-phonegap.git
 	
 This will install all required components and even copy an index_samples.html file so you can test ImageRecognition and POI-Loading right away.
 
@@ -33,7 +32,7 @@ This will install all required components and even copy an index_samples.html fi
 ### iOS
 
 execute
-	plugmain --platfrom ios --project {PROJECT/PATH}/platforms/ios --plugin https://github.com/AndreasSchacherbauerWikitude/wikitude-phonegap.git
+	plugmain install --platfrom ios --project {PROJECT/PATH}/platforms/ios --plugin https://github.com/AndreasSchacherbauerWikitude/wikitude-phonegap.git
 	
 This will install all required components and configure the project.	
 
