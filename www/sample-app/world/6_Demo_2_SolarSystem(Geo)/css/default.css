@@ -1,0 +1,107 @@
+body {
+	margin: 0;
+}
+
+table {
+	/*margin-left: auto;*/
+	width: 100%;
+	margin-right: auto;
+	border: none;
+	border-spacing: 10px 5px;
+}
+
+th {
+	background-color: #FFCDA0;
+	color: rgb(34,34,34);
+	padding: 5px;
+	text-align: right;
+	font-weight: normal;
+}
+
+th:first-child {
+	border-radius: 10px 0 0 10px;
+}
+th:last-child {
+	text-transform: uppercase;
+	border-radius: 0 10px 10px 0;
+}
+
+td {
+	color: #CCCCCC;
+	text-align: left;
+	border: none;
+}
+
+tr {
+	margin-top: 10px;
+}
+
+.tableheader {
+	font-weight: bold;
+	background-color: #FF9C4F;
+	color: rgb(34,34,34);
+	padding: 5px;
+	text-align: center;
+	text-transform: uppercase;
+	border-radius: 10px 10px 10px 10px;
+}
+
+#info {
+	display: inline-block;
+	background-color: rgba(34,34,34,0.75);
+	bottom: 0;
+	position: absolute;
+	width: 100%;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+	font-size: 24pt;
+}
+
+#description {
+	display: inline;
+	float: left;
+	width: 50%;
+}
+
+.info {
+	opacity: 0;
+
+    -webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+
+	/*border-bottom-right-radius: 20px;*/
+}
+
+.infoVisible {
+	opacity: 1;
+
+    -webkit-transition: all 1s ease-in-out;
+    -moz-transition: all 1s ease-in-out;
+    -o-transition: all 1s ease-in-out;
+    -ms-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out;
+}
+
+.toggelAnimationBtn {
+	font-size: 24pt;
+	margin-left: 25px;
+	margin-top: 25px;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #FF9C4F), color-stop(1, #FF9C4F) );
+	background:-moz-linear-gradient( center top, #ff0000 5%, #000dff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0000', endColorstr='#000dff');
+	background-color:#ff0000;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family:arial;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+}

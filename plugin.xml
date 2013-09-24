@@ -26,13 +26,6 @@
         <!-- copy helper file into www-folder -->
         <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
 
-        <!-- copy sample apps too, contains ARchitect implementation of samples -->
-        <asset src="www/world" target="world" />
-
-        <!-- copy sample phoneGap implementation too, just rename default implementation to e.g. "_index.html" and rename "index_samples.html" to "index.html" -->
-        <asset src="www/index_samples.html" target="index_samples.html" />
-        <asset src="www/index_samples.js" target="index_samples.js" />
-
         <!-- declare implementation of WikitudePlugin -->
         <source-file src="src/android/WikitudePlugin.java"
                 target-dir="src/com/wikitude/phonegap" />
@@ -42,6 +35,7 @@
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
             <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
             <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
             <uses-permission android:name="android.permission.ACCESS_GPS" />
@@ -72,6 +66,9 @@
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="WikitudePlugin">
                 <param name="android-package" value="com.wikitude.phonegap.WikitudePlugin"/>
+            </feature>
+            <feature name="Geolocation">
+                <param name="android-package" value="org.apache.cordova.GeoBroker" />
             </feature>
         </config-file>
 

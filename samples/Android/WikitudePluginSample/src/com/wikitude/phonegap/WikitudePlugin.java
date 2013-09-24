@@ -14,16 +14,25 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.content.Context;
+import android.graphics.Rect;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewManager;
+import android.widget.Toast;
 
 import com.wikitude.architect.ArchitectUrlListener;
 import com.wikitude.architect.ArchitectView;
 import com.wikitude.architect.ArchitectView.ArchitectConfig;
+import com.wikitude.phonegap.WikitudePlugin.ArchitectViewPhoneGap.OnKeyDownListener;
 
 
 
@@ -104,7 +113,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	/**
 	 * the Wikitude ARchitectview
 	 */
-	private ArchitectView		architectView;
+	private ArchitectViewPhoneGap		architectView;
 
 	/**
 	 * callback-Id of url-invocation method
@@ -115,6 +124,24 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 * callback-id of "open"-action method
 	 */
 	private CallbackContext		openCallback				= null;
+	
+	/**
+	 * last known location of the user, used internally for content-loading after user location was fetched
+	 */
+	protected Location lastKnownLocaton;
+	
+
+	/**
+	 * sample location strategy
+	 */
+	protected ILocationProvider				locationProvider;
+	
+	
+	/**
+	 * location listener receives location updates and must forward them to the architectView
+	 */
+	protected LocationListener locationListener;
+	
 	
 
 	@Override
@@ -170,6 +197,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 					public void run() {
 						WikitudePlugin.this.architectView.onResume();
 						callContext.success( action + ": architectView is present" );
+						locationProvider.onResume();
 					}
 				} );
 
@@ -188,6 +216,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 					@Override
 					public void run() {
 						WikitudePlugin.this.architectView.onPause();
+						locationProvider.onPause();
 					}
 				} );
 
@@ -240,7 +269,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		/* define call-back for url-invocations */
 		if ( WikitudePlugin.ACTION_ON_URLINVOKE.equals( action ) ) {
 			this.urlInvokeCallback = callContext;
-			PluginResult result = new PluginResult( PluginResult.Status.NO_RESULT, action + ": registered callback" );
+			final PluginResult result = new PluginResult( PluginResult.Status.NO_RESULT, action + ": registered callback" );
 			result.setKeepCallback( true );
 			callContext.sendPluginResult( result );
 			return true;
@@ -373,38 +402,25 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 	/**
 	 * called when url was invoked in architectView (by e.g. calling document.location = "myprotocoll://foo";
-	 * @param url the invoked url (e.g. "myprotocoll://foo")
+	 * @param url the invoked url (e.g. "architectsdk://foo")
 	 * @return true if call was handled properly
 	 */
 	@Override
-	public boolean urlWasInvoked( String url ) {
+	public boolean urlWasInvoked( final String url ) {
 
 		/* call callback-method if set*/
 		if ( this.urlInvokeCallback != null ) {
 			try {
 				/* pass called url as String to callback-method */
-				PluginResult res = new PluginResult( PluginResult.Status.OK, url );
+				final PluginResult res = new PluginResult( PluginResult.Status.OK, url );
 				res.setKeepCallback( true );
-				urlInvokeCallback.sendPluginResult( res );
-				return true;
+				this.urlInvokeCallback.sendPluginResult( res );
 			} catch ( Exception e ) {
-				urlInvokeCallback.error( "invalid url invoked: " + url );
+				this.urlInvokeCallback.error( "invalid url invoked: " + url );
 			}
 			return true;
 		}
 		return false;
-	}
-	
-	/**
-	 * workaround required until SDK Version 3.1, upcoming version will fix this issue
-	 */
-	private void pluginLifecycleWorkaround() {
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 	}
 
 	/**
@@ -413,14 +429,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 */
 	private boolean removeArchitectView() {
 		if ( this.architectView != null ) {
-
-			pluginLifecycleWorkaround();
 						
 			/* fake life-cycle calls, because activity is already up and running */
 			this.architectView.onPause();
-			
-			pluginLifecycleWorkaround();
-			
 			this.architectView.onDestroy();
 
 			// clean-up used temp-directory
@@ -431,7 +442,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 				e.printStackTrace();
 			}
 
-			this.architectView.setVisibility( View.INVISIBLE );
+			this.architectView.setVisibility( View.GONE );
 			((ViewManager)this.architectView.getParent()).removeView( this.architectView );
 			this.architectView = null;
 			
@@ -491,28 +502,77 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	private void addArchitectView( final String apiKey, String filePath ) throws IOException {
 		if ( this.architectView == null ) {
 
-			this.architectView = new ArchitectView( this.cordova.getActivity() );
-
-			/* add content view and fake initial life-cycle */
-			(this.cordova.getActivity()).addContentView( this.architectView, new ViewGroup.LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT ) );
-
-			/* fake life-cycle calls, because activity is already up and running */
-			this.architectView.onCreate( getArchitectConfig( apiKey ) );
-			this.architectView.onPostCreate();
-
-			/* register self as url listener to fwd these native calls to PhoneGap */
-			this.architectView.registerUrlListener( WikitudePlugin.this );
-
-			/* load asset from local directory if prefix is used */
-			if ( filePath.startsWith( WikitudePlugin.LOCAL_ASSETS_PATH_ROOT ) ) {
-				filePath = filePath.substring( WikitudePlugin.LOCAL_ASSETS_PATH_ROOT.length() );
+		this.architectView = new ArchitectViewPhoneGap( this.cordova.getActivity() , new OnKeyDownListener() {
+			
+			@Override
+			public boolean onKeyDown(int keyCode, KeyEvent event) {
+				if (WikitudePlugin.this.architectView!=null && keyCode == KeyEvent.KEYCODE_BACK) {
+					WikitudePlugin.this.locationProvider.onPause();
+					removeArchitectView();
+					return true;
+				}
+				return false;
 			}
-			this.architectView.load( filePath );
+		});
+		
+		this.architectView.setFocusableInTouchMode(true);
+		this.architectView.requestFocus();
+		
+		this.locationListener = new LocationListener() {
 
-			/* also a fake-life-cycle call (the last one before it is really shown in UI */
-			this.architectView.onResume();
+			@Override
+			public void onStatusChanged( String provider, int status, Bundle extras ) {
+			}
 
+			@Override
+			public void onProviderEnabled( String provider ) {
+			}
+
+			@Override
+			public void onProviderDisabled( String provider ) {
+			}
+
+			@Override
+			public void onLocationChanged( final Location location ) {
+				if (location!=null) {
+					lastKnownLocaton = location;
+				if ( architectView != null ) {
+					if ( location.hasAltitude() ) {
+						architectView.setLocation( location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getAccuracy() );
+					} else {
+						architectView.setLocation( location.getLatitude(), location.getLongitude(), location.getAccuracy() );
+					}
+				}
+				}
+			}
+		};
+
+		/* add content view and fake initial life-cycle */
+		(this.cordova.getActivity()).addContentView( this.architectView, new ViewGroup.LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT ) );
+		
+
+		/* fake life-cycle calls, because activity is already up and running */
+		this.architectView.onCreate( getArchitectConfig( apiKey ) );
+		this.architectView.onPostCreate();
+
+		/* register self as url listener to fwd these native calls to PhoneGap */
+		this.architectView.registerUrlListener( WikitudePlugin.this );
+
+		/* load asset from local directory if prefix is used */
+		if ( filePath.startsWith( WikitudePlugin.LOCAL_ASSETS_PATH_ROOT ) ) {
+			filePath = filePath.substring( WikitudePlugin.LOCAL_ASSETS_PATH_ROOT.length() );
 		}
+		this.architectView.load( filePath );
+
+		/* also a fake-life-cycle call (the last one before it is really shown in UI */
+		this.architectView.onResume();
+		
+		this.locationProvider = new LocationProvider( cordova.getActivity(), this.locationListener );
+		
+		this.locationProvider.onResume();
+		
+		}
+
 	}
 	
 	
@@ -575,6 +635,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	private static void handleResumeInCordovaWebView(final View rootView) {
 		if (rootView instanceof CordovaWebView) { 
 			((CordovaWebView)rootView).handleResume(true, true);
+			((CordovaWebView)rootView).requestFocus();
 		}
 		else if (rootView instanceof ViewGroup) {
 			final int childCount = ((ViewGroup)rootView).getChildCount();
@@ -582,6 +643,142 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 				WikitudePlugin.handleResumeInCordovaWebView(((ViewGroup)rootView).getChildAt(i));
 			}
 		}
+	}
+	
+	
+	protected static class ArchitectViewPhoneGap extends ArchitectView{
+		public static interface OnKeyDownListener {
+			public boolean onKeyDown(int keyCode, KeyEvent event);
+		}
+		
+		private final OnKeyDownListener onKeyDownListener;
+		
+		@Deprecated
+		public ArchitectViewPhoneGap(Context context) {
+			super(context);
+			this.onKeyDownListener = null;
+		}
+		
+		public ArchitectViewPhoneGap(Context context, OnKeyDownListener onKeyDownListener) {
+			super(context);
+			this.onKeyDownListener = onKeyDownListener;
+		}
+
+		@Override
+	    public boolean onKeyDown(int keyCode, KeyEvent event) {
+			// forward onKeyDown events to listener
+			return this.onKeyDownListener!=null &&  this.onKeyDownListener.onKeyDown(keyCode, event);
+	    }
+		
+		@Override
+		protected void onFocusChanged(boolean gainFocus, int direction,
+				Rect previouslyFocusedRect) {
+			super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+			
+			// ensure architectView does not loose focus on screen orientation changes etc.
+			if (!gainFocus) {
+				this.requestFocus();
+			}
+		}
+	}
+	
+	/**
+	 * Sample implementation of a locationProvider, feel free to polish this very basic approach (compare http://goo.gl/pvkXV )
+	 * @author Wikitude GmbH
+	 *
+	 */
+	private static class LocationProvider implements ILocationProvider {
+
+		/** location listener called on each location update */
+		private final LocationListener	locationListener;
+
+		/** system's locationManager allowing access to GPS / Network position */
+		private final LocationManager	locationManager;
+
+		/** location updates should fire approximately every second */
+		private static final int		LOCATION_UPDATE_MIN_TIME_GPS	= 1000;
+
+		/** location updates should fire, even if last signal is same than current one (0m distance to last location is OK) */
+		private static final int		LOCATION_UPDATE_DISTANCE_GPS	= 0;
+
+		/** location updates should fire approximately every second */
+		private static final int		LOCATION_UPDATE_MIN_TIME_NW		= 1000;
+
+		/** location updates should fire, even if last signal is same than current one (0m distance to last location is OK) */
+		private static final int		LOCATION_UPDATE_DISTANCE_NW		= 0;
+
+		/** to faster access location, even use 10 minute old locations on start-up */
+		private static final int		LOCATION_OUTDATED_WHEN_OLDER_MS	= 1000 * 60 * 10;
+
+		/** is gpsProvider and networkProvider enabled in system settings */
+		private boolean					gpsProviderEnabled, networkProviderEnabled;
+
+		/** the context in which we're running */
+		private final Context			context;
+
+
+		public LocationProvider( final Context context, LocationListener locationListener ) {
+			super();
+			this.locationManager = (LocationManager)context.getSystemService( Context.LOCATION_SERVICE );
+			this.locationListener = locationListener;
+			this.context = context;
+			this.gpsProviderEnabled = this.locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+			this.networkProviderEnabled = this.locationManager.isProviderEnabled( LocationManager.NETWORK_PROVIDER );
+		}
+
+		@Override
+		public void onPause() {
+			if ( this.locationListener != null && this.locationManager != null && (this.gpsProviderEnabled || this.networkProviderEnabled) ) {
+				this.locationManager.removeUpdates( this.locationListener );
+			}
+		}
+
+		@Override
+		public void onResume() {
+			if ( this.locationManager != null && this.locationListener != null ) {
+
+				// check which providers are available are available
+				this.gpsProviderEnabled = this.locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER );
+				this.networkProviderEnabled = this.locationManager.isProviderEnabled( LocationManager.NETWORK_PROVIDER );
+
+				/** is GPS provider enabled? */
+				if ( this.gpsProviderEnabled ) {
+					final Location lastKnownGPSLocation = this.locationManager.getLastKnownLocation( LocationManager.GPS_PROVIDER );
+					if ( lastKnownGPSLocation != null && lastKnownGPSLocation.getTime() > System.currentTimeMillis() - LOCATION_OUTDATED_WHEN_OLDER_MS ) {
+						locationListener.onLocationChanged( lastKnownGPSLocation );
+					}
+					this.locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, LOCATION_UPDATE_MIN_TIME_GPS, LOCATION_UPDATE_DISTANCE_GPS, this.locationListener );
+				}
+
+				/** is Network / WiFi positioning provider available? */
+				if ( this.networkProviderEnabled ) {
+					final Location lastKnownNWLocation = this.locationManager.getLastKnownLocation( LocationManager.NETWORK_PROVIDER );
+					if ( lastKnownNWLocation != null && lastKnownNWLocation.getTime() > System.currentTimeMillis() - LOCATION_OUTDATED_WHEN_OLDER_MS ) {
+						locationListener.onLocationChanged( lastKnownNWLocation );
+					}
+					this.locationManager.requestLocationUpdates( LocationManager.NETWORK_PROVIDER, LOCATION_UPDATE_MIN_TIME_NW, LOCATION_UPDATE_DISTANCE_NW, this.locationListener );
+				}
+
+				/** user didn't check a single positioning in the location settings, recommended: handle this event properly in your app, e.g. forward user directly to location-settings, new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS ) */
+				if ( !this.gpsProviderEnabled && !this.networkProviderEnabled ) {
+					Toast.makeText( this.context, "Please enable GPS and Network positioning in your Settings ", Toast.LENGTH_LONG ).show();
+				}
+			}
+		}
+	}
+	
+	private interface ILocationProvider {
+
+		/**
+		 * Call when host-activity is resumed (usually within systems life-cycle method)
+		 */
+		public void onResume();
+
+		/**
+		 * Call when host-activity is paused (usually within systems life-cycle method)
+		 */
+		public void onPause();
+
 	}
 	
 }

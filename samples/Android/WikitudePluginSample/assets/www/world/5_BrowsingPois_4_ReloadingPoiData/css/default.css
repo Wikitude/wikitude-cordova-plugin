@@ -1,0 +1,60 @@
+
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+}
+
+
+/* CSS Style for status message at the top of the HUD */
+.status {
+    background-color: rgba(255, 255, 255, 0.4);
+    color: black;
+    text-align: center;
+    padding: 10px;
+    position:absolute;
+    width: 100%;
+    height: 5%;
+    font-size: 30px;
+}
+
+
+#refresh-div {
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 20px;
+    width: 100%;
+    position:fixed;
+    bottom:0px;
+    text-align: center;
+}
+
+#refresh-button {
+    -moz-box-shadow:inset 0px 1px 0px -6px #fce2c1;
+    -webkit-box-shadow:inset 0px 1px 0px -6px #fce2c1;
+    box-shadow:inset 0px 1px 0px -6px #fce2c1;
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffc477), color-stop(1, #fb9e25) );
+    background:-moz-linear-gradient( center top, #ffc477 5%, #fb9e25 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc477', endColorstr='#fb9e25');
+    background-color:#ffc477;
+    -moz-border-radius:12px;
+    -webkit-border-radius:12px;
+    border-radius:12px;
+    border:1px solid #eeb44f;
+    display:inline-block;
+    color:#ffffff;
+    font-family:arial;
+    font-size:23px;
+    font-weight:bold;
+    padding:14px 24px;
+    text-decoration:none;
+    text-shadow:1px 1px 3px #cc9f52;
+}.refresh-btn:hover {
+    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fb9e25), color-stop(1, #ffc477) );
+    background:-moz-linear-gradient( center top, #fb9e25 5%, #ffc477 100% );
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fb9e25', endColorstr='#ffc477');
+    background-color:#fb9e25;
+}.refresh-btn:active {
+    position:relative;
+    top:1px;
+}

@@ -10,13 +10,6 @@ var WikitudePlugin = {
 
     /**
      *
-     *  Change the value of this variable to modify the location update rate
-     *
-     */
-    locationUpdateRate: 3000,
-
-    /**
-     *
      *  This variable represents if the current device is capable of running the Wikitude SDK
      *
      */
@@ -62,7 +55,6 @@ var WikitudePlugin = {
         WikitudePlugin.onDeviceSupportedCallback = successCallback;
         WikitudePlugin.onDeviceNotSupportedCallback = errorCallback;
 
-
         // PhoneGap is running, so the first thing we do is to check if the current device is capable of running the Wikitude Plugin
         cordova.exec(WikitudePlugin.deviceIsARchitectReady, WikitudePlugin.deviceIsNotARchitectReady, "WikitudePlugin", "isDeviceSupported", [WikitudePlugin.arMode]);
 
@@ -76,7 +68,6 @@ var WikitudePlugin = {
     deviceIsARchitectReady: function() {
         // We keep track of the device status
         WikitudePlugin.isDeviceSupported = true;
-
 
         if (WikitudePlugin.onDeviceSupportedCallback) {
             WikitudePlugin.onDeviceSupportedCallback();
@@ -124,16 +115,11 @@ var WikitudePlugin = {
             //  @param {Object} options (required)
             //  @param {String} options.sdkKey License key for the Wikitude SDK
             //  @param {String} options.filePath The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
-
             cordova.exec(WikitudePlugin.worldLaunched, WikitudePlugin.worldFailedLaunching, "WikitudePlugin", "open", [WikitudePlugin.mySDKKey, worldPath]);
-
 
             // We add an event listener on the resume and pause event of the application lifecycle
             document.addEventListener("resume", WikitudePlugin.onResume, false);
             document.addEventListener("pause", WikitudePlugin.onPause, false);
-
-            // After we started loading the world, we start location updates 
-            WikitudePlugin.startLocationUpdates();
 
         } else {
             // if the device is not able to start the Wikitude SDK, we notify the user again
@@ -151,8 +137,6 @@ var WikitudePlugin = {
     close: function() {
         document.removeEventListener("pause", WikitudePlugin.onPause, false);
         document.removeEventListener("resume", WikitudePlugin.onResume, false);
-
-        WikitudePlugin.stopLocationUpdates();
 
         cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "close", [""]);
     },
@@ -190,16 +174,18 @@ var WikitudePlugin = {
     },
 
     /**
+     * deprecated, no longer supported
      *
      *  Use this function to set a callback which will be invoked when the ARchitect World calls for example
      *  document.location = "architectsdk://opendetailpage?id=9";
      *
      *
      *  @param onUrlInvokeCallback A function which gets called when the ARchitect World invokes a call to "document.location = architectsdk://"
-     */
+     
     setOnUrlInvokeCallback: function(onUrlInvokeCallback) {
         cordova.exec(onUrlInvokeCallback, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onUrlInvoke", [""]);
     },
+    */
 
 
     /*
@@ -232,67 +218,14 @@ var WikitudePlugin = {
         }
     },
 
-    /* Lifecycle updates */
-
-    /**
-     *
-     *  This function actually starts the PhoneGap location updates
-     *
-     */
-    startLocationUpdates: function() {
-
-        WikitudePlugin.watchID = navigator.geolocation.watchPosition(WikitudePlugin.onReceivedLocation, WikitudePlugin.onWikitudeError, {
-            frequency: WikitudePlugin.locationUpdateRate,
-            maximumAge: 30 * 1000,
-            enableHighAccuracy: true
-        });
-        navigator.geolocation.getCurrentPosition(WikitudePlugin.onReceivedLocation, WikitudePlugin.onWikitudeError, {
-            maximumAge: 30 * 1000,
-            enableHighAccuracy: true
-        });
-    },
-
-    /**
-     *
-     *  This callback gets called everytime the location did update
-     *
-     */
-    onReceivedLocation: function(position) {
-
-        // Every time that PhoneGap did received a location update, we pass the location into the Wikitude SDK
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "setLocation", [position.coords.latitude, position.coords.longitude, position.coords.altitude, position.coords.accuracy]);
-    },
-
-    /**
-     *
-     *  Use this function to stop location updates
-     *
-     */
-    stopLocationUpdates: function() {
-
-        // We clear the location update watch which was responsible for updating the location in a specific time interval
-        navigator.geolocation.clearWatch(WikitudePlugin.watchID);
-        WikitudePlugin.watchID = null;
-    },
-
     /**
      *
      *  This function gets called every time the application did become active.
      *
      */
     onResume: function() {
-
-        cordova.exec(function() {
-            WikitudePlugin.startLocationUpdates();
-        }, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onResume", [""]);
-
-        /*
-        // Call the Wikitude SDK that the application did become active again
         cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onResume", [""]);
 
-        // And start continuing updating the user location
-        WikitudePlugin.startLocationUpdates();
-        */
     },
 
     /**
@@ -301,31 +234,7 @@ var WikitudePlugin = {
      *
      */
     onPause: function() {
-
-        cordova.exec(function() {
-            WikitudePlugin.stopLocationUpdates();
-        }, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onPause", [""]);
-        /*
-        // Call the Wikitude SDK that the application did resign active
         cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onPause", [""]);
-
-        // And stop all ongoing location updates
-        WikitudePlugin.stopLocationUpdates();
-        
-        */
-    },
-
-    /**
-     *
-     *  Android specific!
-     *  This function gets called if the user presses the back button
-     *
-     */
-    onBackButton: function() {
-        window.clearTimeout(window.wikitudeFailedLaunchingCloseTimer);
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "close", [""]);
-        WikitudePlugin.stopLocationUpdates();
-        document.removeEventListener("backbutton", WikitudePlugin.onBackButton, false);
     },
 
     /**
