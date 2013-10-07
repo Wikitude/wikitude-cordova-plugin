@@ -526,5 +526,6 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 				WikitudePlugin.handleResumeInCordovaWebView(((ViewGroup)rootView).getChildAt(i));
 			}
 		}
+	}
 	
 }
