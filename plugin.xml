@@ -60,7 +60,7 @@
         </config-file>
 
         <!-- copy wikitude sdk -->
-        <source-file src="src/android/libs/wikitudesdk_3_1.jar" target-dir="libs/" />
+        <source-file src="src/android/libs/wikitudesdk_3_2.jar" target-dir="libs/" />
 
         <!-- adds Wikitudeplugin in project's config.xml -->
         <config-file target="res/xml/config.xml" parent="/*">
