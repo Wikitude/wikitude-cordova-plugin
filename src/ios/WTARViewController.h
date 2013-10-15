@@ -9,29 +9,28 @@
 #import <UIKit/UIKit.h>
 
 
-typedef NS_ENUM(NSUInteger, WTARViewLifecycleBehavior)
-{
-    WTARViewLifecycleBehavior_Will,
-    WTARViewLifecycleBehavior_Did
-};
-
+@class WTARViewController;
 @class WTArchitectView;
 @class CMMotionManager;
 
 
+@protocol WTARViewControllerDelegate <NSObject>
+
+- (void)arViewControllerWillDisappear:(WTARViewController *)arViewcontroller;
+
+@end
+
+
 @interface WTARViewController : UIViewController
 
-@property (nonatomic, readonly) WTArchitectView         *architectView;
-@property (nonatomic, assign) BOOL                      isARchitectViewRunning;
+@property (nonatomic, weak) id<WTARViewControllerDelegate>      delegate;
+@property (nonatomic, readonly) WTArchitectView                 *architectView;
+@property (nonatomic, assign) BOOL                              isARchitectViewRunning;
+
 
 + (BOOL)isGeoSupported;
 + (BOOL)isIRSupported;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil sdkKey:(NSString *)sdkKeyorNil motionManager:(CMMotionManager *)cmMotionManagerOrNil;
-
-- (void)setLifecycleBehaviour:(WTARViewLifecycleBehavior)lifecycleBehavior;
-
-
-
 
 @end
