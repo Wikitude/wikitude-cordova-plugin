@@ -19,12 +19,13 @@
 	<engines>
       <engine name="cordova" version=">=2.8.1" />
     </engines>	
-    
-    <!-- copy helper file into www-folder -->
-    <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
 
     <!-- android -->
     <platform name="android">
+
+
+        <!-- copy helper file into www-folder -->
+        <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
 
         <!-- declare implementation of WikitudePlugin -->
         <source-file src="src/android/WikitudePlugin.java"
@@ -87,6 +88,8 @@
 
     <!-- iOS -->
     <platform name="ios">
+        <!-- copy helper file into www-folder -->
+        <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
                 
         <!-- WikitudePlugin Source -->
         <header-file src="src/ios/WTWikitudePlugin.h" />
