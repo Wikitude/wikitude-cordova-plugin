@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreLocation/CoreLocation.h>
 
 
 @protocol WTScreenshotSaver;
@@ -117,21 +118,10 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  *
 */ 
 @property (nonatomic, weak) id<WTArchitectViewDelegate>                                 delegate;
-@property (nonatomic, assign) BOOL                                                      shouldWebViewRotate;
 @property (nonatomic, readonly) BOOL                                                    isRunning;
-
-/** @name Initializing a WTArchitectView Object */
-/**
- * Initializes the ARchitect view with the specified license key and motion manager that will be shared by the Wikitude SDK and the third party application.
- * If a motion manager instance is passed, it will be set to Wikitudes preferred settings (update intervals etc.)
- * The motion manager argument may be nil in which case Wikitude creates and manages its own motion manager instance.
- *
- *  -
- *
- * @param key Your developer key, provided with your licence information.
- * @param motionManager The CMMotionManager instance which should be used from the SDK.
-*/
-- (void)initializeWithKey:(NSString*)key motionManager:(CMMotionManager*)motionManager;
+@property (nonatomic, assign) CLLocationAccuracy                                        desiredLocationAccuracy;
+@property (nonatomic, assign) CLLocationDistance                                        desiredDistanceFilter;
+@property (nonatomic, assign) BOOL                                                      shouldWebViewRotate;
 
 
 /** @name Accessing Device Compatibility */
@@ -145,6 +135,20 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  * @discussion If the device supports ARMode_Geo, also ARMode_IR is supported.
  */
 + (BOOL)isDeviceSupportedForARMode:(WTARMode)supportedARMode;
+
+
+/** @name Initializing a WTArchitectView Object */
+/**
+ * Initializes the ARchitect view with the specified license key and motion manager that will be shared by the Wikitude SDK and the third party application.
+ * If a motion manager instance is passed, it will be set to Wikitudes preferred settings (update intervals etc.)
+ * The motion manager argument may be nil in which case Wikitude creates and manages its own motion manager instance.
+ *
+ *  -
+ *
+ * @param key Your developer key, provided with your licence information.
+ * @param motionManager The CMMotionManager instance which should be used from the SDK.
+*/
+- (void)initializeWithKey:(NSString*)key motionManager:(CMMotionManager*)motionManager;
 
 
 /** @name Loading Architect Worlds */
