@@ -15,12 +15,14 @@
 
 
 
-@interface WTWikitudePlugin () <WTArchitectViewDelegate>
+@interface WTWikitudePlugin () <WTArchitectViewDelegate, WTARViewControllerDelegate>
 
 @property (nonatomic, strong) WTARViewController                            *arViewController;
 
 @property (nonatomic, strong) NSString                                      *currentARchitectViewCallbackID;
 @property (nonatomic, strong) NSString                                      *currentPlugInErrorCallback;
+
+@property (nonatomic, strong) NSString                                      *currentARchitectViewScreenshotCallbackId;
 
 @property (nonatomic, assign) BOOL                                          isUsingInjectedLocation;
 @property (nonatomic, assign) BOOL                                          isDeviceSupported;
@@ -96,6 +98,7 @@
                 self.arViewController = [[WTARViewController alloc] initWithNibName:nil bundle:nil sdkKey:sdkKey motionManager:nil];
                 self.arViewController.architectView.delegate = self;
                 self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                self.arViewController.delegate = self;
             }
             
             
@@ -106,7 +109,7 @@
             
             
             // and finaly load the architect world, specified in the open function in js
-            if (architectWorldFilePath) {
+            if ( architectWorldFilePath && ![architectWorldFilePath isKindOfClass:[NSNull class]] ) {
                 
                 NSURL *architectWorldURL;
                 if ([architectWorldFilePath hasPrefix:@"http"]) {
@@ -205,7 +208,9 @@
     }
     
     
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    if (command) {
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
 }
 
 - (void)hide:(CDVInvokedUrlCommand *)command
@@ -278,6 +283,53 @@
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
     }
     
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+#pragma mark - Capture Screen
+
+- (void)captureScreen:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult *pluginResult = nil;
+    
+    @try {
+        
+        if (self.arViewController && self.arViewController.isARchitectViewRunning) {
+            
+            if ( 2 == command.arguments.count ) { // only proceed if the two required parameters are given
+                
+                self.currentARchitectViewScreenshotCallbackId = command.callbackId;
+                
+                
+                WTScreenshotCaptureMode captureMode = [[command.arguments objectAtIndex:0] boolValue] ? WTScreenshotCaptureMode_CamAndWebView : WTScreenshotCaptureMode_Cam;
+                
+                
+                WTScreenshotSaveMode saveMode;
+                NSString *screenshotBundlePath = nil;
+                if ( [[command.arguments objectAtIndex:1] isKindOfClass:[NSString class]] ) {
+                    
+                    saveMode = WTScreenshotSaveMode_BundleDirectory;
+                    screenshotBundlePath = [command.arguments objectAtIndex:1];
+                    
+                } else {
+                    
+                    saveMode = WTScreenshotSaveMode_PhotoLibrary;
+                }
+                
+                WTScreenshotSaveOptions options = WTScreenshotSaveOption_SavingWithoutOverwriting | WTScreenshotSaveOption_CallDelegateOnSuccess;
+                
+                [self.arViewController.architectView captureScreenWithMode:captureMode usingSaveMode:saveMode saveOptions:options context: screenshotBundlePath ? @{kWTScreenshotBundleDirectoryKey: screenshotBundlePath} : nil];
+            }
+        }
+        
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+        [pluginResult setKeepCallbackAsBool:YES];
+    }
+    @catch (NSException *exception) {
+        
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
+    }
     
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -382,10 +434,9 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-
 #pragma mark - WTArchitectView Delegate
 
-- (void)urlWasInvoked:(NSString *)url
+- (void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)url
 {
     
     CDVPluginResult *pluginResult = nil;
@@ -393,7 +444,7 @@
     
     if (url && self.currentARchitectViewCallbackID) {
         
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:url];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[url absoluteString]];
         [pluginResult setKeepCallbackAsBool:YES];
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentARchitectViewCallbackID];
@@ -405,6 +456,50 @@
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentPlugInErrorCallback];
     }
     
+}
+
+- (void)architectView:(WTArchitectView *)architectView didFailLoadWithError:(NSError *)error
+{
+    NSLog(@"Error loading world with error: %@", [error localizedDescription]);
+}
+
+- (void)architectView:(WTArchitectView *)architectView didCaptureScreenWithContext:(NSDictionary *)context
+{
+    
+    if (self.currentARchitectViewScreenshotCallbackId) {
+        
+        WTScreenshotSaveMode mode = [[context objectForKey:kWTScreenshotSaveModeKey] integerValue];
+        
+        NSString *resultMessage = nil;
+        if (WTScreenshotSaveMode_BundleDirectory == mode) {
+            resultMessage = [context objectForKey:kWTScreenshotBundleDirectoryKey];
+        } else {
+            resultMessage = @"Screenshot was added to the device Photo Library";
+        }
+        
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:resultMessage];
+        [pluginResult setKeepCallbackAsBool:YES];
+
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentARchitectViewScreenshotCallbackId];
+    }
+}
+
+- (void)architectView:(WTArchitectView *)architectView didFailCaptureScreenWithError:(NSError *)error
+{
+    
+    if (self.currentARchitectViewScreenshotCallbackId) {
+        
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+        [pluginResult setKeepCallbackAsBool:YES];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.currentARchitectViewScreenshotCallbackId];
+    }
+}
+
+#pragma mark - WTARViewControllerDelegate
+
+- (void)arViewControllerWillDisappear:(WTARViewController *)arViewcontroller
+{
+    [self close:nil];
 }
 
 @end

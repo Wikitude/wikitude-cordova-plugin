@@ -2,8 +2,8 @@ var WikitudePlugin = {
 
     /**
      *
-     *  This is the SDK Key, provided to you after you purchased the Wikitude SDK from http://www.wikitude.com/developer/sdk
-     *  If you're having a trial version, leave this string empty
+     *	This is the SDK Key, provided to you after you purchased the Wikitude SDK from http://www.wikitude.com/developer/sdk
+     *	If you're having a trial version, leave this string empty
      *
      */
     mySDKKey: "ENTER-YOUR-KEY-HERE",
@@ -17,28 +17,28 @@ var WikitudePlugin = {
 
     /**
      *
-     *  This variable represents if the current device is capable of running the Wikitude SDK
+     *	This variable represents if the current device is capable of running the Wikitude SDK
      *
      */
     isDeviceSupported: false,
 
     /**
      *
-     *  This variable represents if the current device is capable of running the Wikitude SDK
+     *	This variable represents if the current device is capable of running the Wikitude SDK
      *
      */
     arMode: "Geo",
 
     /**
      *
-     *  This watchID is used to shedule location updates
+     *	This watchID is used to shedule location updates
      *
      */
     watchID: null,
 
     /**
      *
-     *  Callbacks to get device information if ARchitect Worlds can be launched
+     *	Callbacks to get device information if ARchitect Worlds can be launched
      *
      */
     onDeviceSupportedCallback: null,
@@ -46,7 +46,7 @@ var WikitudePlugin = {
 
     /**
      *
-     *  Callbacks to get notified if the ARchitect World finished launching or if something went wrong during the World launch
+     *	Callbacks to get notified if the ARchitect World finished launching or if something went wrong during the World launch
      *
      */
     onARchitectWorldLaunchedCallback: null,
@@ -54,7 +54,7 @@ var WikitudePlugin = {
 
     /**
      *
-     *  This function gets called when PhoneGap reports that it has finished loading successfully.
+     *	This function gets called when PhoneGap reports that it has finished loading successfully.
      *
      */
     isDeviceSupported: function(successCallback, errorCallback) {
@@ -70,7 +70,7 @@ var WikitudePlugin = {
 
     /**
      *
-     *  This function gets called if the Wikitude Plugin reports that the device is able to start the Wikitude SDK
+     *	This function gets called if the Wikitude Plugin reports that the device is able to start the Wikitude SDK
      *
      */
     deviceIsARchitectReady: function() {
@@ -85,7 +85,7 @@ var WikitudePlugin = {
 
     /**
      *
-     *  This function gets called if the Wikitude Plugin reports that the device is not able of starting the Wikitude SDK.
+     *	This function gets called if the Wikitude Plugin reports that the device is not able of starting the Wikitude SDK.
      *
      */
     deviceIsNotARchitectReady: function() {
@@ -99,31 +99,30 @@ var WikitudePlugin = {
 
 
     /*
-     *  =============================================================================================================================
+     *	=============================================================================================================================
      *
-     *  PUBLIC API
+     *	PUBLIC API
      *
-     *  =============================================================================================================================
+     *	=============================================================================================================================
      */
 
     /* Managing ARchitect world loading */
 
     /**
      *
-     *  Call this function if you want to load an ARchitect World
+     *	Call this function if you want to load an ARchitect World
      *
-     *  @param {String} worldPath The path to an ARchitect world ether on the device or on e.g. your dropbox
+     * 	@param {String} worldPath The path to an ARchitect world ether on the device or on e.g. your dropbox
      *
      */
     loadARchitectWorld: function(worldPath) {
 
         // before we actually call load, we check again if the device is able to open the world
         if (WikitudePlugin.isDeviceSupported) {
-
-            //  the 'open' function of the Wikitude Plugin requires a option dictionary with two keys:
-            //  @param {Object} options (required)
-            //  @param {String} options.sdkKey License key for the Wikitude SDK
-            //  @param {String} options.filePath The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
+            //	the 'open' function of the Wikitude Plugin requires a option dictionary with two keys:
+            //	@param {Object} options (required)
+            //	@param {String} options.sdkKey License key for the Wikitude SDK
+            //	@param {String} options.filePath The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
 
             cordova.exec(WikitudePlugin.worldLaunched, WikitudePlugin.worldFailedLaunching, "WikitudePlugin", "open", [WikitudePlugin.mySDKKey, worldPath]);
 
@@ -145,7 +144,7 @@ var WikitudePlugin = {
 
     /**
      *
-     *  Use this function to stop the Wikitude SDK and to remove the ARchitectView from the screen
+     *	Use this function to stop the Wikitude SDK and to remove the ARchitectView from the screen
      *
      */
     close: function() {
@@ -159,7 +158,7 @@ var WikitudePlugin = {
 
     /**
      *
-     *  Use this function to only hide the Wikitude SDK. All location and rendering updates are still active
+     *	Use this function to only hide the Wikitude SDK. All location and rendering updates are still active
      *
      */
     hide: function() {
@@ -168,7 +167,7 @@ var WikitudePlugin = {
 
     /**
      *
-     *  Use this function to show the Wikitude SDK if it was hidden before
+     *	Use this function to show the Wikitude SDK if it was hidden before
      *
      */
     show: function() {
@@ -179,7 +178,7 @@ var WikitudePlugin = {
 
     /**
      *
-     *  Use this function to call javascript which will be executed in the context of your ARchitect World
+     *	Use this function to call javascript which will be executed in the context of your ARchitect World
      *
      *
      * @param js The JavaScript that gets evaluated in context of the ARchitect World
@@ -191,28 +190,39 @@ var WikitudePlugin = {
 
     /**
      *
-     *  Use this function to set a callback which will be invoked when the ARchitect World calls for example
-     *  document.location = "architectsdk://opendetailpage?id=9";
+     *	Use this function to set a callback which will be invoked when the ARchitect World calls for example
+     *	document.location = "architectsdk://opendetailpage?id=9";
      *
      *
-     *  @param onUrlInvokeCallback A function which gets called when the ARchitect World invokes a call to "document.location = architectsdk://"
+     *	@param onUrlInvokeCallback A function which gets called when the ARchitect World invokes a call to "document.location = architectsdk://"
      */
     setOnUrlInvokeCallback: function(onUrlInvokeCallback) {
         cordova.exec(onUrlInvokeCallback, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onUrlInvoke", [""]);
     },
 
+    /**
+     *
+     *  Use this function to generate a screenshot from the current AR view.
+     *
+     *
+     *  @param includeWebView Indicates if the ARchitect webview should be included in the generated screenshot or not.
+     *  @param imagePathInBundleorNullForPhotoLibrary If a file path or file name is given, the generates screenshot will be saved in the application bundle. Passing null will save the photo in the device photo library.
+     */
+    captureScreen: function(includeWebView, imagePathInBundleOrNullForPhotoLibrary, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "WikitudePlugin", "captureScreen", [includeWebView, imagePathInBundleOrNullForPhotoLibrary]);
+    },
 
     /*
-     *  =============================================================================================================================
+     *	=============================================================================================================================
      *
-     *  Callbacks of public functions
+     *	Callbacks of public functions
      *
-     *  =============================================================================================================================
+     *	=============================================================================================================================
      */
 
     /**
      *
-     *  Use this callback to get notified if the world loaded successfully
+     *	Use this callback to get notified if the world loaded successfully
      *
      */
     worldLaunched: function() {
@@ -223,7 +233,7 @@ var WikitudePlugin = {
 
     /**
      *
-     *  Use this callback to get notified if the Wikitude SDK wasn't able to load the ARchitect World
+     *	Use this callback to get notified if the Wikitude SDK wasn't able to load the ARchitect World
      *
      */
     worldFailedLaunching: function(err) {
@@ -233,118 +243,65 @@ var WikitudePlugin = {
     },
 
     /* Lifecycle updates */
-
     /**
      *
-     *  This function actually starts the PhoneGap location updates
-     *
-     */
-    startLocationUpdates: function() {
-
-        WikitudePlugin.watchID = navigator.geolocation.watchPosition(WikitudePlugin.onReceivedLocation, WikitudePlugin.onWikitudeError, {
-            frequency: WikitudePlugin.locationUpdateRate,
-            maximumAge: 30 * 1000,
-            enableHighAccuracy: true
-        });
-        navigator.geolocation.getCurrentPosition(WikitudePlugin.onReceivedLocation, WikitudePlugin.onWikitudeError, {
-            maximumAge: 30 * 1000,
-            enableHighAccuracy: true
-        });
-    },
-
-    /**
-     *
-     *  This callback gets called everytime the location did update
-     *
-     */
-    onReceivedLocation: function(position) {
-
-        // Every time that PhoneGap did received a location update, we pass the location into the Wikitude SDK
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "setLocation", [position.coords.latitude, position.coords.longitude, position.coords.altitude, position.coords.accuracy]);
-    },
-
-    /**
-     *
-     *  Use this function to stop location updates
-     *
-     */
-    stopLocationUpdates: function() {
-
-        // We clear the location update watch which was responsible for updating the location in a specific time interval
-        navigator.geolocation.clearWatch(WikitudePlugin.watchID);
-        WikitudePlugin.watchID = null;
-    },
-
-    /**
-     *
-     *  This function gets called every time the application did become active.
+     *	This function gets called every time the application did become active.
      *
      */
     onResume: function() {
 
-        cordova.exec(function() {
-            WikitudePlugin.startLocationUpdates();
-        }, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onResume", [""]);
-
-        /*
         // Call the Wikitude SDK that the application did become active again
         cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onResume", [""]);
 
         // And start continuing updating the user location
         WikitudePlugin.startLocationUpdates();
-        */
     },
 
     /**
      *
-     *  This function gets called every time the application is about to become inactive
+     *	This function gets called every time the application is about to become inactive
      *
      */
     onPause: function() {
 
-        cordova.exec(function() {
-            WikitudePlugin.stopLocationUpdates();
-        }, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onPause", [""]);
-        /*
         // Call the Wikitude SDK that the application did resign active
         cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onPause", [""]);
 
         // And stop all ongoing location updates
         WikitudePlugin.stopLocationUpdates();
-        
-        */
     },
 
     /**
      *
-     *  Android specific!
-     *  This function gets called if the user presses the back button
+     *	Android specific!
+     *	This function gets called if the user presses the back button
      *
      */
     onBackButton: function() {
-        window.clearTimeout(window.wikitudeFailedLaunchingCloseTimer);
+
         cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "close", [""]);
         WikitudePlugin.stopLocationUpdates();
+
         document.removeEventListener("backbutton", WikitudePlugin.onBackButton, false);
     },
 
     /**
      *
-     *  This function gets called every time the application is about to become inactive
+     *	This function gets called every time the application is about to become inactive
      *
      */
     onWikitudeOK: function() {},
 
     /**
      *
-     *  This function gets called every time the application is about to become inactive
+     *	This function gets called every time the application is about to become inactive
      *
      */
     onWikitudeError: function() {},
 
     /**
      *
-     *  This function gets called every time the application is about to become inactive
+     *	This function gets called every time the application is about to become inactive
      *
      */
     report: function(id) {

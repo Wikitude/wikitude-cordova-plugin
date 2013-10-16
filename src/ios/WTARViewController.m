@@ -51,20 +51,35 @@
             
             self.view = self.architectView;
             self.view.backgroundColor = [UIColor clearColor];
+            
+            
+            UISwipeGestureRecognizer *swipeBackRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeBack:)];
+            swipeBackRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+            
+            [self.view addGestureRecognizer:swipeBackRecognizer];
         }
     }
     return self;
 }
 
-- (void)setLifecycleBehaviour:(WTARViewLifecycleBehavior)lifecycleBehavior
+- (BOOL)prefersStatusBarHidden
 {
-    
+    return YES;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+}
+
+- (void)didSwipeBack:(UISwipeGestureRecognizer *)recognizer
+{
+    if (self.delegate) {
+        if ([self.delegate respondsToSelector:@selector(arViewControllerWillDisappear:)]) {
+            [self.delegate arViewControllerWillDisappear:self];
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning
