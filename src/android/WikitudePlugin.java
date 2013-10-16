@@ -200,7 +200,13 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		if (WikitudePlugin.ACTION_CAPTURE_SCREEN.equals(action) ) {
 			if (architectView!=null) {
 
-				final int captureMode = args.getBoolean( 0 ) ? ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM_AND_WEBVIEW : ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM;
+				int captureMode = ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM_AND_WEBVIEW;
+
+				try {
+					captureMode = ( args.getBoolean( 0 )) ? ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM_AND_WEBVIEW : ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM;
+				} catch (Exception e) {
+					// unexpected error;
+				}
 
 				architectView.captureScreen(captureMode, new CaptureScreenCallback() {
 					
