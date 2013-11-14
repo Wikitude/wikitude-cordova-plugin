@@ -298,6 +298,20 @@ var WikitudePlugin = {
      *
      */
     onWikitudeError: function() {},
+    
+    /**
+     *
+     *	This function gets called when the application starts updating location
+     *
+     */
+    startLocationUpdates: function() {},
+    
+    /**
+     *
+     *	This function gets called when the application stops updating location
+     *
+     */
+    stopLocationUpdates: function() {},
 
     /**
      *
