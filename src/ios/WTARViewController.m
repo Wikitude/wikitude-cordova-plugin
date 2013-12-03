@@ -45,6 +45,9 @@
             if ([self.architectView respondsToSelector:@selector(setSDKOrigin:)]) {
                 [self.architectView performSelector:@selector(setSDKOrigin:) withObject:@"ORIGIN_PHONEGAP"];
             }
+            if ([self.architectView respondsToSelector:@selector(setPresentingViewController:)]) {
+                [self.architectView performSelector:@selector(setPresentingViewController:) withObject:self];
+            }
             
             [self.architectView initializeWithKey:sdkKeyorNil motionManager:cmMotionManagerOrNil];
             
@@ -71,6 +74,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    [self.architectView setShouldRotate:YES
+                 toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+    
 }
 
 - (void)didSwipeBack:(UISwipeGestureRecognizer *)recognizer
@@ -82,16 +89,31 @@
     }
 }
 
-- (void)didReceiveMemoryWarning
+
+#pragma mark - Orientation handling iOS 6
+
+- (BOOL)shouldAutorotate
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    return YES;
 }
 
+- (NSUInteger)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAll;
+}
 
+#pragma mark Orientation handling iOS 5
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+{
+    return YES;
+}
+
+#pragma mark Orientation handling Wikitude
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-    [self.architectView setShouldRotate:YES toInterfaceOrientation:toInterfaceOrientation];
+    BOOL shouldRotate = UIInterfaceOrientationIsLandscape(toInterfaceOrientation);
+    
+    [self.architectView setShouldRotate:shouldRotate toInterfaceOrientation:toInterfaceOrientation];
 }
 
 @end
