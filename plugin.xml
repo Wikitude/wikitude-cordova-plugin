@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.wikitude.phonegap.WikitudePlugin"
-    version="1.3.0">
+    version="3.2.1">
 
     <name>Augmented Reality - Wikitude SDK Plugin</name>
     
@@ -61,7 +61,7 @@
         </config-file>
 
         <!-- copy wikitude sdk -->
-        <source-file src="src/android/libs/wikitudesdk_3_2.jar" target-dir="libs/" />
+        <source-file src="src/android/libs/wikitudesdk_3_2_1.jar" target-dir="libs/" />
 
         <!-- adds Wikitudeplugin in project's config.xml -->
         <config-file target="res/xml/config.xml" parent="/*">
