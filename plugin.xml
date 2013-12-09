@@ -9,16 +9,16 @@
     <author>Wikitude GmbH</author>
     <keywords>AR,Augmented Reality,Wikitude</keywords>
 
-	<description>
-		The Wikitude PhoneGap Plugin enables developers to embed an augmented reality view into their PhoneGap project. You can create a fully featured app with advanced augmented reality features, including image recognition, purely using HTML, CSS and JavaScript.
-	</description>
+    <description>
+        The Wikitude PhoneGap Plugin enables developers to embed an augmented reality view into their PhoneGap project. You can create a fully featured app with advanced augmented reality features, including image recognition, purely using HTML, CSS and JavaScript.
+    </description>
 
-	<license>Apache 2.0</license>
+    <license>Apache 2.0</license>
     
     
-	<engines>
+    <engines>
       <engine name="cordova" version=">=2.8.1" />
-    </engines>	
+    </engines>  
 
     <!-- android -->
     <platform name="android">
@@ -63,7 +63,7 @@
         <!-- copy wikitude sdk -->
         <source-file src="src/android/libs/wikitudesdk_3_2_1.jar" target-dir="libs/" />
 
-        <!-- adds Wikitudeplugin in project's config.xml -->
+        <!-- adds WikitudePlugin in project's config.xml -->
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="WikitudePlugin">
                 <param name="android-package" value="com.wikitude.phonegap.WikitudePlugin"/>
@@ -75,9 +75,9 @@
 
         <!-- visible after installation -->
         <info>
-            Have fun using World's first AR Plugin for PhoneGap. Visit developer.wikitude.com for technical support.
+            Have fun using world's first AR plugin for PhoneGap. Visit http://developer.wikitude.com/documentation/phonegap for technical support.
 
-            SDK-Key matching your package-identifier (e.g. "com.yourapp.id" ) required to get rid of the watermark and intro-animation, see "Store" at www.wikitude.com
+            Ensure that your SDK key matches your package identifier (e.g. "com.yourapp.id" ). This will remove the watermark and intro animation. For more information the online store at http://www.wikitude.com/store
 
             If you want to contribute to the open source project, please visit us at github, http://github.com/Wikitude
         </info>
@@ -101,16 +101,26 @@
         <header-file src="src/ios/WTArchitectView.h" />
         <source-file src="src/ios/libWikitudeSDK.a" framework="true" />
 
-        <!-- Additioanl WikitudePlugin libraries and frameworkd -->
+        <!-- Additional WikitudePlugin libraries and frameworks -->
         <framework src="CoreMotion.framework" />
         <framework src="CoreVideo.framework" />
         <framework src="OpenGLES.framework" />
-        <framework src="Security.framework" />        
-        
+        <framework src="Security.framework" /> 
+        <framework src="AssetsLibrary.framework" /> 
+        <framework src="AVFoundation.framework" /> 
+        <framework src="CFNetwork.framework" /> 
+        <framework src="CoreGraphics.framework" /> 
+        <framework src="CoreLocation.framework" /> 
+        <framework src="CoreMedia.framework" /> 
+        <framework src="Foundation.framework" /> 
+        <framework src="MediaPlayer.framework" /> 
+        <framework src="QuartzCore.framework" /> 
+        <framework src="SystemConfiguration.framework" /> 
+        <framework src="UIKit.framework" />  
         <framework src="libc++.dylib" />
         <framework src="libz.dylib" />
         
-        <!-- Adopts project's config.xml to include the WikitudPlugin and domain whitelists -->
+        <!-- Adopts project's config.xml to include the WikitudePlugin and domain white-lists -->
         <config-file target="config.xml" parent="/*/plugins">
             <feature name="WikitudePlugin">
                 <param name="ios-package" value="WTWikitudePlugin"/>
@@ -122,7 +132,11 @@
         
         <!-- visible after installation -->
         <info>
-            Ensure SDK-Key matching your package-identifier (e.g. "com.yourapp.id" )required to get rid of the watermark and intro-animation, see Store at http://www.wikitude.com/store
+            Have fun using world's first AR plugin for PhoneGap. Visit http://developer.wikitude.com/documentation/phonegap for technical support.
+
+            Ensure that your SDK key matches your bundle identifier (e.g. "com.yourapp.id" ). This will remove the watermark and intro animation. For more information the online store at http://www.wikitude.com/store
+
+            If you want to contribute to the open source project, please visit us at github, http://github.com/Wikitude
         </info>
         
     </platform>    
