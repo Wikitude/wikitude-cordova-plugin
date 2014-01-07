@@ -1,6 +1,5 @@
 
-
-[![Analytics](https://ga-beacon.appspot.com/UA-11754809-17/wikitude-phonegap/home)](https://github.com/igrigorik/ga-beacon?pixel)
+[![Analytics](https://ga-beacon.appspot.com/UA-11754809-17/wikitude-phonegap/home?pixel)](https://github.com/igrigorik/ga-beacon)
 
 
 # Augmented Reality - Wikitude SDK Plugin
