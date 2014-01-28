@@ -20,16 +20,18 @@
       <engine name="cordova" version=">=2.8.1" />
     </engines>  
 
+    <!-- copy WikitudePlugin wrapper file into www-folder -->
+    <js-module src="www/WikitudePlugin.js" name="WikitudePlugin">
+    	<clobbers target="WikitudePlugin" />
+    </js-module>
+
     <!-- android -->
     <platform name="android">
 
 
-        <!-- copy helper file into www-folder -->
-        <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
-
         <!-- declare implementation of WikitudePlugin -->
-        <source-file src="src/android/WikitudePlugin.java"
-                target-dir="src/com/wikitude/phonegap" />
+        <source-file src="src/android/WikitudePlugin.java" target-dir="src/com/wikitude/phonegap" />
+
 
         <!-- add permissions and requirements -->
         <config-file target="AndroidManifest.xml" parent="/manifest">
@@ -60,8 +62,10 @@
             </activity>
         </config-file>
 
+
         <!-- copy wikitude sdk -->
         <source-file src="src/android/libs/wikitudesdk_3_2_1.jar" target-dir="libs/" />
+
 
         <!-- adds WikitudePlugin in project's config.xml -->
         <config-file target="res/xml/config.xml" parent="/*">
@@ -72,6 +76,7 @@
                 <param name="android-package" value="org.apache.cordova.GeoBroker" />
             </feature>
         </config-file>
+
 
         <!-- visible after installation -->
         <info>
@@ -88,10 +93,7 @@
 
     <!-- iOS -->
     <platform name="ios">
-        <!-- copy WikitudePlugin wrapper file into www-folder -->
-        <js-module src="www/WikitudePlugin.js" name="WikitudePlugin">
-        	<clobbers target="WikitudePlugin" />
-        </js-module>
+                
                 
         <!-- WikitudePlugin Source -->
         <header-file src="src/ios/WTWikitudePlugin.h" />
@@ -102,6 +104,7 @@
 
         <header-file src="src/ios/WTArchitectView.h" />
         <source-file src="src/ios/libWikitudeSDK.a" framework="true" />
+
 
         <!-- Additional WikitudePlugin libraries and frameworks -->
         <framework src="CoreMotion.framework" />
@@ -122,16 +125,16 @@
         <framework src="libc++.dylib" />
         <framework src="libz.dylib" />
         
+
         <!-- Adopts project's config.xml to include the WikitudePlugin and domain white-lists -->
-        <config-file target="config.xml" parent="/*/plugins">
+        <config-file target="config.xml" parent="/*">
             <feature name="WikitudePlugin">
                 <param name="ios-package" value="WTWikitudePlugin"/>
             </feature>
-        </config-file>
-        <config-file target="config.xml" parent="/*">
             <access origin="*" />
         </config-file>
         
+
         <!-- visible after installation -->
         <info>
             Have fun using world's first AR plugin for PhoneGap. Visit http://developer.wikitude.com/documentation/phonegap for technical support.
