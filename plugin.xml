@@ -88,8 +88,10 @@
 
     <!-- iOS -->
     <platform name="ios">
-        <!-- copy helper file into www-folder -->
-        <asset src="www/WikitudePlugin.js" target="WikitudePlugin.js" />
+        <!-- copy WikitudePlugin wrapper file into www-folder -->
+        <js-module src="www/WikitudePlugin.js" name="WikitudePlugin">
+        	<clobbers target="WikitudePlugin" />
+        </js-module>
                 
         <!-- WikitudePlugin Source -->
         <header-file src="src/ios/WTWikitudePlugin.h" />
