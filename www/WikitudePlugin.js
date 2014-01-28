@@ -1,34 +1,43 @@
 
-WikitudePlugin = {
-
     /**
-     *	This is the SDK Key, provided to you after you purchased the Wikitude SDK from http://www.wikitude.com/store/.
-     *	If you're having a trial version, leave this string empty.
-     */
-    SDKKey: "ENTER-YOUR-KEY-HERE",
+    * Release date: 29.01.14
+    */
 
-    /**
-     *	This variable represents if the current device is capable of running ARchitect Worlds.
-     */
-    isDeviceSupported: false,
+    var WikitudePlugin = function {
 
-    /**
-     *	The Wikitude SDK can run in different modes. Geo means that objects are placed on latitude/longitude positions. IR means that only image recognition is used in the ARchitect World.
-     *  When your ARchitect World uses both, geo and ir content, than leave this to "Geo". When you only need image recognition, placing "IR" will require less features from the device. 
-     */
-    arMode: "Geo", // "IR" for image recognition worlds only
+        /**
+         *  This is the SDK Key, provided to you after you purchased the Wikitude SDK from http =//www.wikitude.com/store/.
+         *  If you're having a trial version, leave this string empty.
+         */
+        this._sdkKey = "ENTER-YOUR-KEY-HERE";
 
-    /**
-     *	Callbacks that are used during device compatibilty checks.
-     */
-    onDeviceSupportedCallback: null,
-    onDeviceNotSupportedCallback: null,
 
-    /**
-     *	Callbacks that are used if an ARchitect World was launched successfully or not.
-     */
-    onARchitectWorldLaunchedCallback: null,
-    onARchitectWorldFailedLaunchingCallback: null,
+        /**
+         *  This variable represents if the current device is capable of running ARchitect Worlds.
+         */
+        this._isDeviceSupported = false;
+
+
+        /**
+         *  The Wikitude SDK can run in different modes. Geo means that objects are placed on latitude/longitude positions. IR means that only image recognition is used in the ARchitect World.
+         *  When your ARchitect World uses both, geo and ir content, than leave this to "Geo". When you only need image recognition, placing "IR" will require less features from the device.
+         */
+        this._arMode = "Geo"; // "IR" for image recognition worlds only
+
+
+        /**
+         *  Callbacks that are used during device compatibilty checks.
+         */
+        this._onDeviceSupportedCallback = null;
+        this._onDeviceNotSupportedCallback = null;        
+
+
+        /**
+         *  Callbacks that are used if an ARchitect World was launched successfully or not.
+         */
+        this._onARchitectWorldLaunchedCallback = null;
+        this._onARchitectWorldFailedLaunchingCallback = null;
+    };
 
 
     /*
@@ -47,72 +56,72 @@ WikitudePlugin = {
      * @param {function} successCallback A callback which is called if the device is capable of running ARchitect Worlds.
      * @param {function} errorCallback A callback which is called if the device is not capable of running ARchitect Worlds.
      */
-    isDeviceSupported: function(successCallback, errorCallback) {
+    WikitudePlugin.prototype.isDeviceSupported = function(successCallback, errorCallback) {
 
         // Store a reference to the success and error callback function because we intercept the callbacks ourself but need to call the developer ones afterwards
-        WikitudePlugin.onDeviceSupportedCallback = successCallback;
-        WikitudePlugin.onDeviceNotSupportedCallback = errorCallback;
+        this._onDeviceSupportedCallback = successCallback;
+        this._onDeviceNotSupportedCallback = errorCallback;
 
 
         // Check if the current device is capable of running Architect Worlds
-        cordova.exec(WikitudePlugin.deviceIsARchitectReady, WikitudePlugin.deviceIsNotARchitectReady, "WikitudePlugin", "isDeviceSupported", [WikitudePlugin.arMode]);
-    },
+        cordova.exec(this.deviceIsARchitectReady, this.deviceIsNotARchitectReady, "WikitudePlugin", "isDeviceSupported", [this._arMode]);
+    };
 
     /**
      *	Use this function to load an ARchitect World.
      *
      * 	@param {String} worldPath The path to an ARchitect world, ether on the device or on e.g. your Dropbox.
      */
-    loadARchitectWorld: function(worldPath) {
+    WikitudePlugin.prototype.loadARchitectWorld = function(worldPath) {
 
         // before we actually call load, we check again if the device is able to open the world
         if (WikitudePlugin.isDeviceSupported) {
 
-            //	the 'open' function of the Wikitude Plugin requires a option dictionary with two keys:
+            //	the 'open' function of the Wikitude Plugin requires a option dictionary with two keys =
             //	@param {Object} options (required)
             //	@param {String} options.sdkKey License key for the Wikitude SDK
             //	@param {String} options.filePath The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
-            cordova.exec(WikitudePlugin.worldLaunched, WikitudePlugin.worldFailedLaunching, "WikitudePlugin", "open", [WikitudePlugin.SDKKey, worldPath]);
+            cordova.exec(this.worldLaunched, this.worldFailedLaunching, "WikitudePlugin", "open", [this._SDKKey, worldPath]);
 
 
             // We add an event listener on the resume and pause event of the application lifecycle
-            document.addEventListener("resume", WikitudePlugin.onResume, false);
-            document.addEventListener("pause", WikitudePlugin.onPause, false);
+            document.addEventListener("resume", this.onResume, false);
+            document.addEventListener("pause", this.onPause, false);
 
         } else {
 
             // If the device is not supported, we call the device not supported callback again.
-            if (WikitudePlugin.onDeviceNotSupportedCallback {
-                WikitudePlugin.onDeviceNotSupportedCallback();
+            if (this._onDeviceNotSupportedCallback) {
+                this._onDeviceNotSupportedCallback();
             }
         }
-    },
+    };
 
     /* Managing the Wikitude SDK Lifecycle */
     /**
      *	Use this function to stop the Wikitude SDK and to remove it from the screen.
      */
-    close: function() {
-        document.removeEventListener("pause", WikitudePlugin.onPause, false);
-        document.removeEventListener("resume", WikitudePlugin.onResume, false);
+    WikitudePlugin.prototype.close = function() {
 
+        document.removeEventListener("pause", this.onPause, false);
+        document.removeEventListener("resume", this.onResume, false);
 
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "close", [""]);
-    },
+        cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "close", [""]);
+    };
 
     /**
      *	Use this function to only hide the Wikitude SDK. All location and rendering updates are still active.
      */
-    hide: function() {
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "hide", [""]);
-    },
+    WikitudePlugin.prototype.hide = function() {
+        cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "hide", [""]);
+    };
 
     /**
      *	Use this function to show the Wikitude SDK again if it was hidden before.
      */
-    show: function() {
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "show", [""]);
-    },
+    WikitudePlugin.prototype.show = function() {
+        cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "show", [""]);
+    };
 
     /* Interacting with the Wikitude SDK */
 
@@ -121,19 +130,19 @@ WikitudePlugin = {
      *
      * @param js The JavaScript that should be evaluated in the ARchitect View.
      */
-    callJavaScript: function(js) {
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "callJavascript", [js]);
-    },
+    WikitudePlugin.prototype.callJavaScript = function(js) {
+        cordova.exec(this.onWikitudeOK, this.onWikitudeError, "wikitudePlugin", "callJavascript", [js]);
+    };
 
     /**
-     *	Use this function to set a callback which will be invoked when the ARchitect World opens an architectsdk:// url.
-     *	document.location = "architectsdk://opendetailpage?id=9";
+     *	Use this function to set a callback which will be invoked when the ARchitect World opens an architectsdk =// url.
+     *	document.location = "architectsdk =//opendetailpage?id=9";
      *
-     *	@param onUrlInvokeCallback A function which will be called when the ARchitect World invokes a call to "document.location = architectsdk://"
+     *	@param onUrlInvokeCallback A function which will be called when the ARchitect World invokes a call to "document.location = architectsdk =//"
      */
-    setOnUrlInvokeCallback: function(onUrlInvokeCallback) {
-        cordova.exec(onUrlInvokeCallback, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onUrlInvoke", [""]);
-    },
+    WikitudePlugin.prototype.setOnUrlInvokeCallback = function(onUrlInvokeCallback) {
+        cordova.exec(onUrlInvokeCallback, this.onWikitudeError, "WikitudePlugin", "onUrlInvoke", [""]);
+    };
 
     /**
      *  Use this function to generate a screenshot from the current Wikitude SDK view.
@@ -141,9 +150,9 @@ WikitudePlugin = {
      *  @param includeWebView Indicates if the ARchitect web view should be included in the generated screenshot or not.
      *  @param imagePathInBundleorNullForPhotoLibrary If a file path or file name is given, the generated screenshot will be saved in the application bundle. Passing null will save the photo in the device photo library.
      */
-    captureScreen: function(includeWebView, imagePathInBundleOrNullForPhotoLibrary, successCallback, errorCallback) {
+    WikitudePlugin.prototype.captureScreen = function(includeWebView, imagePathInBundleOrNullForPhotoLibrary, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "WikitudePlugin", "captureScreen", [includeWebView, imagePathInBundleOrNullForPhotoLibrary]);
-    },
+    };
 
     /*
      *	=============================================================================================================================
@@ -157,89 +166,88 @@ WikitudePlugin = {
     /**
      *  This function gets called if the Wikitude Plugin reports that the device is able to start the Wikitude SDK
      */
-    deviceIsARchitectReady: function() {
+    WikitudePlugin.prototype.deviceIsARchitectReady = function() {
         
         // Keep track of the device status
-        WikitudePlugin.isDeviceSupported = true;
+        this._isDeviceSupported = true;
 
         // if the developer passed in a device supported callback, call it
-        if (WikitudePlugin.onDeviceSupportedCallback) {
-            WikitudePlugin.onDeviceSupportedCallback();
+        if (this._onDeviceSupportedCallback) {
+            this._onDeviceSupportedCallback();
         }
-    },
+    };
 
     /**
      *  This function gets called if the Wikitude Plugin reports that the device is not able of starting the Wikitude SDK.
      */
-    deviceIsNotARchitectReady: function() {
+    WikitudePlugin.prototype.deviceIsNotARchitectReady = function() {
 
         // Keep track of the device status
-        WikitudePlugin.isDeviceSupported = false;
+        this._isDeviceSupported = false;
 
         // if the developer passed in a device not supported callback, call it
-        if (WikitudePlugin.onDeviceNotSupportedCallback) {
-            WikitudePlugin.onDeviceNotSupportedCallback();
+        if (this._onDeviceNotSupportedCallback) {
+            this._onDeviceNotSupportedCallback();
         }
-    },
+    };
 
     /**
      *	Use this callback to get notified when the ARchitect World was loaded successfully.
      */
-    worldLaunched: function() {
-        if (WikitudePlugin.onARchitectWorldLaunchedCallback) {
-            WikitudePlugin.onARchitectWorldLaunchedCallback();
+    WikitudePlugin.prototype.worldLaunched = function() {
+        if (this._onARchitectWorldLaunchedCallback) {
+            this._onARchitectWorldLaunchedCallback();
         }
-    },
+    };
 
     /**
      *	Use this callback to get notified when the ARchitect World could not be loaded.
      */
-    worldFailedLaunching: function(err) {
-        if (WikitudePlugin.onARchitectWorldFailedLaunchingCallback) {
-            WikitudePlugin.onARchitectWorldFailedLaunchingCallback(err);
+    WikitudePlugin.prototype.worldFailedLaunching = function(err) {
+        if (this._onARchitectWorldFailedLaunchingCallback) {
+            this._onARchitectWorldFailedLaunchingCallback(err);
         }
-    },
+    };
 
     /* Lifecycle updates */
     /**
      *	This function gets called every time the application did become active.
      */
-    onResume: function() {
+    WikitudePlugin.prototype.onResume = function() {
 
         // Call the Wikitude SDK that it should resume.
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onResume", [""]);
-    },
+        cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "onResume", [""]);
+    };
 
     /**
      *	This function gets called every time the application is about to become inactive.
      */
-    onPause: function() {
+    WikitudePlugin.prototype.onPause = function() {
 
         // Call the Wikitude SDK that the application did become inactive
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "onPause", [""]);
-    },
+        cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "onPause", [""]);
+    };
 
     /**
      *	Android specific!
      *	This function gets called if the user presses the back button
      */
-    onBackButton: function() {
+    WikitudePlugin.prototype.onBackButton = function() {
 
-        cordova.exec(WikitudePlugin.onWikitudeOK, WikitudePlugin.onWikitudeError, "WikitudePlugin", "close", [""]);
-        WikitudePlugin.stopLocationUpdates();
-
-        document.removeEventListener("backbutton", WikitudePlugin.onBackButton, false);
-    },
+        cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "close", [""]);
+        
+        document.removeEventListener("backbutton", this.onBackButton, false);
+    };
 
     /**
      *	A generic success callback used inside this wrapper.
      */
-    onWikitudeOK: function() {},
+    WikitudePlugin.prototype.onWikitudeOK = function() {};
 
     /**
      *  A generic error callback used inside this wrapper.
      */
-    onWikitudeError: function() {}
-};
+    WikitudePlugin.prototype.onWikitudeError = function() {};
 
-module.exports = WikitudePlugin;
+    var wikitudePlugin = new WikitudePlugin();
+    module.exports = wikitudePlugin;
