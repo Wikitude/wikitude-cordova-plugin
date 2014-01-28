@@ -1,4 +1,4 @@
-var WikitudePlugin = {
+WikitudePlugin = {
 
     /**
      *
@@ -287,24 +287,17 @@ var WikitudePlugin = {
 
     /**
      *
-     *	This function gets called every time the application is about to become inactive
+     *	A generic success callback
      *
      */
     onWikitudeOK: function() {},
 
     /**
      *
-     *	This function gets called every time the application is about to become inactive
+     *	A generic error callback
      *
      */
-    onWikitudeError: function() {},
-
-    /**
-     *
-     *	This function gets called every time the application is about to become inactive
-     *
-     */
-    report: function(id) {
-        console.log("app report: " + id);
-    }
+    onWikitudeError: function() {}
 };
+
+module.exports = WikitudePlugin;
