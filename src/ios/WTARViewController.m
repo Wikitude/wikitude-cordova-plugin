@@ -66,7 +66,7 @@
             [self.view addGestureRecognizer:swipeBackRecognizer];
         }
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillResignActiveNotification:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillBecomeActiveNotification:) name:UIApplicationWillEnterForegroundNotification object:nil];
     }
     return self;
@@ -104,7 +104,6 @@
 #pragma mark - Notifications
 - (void)didReceivedDeviceWillResignActiveNotification:(NSNotification *)aNotification
 {
-    
     /* If we’re presented then we need to stop the sdk view */
     if ( self.presentingViewController && [self.architectView isRunning] ) {
         [self.architectView stop];
