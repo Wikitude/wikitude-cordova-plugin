@@ -146,6 +146,18 @@
     };
 
     /**
+     *  Use this function to inject a location into the Wikituce SDK.
+     *
+     *  @param latitude The latitude which should be simulated
+     *  @param longitude The longitude which should be simulated
+     *  @param altitude The altitude which should be simulated
+     *  @param accuracy The simulated location accuracy
+     */
+    WikitudePlugin.prototype.setLocation = function(latitude, longitude, altitude, accuracy) {
+        cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "setLocation", [latitude, longitude, altitude, accuracy]);
+    };
+
+    /**
      *  Use this function to generate a screenshot from the current Wikitude SDK view.
      *
      *  @param includeWebView Indicates if the ARchitect web view should be included in the generated screenshot or not.
