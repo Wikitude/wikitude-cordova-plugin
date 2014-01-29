@@ -22,7 +22,7 @@
 
     <!-- copy WikitudePlugin wrapper file into www-folder -->
     <js-module src="www/WikitudePlugin.js" name="WikitudePlugin">
-    	<clobbers target="WikitudePlugin" />
+        	<clobbers target="WikitudePlugin" />
     </js-module>
 
     <!-- android -->
