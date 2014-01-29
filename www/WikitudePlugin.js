@@ -1,9 +1,10 @@
 
+
     /**
     * Release date: 29.01.14
     */
 
-    var WikitudePlugin = function {
+    var WikitudePlugin = function() {
 
         /**
          *  This is the SDK Key, provided to you after you purchased the Wikitude SDK from http =//www.wikitude.com/store/.
@@ -75,13 +76,13 @@
     WikitudePlugin.prototype.loadARchitectWorld = function(worldPath) {
 
         // before we actually call load, we check again if the device is able to open the world
-        if (WikitudePlugin.isDeviceSupported) {
+        if (this._isDeviceSupported) {
 
             //	the 'open' function of the Wikitude Plugin requires a option dictionary with two keys =
             //	@param {Object} options (required)
             //	@param {String} options.sdkKey License key for the Wikitude SDK
             //	@param {String} options.filePath The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
-            cordova.exec(this.worldLaunched, this.worldFailedLaunching, "WikitudePlugin", "open", [this._SDKKey, worldPath]);
+            cordova.exec(this.worldLaunched, this.worldFailedLaunching, "WikitudePlugin", "open", [this._sdkKey, worldPath]);
 
 
             // We add an event listener on the resume and pause event of the application lifecycle
@@ -169,11 +170,11 @@
     WikitudePlugin.prototype.deviceIsARchitectReady = function() {
         
         // Keep track of the device status
-        this._isDeviceSupported = true;
+        module.exports._isDeviceSupported = true;
 
         // if the developer passed in a device supported callback, call it
-        if (this._onDeviceSupportedCallback) {
-            this._onDeviceSupportedCallback();
+        if (module.exports._onDeviceSupportedCallback) {
+            module.exports._onDeviceSupportedCallback();
         }
     };
 
@@ -183,11 +184,11 @@
     WikitudePlugin.prototype.deviceIsNotARchitectReady = function() {
 
         // Keep track of the device status
-        this._isDeviceSupported = false;
+        module.exports._isDeviceSupported = false;
 
         // if the developer passed in a device not supported callback, call it
-        if (this._onDeviceNotSupportedCallback) {
-            this._onDeviceNotSupportedCallback();
+        if (module.exports._onDeviceNotSupportedCallback) {
+            module.exports._onDeviceNotSupportedCallback();
         }
     };
 
@@ -195,8 +196,8 @@
      *	Use this callback to get notified when the ARchitect World was loaded successfully.
      */
     WikitudePlugin.prototype.worldLaunched = function() {
-        if (this._onARchitectWorldLaunchedCallback) {
-            this._onARchitectWorldLaunchedCallback();
+        if (module.exports._onARchitectWorldLaunchedCallback) {
+            module.exports._onARchitectWorldLaunchedCallback();
         }
     };
 
@@ -204,8 +205,8 @@
      *	Use this callback to get notified when the ARchitect World could not be loaded.
      */
     WikitudePlugin.prototype.worldFailedLaunching = function(err) {
-        if (this._onARchitectWorldFailedLaunchingCallback) {
-            this._onARchitectWorldFailedLaunchingCallback(err);
+        if (module.exports._onARchitectWorldFailedLaunchingCallback) {
+            module.exports._onARchitectWorldFailedLaunchingCallback(err);
         }
     };
 
@@ -249,5 +250,8 @@
      */
     WikitudePlugin.prototype.onWikitudeError = function() {};
 
+
+
+    /* Export a new WikitudePlugin instance */
     var wikitudePlugin = new WikitudePlugin();
     module.exports = wikitudePlugin;
