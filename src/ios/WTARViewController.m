@@ -66,8 +66,8 @@
             [self.view addGestureRecognizer:swipeBackRecognizer];
         }
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillResignActiveNotification:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillBecomeActiveNotification:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     return self;
 }
@@ -85,7 +85,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.
     
     [self.architectView setShouldRotate:YES
                  toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
@@ -110,7 +110,7 @@
     }
 }
 
-- (void)didReceivedDeviceWillBecomeActiveNotification:(NSNotification *)aNotification
+- (void)didReceivedDeviceDidBecomeActiveNotification:(NSNotification *)aNotification
 {
     if ( self.presentingViewController && ![self.architectView isRunning] ) {
         [self.architectView start];

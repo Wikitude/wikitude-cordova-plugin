@@ -102,10 +102,7 @@
             }
             
             
-            [self.viewController presentViewController:self.arViewController animated:YES completion:^{
-                // completion code
-            }];
-            
+            [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
             
             
             // and finaly load the architect world, specified in the open function in js
@@ -127,7 +124,7 @@
                     architectWorldURL = [[NSBundle mainBundle] URLForResource:worldName withExtension:worldNameExtension subdirectory:architectWorldDirectoryPath];
                     
                 }
-                
+
                 [self.arViewController.architectView loadArchitectWorldFromUrl:architectWorldURL];
             }
         }
