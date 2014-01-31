@@ -102,10 +102,7 @@
             }
             
             
-            [self.viewController presentViewController:self.arViewController animated:YES completion:^{
-                // completion code
-            }];
-            
+            [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
             
             
             // and finaly load the architect world, specified in the open function in js
@@ -127,7 +124,7 @@
                     architectWorldURL = [[NSBundle mainBundle] URLForResource:worldName withExtension:worldNameExtension subdirectory:architectWorldDirectoryPath];
                     
                 }
-                
+
                 [self.arViewController.architectView loadArchitectWorldFromUrl:architectWorldURL];
             }
         }
@@ -191,9 +188,7 @@
         
         if (self.arViewController) {
             
-            [self.viewController presentViewController:self.arViewController animated:YES completion:^{
-                
-            }];
+            [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
             
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
         }else
@@ -222,7 +217,7 @@
         
         if (self.arViewController) {
             
-            [self.viewController dismissModalViewControllerAnimated:YES];
+            [self.viewController dismissViewControllerAnimated:YES completion:nil];
             
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:nil];
         }else
@@ -246,11 +241,7 @@
     
     @try {
         
-        if (self.arViewController && !self.arViewController.isARchitectViewRunning) {
-            [self.arViewController.architectView start];
-            self.arViewController.isARchitectViewRunning = YES;
-        }
-        
+        /* Intentionally left blank */
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT messageAsString:nil];
         
@@ -269,12 +260,8 @@
     CDVPluginResult* pluginResult = nil;
     
     @try {
-        
-        if (self.arViewController && self.arViewController.isARchitectViewRunning) {
-            [self.arViewController.architectView stop];
-            self.arViewController.isARchitectViewRunning = NO;
-        }
-        
+
+        /* Intentionally left blank */
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT messageAsString:nil];
         
