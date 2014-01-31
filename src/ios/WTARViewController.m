@@ -42,12 +42,16 @@
             self.architectView = [[WTArchitectView alloc] initWithFrame:self.view.bounds];;
             
             
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+#pragma clang diagnostic ignored "-Wundeclared-selector"
             if ([self.architectView respondsToSelector:@selector(setSDKOrigin:)]) {
-                [self.architectView performSelector:@selector(setSDKOrigin:) withObject:@"ORIGIN_PHONEGAP"];
+                [self.architectView performSelector:@selector(setSDKOrigin:) withObject:@"phonegap"];
             }
             if ([self.architectView respondsToSelector:@selector(setPresentingViewController:)]) {
                 [self.architectView performSelector:@selector(setPresentingViewController:) withObject:self];
             }
+#pragma clang diagnostic pop
             
             [self.architectView initializeWithKey:sdkKeyorNil motionManager:cmMotionManagerOrNil];
             
@@ -61,8 +65,16 @@
             
             [self.view addGestureRecognizer:swipeBackRecognizer];
         }
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -73,7 +85,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.
     
     [self.architectView setShouldRotate:YES
                  toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
@@ -86,6 +98,22 @@
         if ([self.delegate respondsToSelector:@selector(arViewControllerWillDisappear:)]) {
             [self.delegate arViewControllerWillDisappear:self];
         }
+    }
+}
+
+#pragma mark - Notifications
+- (void)didReceivedDeviceWillResignActiveNotification:(NSNotification *)aNotification
+{
+    /* If we’re presented then we need to stop the sdk view */
+    if ( self.presentingViewController && [self.architectView isRunning] ) {
+        [self.architectView stop];
+    }
+}
+
+- (void)didReceivedDeviceDidBecomeActiveNotification:(NSNotification *)aNotification
+{
+    if ( self.presentingViewController && ![self.architectView isRunning] ) {
+        [self.architectView start];
     }
 }
 
