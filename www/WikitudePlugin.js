@@ -1,7 +1,7 @@
 
 
     /**
-    * Release date: 29.01.14
+    * Release date: 10.03.14
     */
 
     var WikitudePlugin = function() {
@@ -132,7 +132,7 @@
      * @param js The JavaScript that should be evaluated in the ARchitect View.
      */
     WikitudePlugin.prototype.callJavaScript = function(js) {
-        cordova.exec(this.onWikitudeOK, this.onWikitudeError, "wikitudePlugin", "callJavascript", [js]);
+        cordova.exec(this.onWikitudeOK, this.onWikitudeError, “WikitudePlugin", "callJavascript", [js]);
     };
 
     /**
