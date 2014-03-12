@@ -132,7 +132,7 @@
      * @param js The JavaScript that should be evaluated in the ARchitect View.
      */
     WikitudePlugin.prototype.callJavaScript = function(js) {
-        cordova.exec(this.onWikitudeOK, this.onWikitudeError, “WikitudePlugin", "callJavascript", [js]);
+        cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "callJavascript", [js]);
     };
 
     /**
