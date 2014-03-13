@@ -139,9 +139,7 @@
 #pragma mark Orientation handling Wikitude
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-    BOOL shouldRotate = UIInterfaceOrientationIsLandscape(toInterfaceOrientation);
-    
-    [self.architectView setShouldRotate:shouldRotate toInterfaceOrientation:toInterfaceOrientation];
+    [self.architectView setShouldRotate:YES toInterfaceOrientation:toInterfaceOrientation];
 }
 
 @end
