@@ -160,24 +160,31 @@
                     self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                     self.arViewController.architectDelegate = self;
                 }
+                
+                [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
+                
+                [self addNotificationObserver];
+                
+                [self.arViewController.architectView start];
+                
+                NSURL *architectWorldURL = [WTWikitudePlugin architectWorldURLFromString:architectWorldFilePath];
+                if ( architectWorldURL )
+                {
+                    [self.arViewController.architectView loadArchitectWorldFromUrl:architectWorldURL];
+                    
+                    self.loadArchitectWorldCallbackId = command.callbackId;
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+                    [pluginResult setKeepCallbackAsBool:YES];
+                }
+                else
+                {
+                    self.loadArchitectWorldCallbackId = nil;
+                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[NSString stringWithFormat:@"Unable to determine what the url to load should be: %@", architectWorldFilePath]];
+                }
             }
-            
-            
-            [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
-            
-            [self.arViewController.architectView loadArchitectWorldFromUrl:[WTWikitudePlugin architectWorldURLFromString:architectWorldFilePath]];
-            
-            
-            [self addNotificationObserver];
-            
-            // start the sdk view updates
-            [self.arViewController.architectView start];
         }
     }
     
-    self.loadArchitectWorldCallbackId = command.callbackId;
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
-
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
