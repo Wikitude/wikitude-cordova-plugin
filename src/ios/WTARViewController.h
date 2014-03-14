@@ -1,36 +1,46 @@
 //
-//  WTARViewController.h
-//  HelloWorld
+//  WTArchitectViewController.h
+//  Wikitude
 //
-//  Created by Andreas Schacherbauer on 2/7/13.
-//
+//  Copyright (c) 2014 Wikitude. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
+#import "WTArchitectView.h"
 
-@class WTARViewController;
-@class WTArchitectView;
+
+extern NSString * const WTArchitectDidLoadWorldNotification;
+extern NSString * const WTArchitectDidFailToLoadWorldNotification;
+extern NSString * const WTArchitectInvokedURLNotification;
+extern NSString * const WTArchitectDidCaptureScreenNotification;
+extern NSString * const WTArchitectDidFailToCaptureScreenNotification;
+
+extern NSString * const WTArchitectNotificationURLKey;
+extern NSString * const WTArchitectNotificationContextKey;
+extern NSString * const WTArchitectNotificationErrorKey;
+
+
+
+@class WTArchitectViewController;
 @class CMMotionManager;
 
+@protocol WTArchitectViewControllerDelegate <NSObject>
 
-@protocol WTARViewControllerDelegate <NSObject>
-
-- (void)arViewControllerWillDisappear:(WTARViewController *)arViewcontroller;
+- (void)architectViewControllerWillDisappear:(WTArchitectViewController *)architectViewController;
 
 @end
 
 
-@interface WTARViewController : UIViewController
+@interface WTArchitectViewController : UIViewController <WTArchitectViewDelegate>
 
-@property (nonatomic, weak) id<WTARViewControllerDelegate>      delegate;
-@property (nonatomic, readonly) WTArchitectView                 *architectView;
-@property (nonatomic, assign) BOOL                              isARchitectViewRunning;
+@property (nonatomic, weak) id<WTArchitectViewControllerDelegate>       architectDelegate;
+@property (nonatomic, readonly) WTArchitectView                         *architectView;
 
 
-+ (BOOL)isGeoSupported;
-+ (BOOL)isIRSupported;
++ (BOOL)isDeviceSupportedForAugmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil sdkKey:(NSString *)sdkKeyorNil motionManager:(CMMotionManager *)cmMotionManagerOrNil;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil motionManager:(CMMotionManager *)motionManagerOrNil augmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode;
 
 @end
