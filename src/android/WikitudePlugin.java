@@ -154,6 +154,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 */
 	protected LocationListener locationListener;
 	
+	private boolean useCustomLocation						= false;
 	
 
 	@Override
@@ -365,6 +366,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 					}
 					final Double accuracy = acc;
 					if ( this.cordova != null && this.cordova.getActivity() != null ) {
+						this.useCustomLocation = true;
 						cordova.getActivity().runOnUiThread(
 //						this.cordova.getThreadPool().execute( 
 								new Runnable() {
@@ -603,7 +605,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 			@Override
 			public void onLocationChanged( final Location location ) {
-				if (location!=null) {
+				if (location!=null && !WikitudePlugin.this.useCustomLocation) {
 					WikitudePlugin.this.lastKnownLocaton = location;
 				if ( WikitudePlugin.this.architectView != null ) {
 					if ( location.hasAltitude() ) {
