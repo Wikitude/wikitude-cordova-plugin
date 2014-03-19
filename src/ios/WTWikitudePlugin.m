@@ -13,8 +13,6 @@
 
 #define kWTWikitudePlugin_ArgumentKeySDKKey @"SDKKey"
 #define kWTWikitudePlugin_ArgumentKeyARchitectWorldPath @"ARchitectWorldPath"
-#define kWTWikitudePlugin_ArgumentKeyOptions @"Options"
-#define kWTWikitudePlugin_ArgumentKeyiOSOptions @"iOS"
 #define kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode @"AugmentedRealityMode"
 
 #define kWTWikitudePlugin_AugmentedRealityModeBoth @"both"
@@ -144,43 +142,37 @@
             NSString *sdkKey = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeySDKKey];
             NSString *architectWorldFilePath = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeyARchitectWorldPath];
             
+            WTAugmentedRealityMode augmentedRealityMode = [WTWikitudePlugin augmentedRealityModeFromString:[arguments objectForKey:kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode]];
             
-            NSDictionary *iOSOptions = [[arguments objectForKey:kWTWikitudePlugin_ArgumentKeyOptions] objectForKey:kWTWikitudePlugin_ArgumentKeyiOSOptions];
-            
-            if ( iOSOptions )
+            if (!_arViewController)
             {
-                WTAugmentedRealityMode augmentedRealityMode = [WTWikitudePlugin augmentedRealityModeFromString:[iOSOptions objectForKey:kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode]];
+                self.arViewController = [[WTArchitectViewController alloc] initWithNibName:nil bundle:nil motionManager:nil augmentedRealityMode:augmentedRealityMode];
                 
-                if (!_arViewController)
-                {
-                    self.arViewController = [[WTArchitectViewController alloc] initWithNibName:nil bundle:nil motionManager:nil augmentedRealityMode:augmentedRealityMode];
-                    
-                    [self.arViewController.architectView setLicenseKey:sdkKey];
-                    
-                    self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-                    self.arViewController.architectDelegate = self;
-                }
+                [self.arViewController.architectView setLicenseKey:sdkKey];
                 
-                [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
+                self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                self.arViewController.architectDelegate = self;
+            }
+            
+            [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
+            
+            [self addNotificationObserver];
+            
+            [self.arViewController.architectView start];
+            
+            NSURL *architectWorldURL = [WTWikitudePlugin architectWorldURLFromString:architectWorldFilePath];
+            if ( architectWorldURL )
+            {
+                [self.arViewController.architectView loadArchitectWorldFromUrl:architectWorldURL];
                 
-                [self addNotificationObserver];
-                
-                [self.arViewController.architectView start];
-                
-                NSURL *architectWorldURL = [WTWikitudePlugin architectWorldURLFromString:architectWorldFilePath];
-                if ( architectWorldURL )
-                {
-                    [self.arViewController.architectView loadArchitectWorldFromUrl:architectWorldURL];
-                    
-                    self.loadArchitectWorldCallbackId = command.callbackId;
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
-                    [pluginResult setKeepCallbackAsBool:YES];
-                }
-                else
-                {
-                    self.loadArchitectWorldCallbackId = nil;
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[NSString stringWithFormat:@"Unable to determine what the url to load should be: %@", architectWorldFilePath]];
-                }
+                self.loadArchitectWorldCallbackId = command.callbackId;
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+                [pluginResult setKeepCallbackAsBool:YES];
+            }
+            else
+            {
+                self.loadArchitectWorldCallbackId = nil;
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[NSString stringWithFormat:@"Unable to determine what the url to load should be: %@", architectWorldFilePath]];
             }
         }
     }
