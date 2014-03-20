@@ -26,7 +26,7 @@
 		 */
 		this._augmentedRealityMode = "Both"; // "IR" for image recognition worlds only, "Both" if you want to use both
 
-	
+
 		/**
 		 *  Callbacks that are used during device compatibilty checks.
 		 */
@@ -79,19 +79,14 @@
 		// before we actually call load, we check again if the device is able to open the world
 		if (this._isDeviceSupported) {
 
-			//	the 'open' function of the Wikitude Plugin requires a option dictionary with two keys =
-			//	@param {Object} options (required)
-			//	@param {String} options.sdkKey License key for the Wikitude SDK
-			//	@param {String} options.filePath The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
+			//	the 'open' function of the Wikitude Plugin requires some parameters
+			//	@param {String} SDKKey (required) The Wikitude SDK license key that you received with your purchase
+			//	@param {String} ARchitectWorldPath (required) The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
+			//	@param {String} AugmentedRealityMode (optional) describes in more detail how the Wikitude SDK should be instantiated
 			cordova.exec(this.worldLaunched, this.worldFailedLaunching, "WikitudePlugin", "open", [{
 				"SDKKey": this._sdkKey,
 				"ARchitectWorldPath": worldPath,
-				"Options": {
-					"iOS": {
-						"AugmentedRealityMode": this._augmentedRealityMode
-					},
-					"Android": null
-				}
+				"AugmentedRealityMode": this._augmentedRealityMode
 			}]);
 
 
