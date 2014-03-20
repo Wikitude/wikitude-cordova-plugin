@@ -14,15 +14,14 @@ import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.format.DateUtils;
@@ -429,8 +428,10 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			this.openCallback = callContext;
 			PluginResult result = null;
 			try {
-				final String apiKey = args.getString( 0 );
-				final String filePath = args.getString( 1 );
+				final JSONObject params = args.getJSONObject( 0 );
+				final String apiKey = params.getString( "SDKKey" );
+				final String filePath = params.getString( "ARchitectWorldPath" );
+				final String arMode = params.getString( "AugmentedRealityMode" );
 
 				this.cordova.getActivity().runOnUiThread( new Runnable() {
 
