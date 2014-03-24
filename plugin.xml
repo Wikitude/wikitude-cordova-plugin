@@ -107,20 +107,21 @@
 
 
         <!-- Additional WikitudePlugin libraries and frameworks -->
+        <framework src="AssetsLibrary.framework" />
+        <framework src="AVFoundation.framework" />
+        <framework src="CFNetwork.framework" />
+        <framework src="CoreGraphics.framework" />
+        <framework src="CoreLocation.framework" />
+        <framework src="CoreMedia.framework" />
         <framework src="CoreMotion.framework" />
+        <framework src="CoreTexto.framework" />
         <framework src="CoreVideo.framework" />
+        <framework src="Foundation.framework" />
+        <framework src="MediaPlayer.framework" />
         <framework src="OpenGLES.framework" />
-        <framework src="Security.framework" /> 
-        <framework src="AssetsLibrary.framework" /> 
-        <framework src="AVFoundation.framework" /> 
-        <framework src="CFNetwork.framework" /> 
-        <framework src="CoreGraphics.framework" /> 
-        <framework src="CoreLocation.framework" /> 
-        <framework src="CoreMedia.framework" /> 
-        <framework src="Foundation.framework" /> 
-        <framework src="MediaPlayer.framework" /> 
-        <framework src="QuartzCore.framework" /> 
-        <framework src="SystemConfiguration.framework" /> 
+        <framework src="QuartzCore.framework" />
+        <framework src="Security.framework" />
+        <framework src="SystemConfiguration.framework" />
         <framework src="UIKit.framework" />  
         <framework src="libc++.dylib" />
         <framework src="libz.dylib" />
