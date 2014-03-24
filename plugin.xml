@@ -114,7 +114,7 @@
         <framework src="CoreLocation.framework" />
         <framework src="CoreMedia.framework" />
         <framework src="CoreMotion.framework" />
-        <framework src="CoreTexto.framework" />
+        <framework src="CoreText.framework" />
         <framework src="CoreVideo.framework" />
         <framework src="Foundation.framework" />
         <framework src="MediaPlayer.framework" />
