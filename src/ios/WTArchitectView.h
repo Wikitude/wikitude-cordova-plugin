@@ -262,7 +262,7 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  *
  * @deprecated since version 3.2.2
  */
-- (void)initializeWithKey:(NSString*)key motionManager:(CMMotionManager*)motionManager WT_DEPRECATED_SINCE(3.2.1, "Use -setLicenseKey:error: instead.");
+- (void)initializeWithKey:(NSString*)key motionManager:(CMMotionManager*)motionManager WT_DEPRECATED_SINCE(3.2.1, "Use -setLicenseKey: instead.");
 
 
 /**
