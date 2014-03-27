@@ -64,7 +64,7 @@
 
 
         <!-- copy wikitude sdk -->
-        <source-file src="src/android/libs/wikitudesdk_3_2_1.jar" target-dir="libs/" />
+        <source-file src="src/android/libs/wikitudesdk.jar" target-dir="libs/" />
 
 
         <!-- adds WikitudePlugin in project's config.xml -->
