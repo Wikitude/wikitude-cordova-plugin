@@ -193,7 +193,11 @@
         
         [self removeNotificationObserver];
         
-        [self.viewController dismissViewControllerAnimated:YES completion:nil];
+        [self.viewController dismissViewControllerAnimated:YES completion:^
+        {
+            /* nil out the strong reference because it’s not longer needed. ‘show’ and ‘hide’ can handle nil controller and are supposed to only used during a active presentation of our plugin */
+            self.arViewController = nil;
+        }];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
