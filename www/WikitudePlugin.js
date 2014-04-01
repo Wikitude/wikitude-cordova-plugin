@@ -247,17 +247,6 @@
 	};
 
 	/**
-	 *	Android specific!
-	 *	This function gets called if the user presses the back button
-	 */
-	WikitudePlugin.prototype.onBackButton = function() {
-
-		cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "close", [""]);
-
-		document.removeEventListener("backbutton", this.onBackButton, false);
-	};
-
-	/**
 	 *	A generic success callback used inside this wrapper.
 	 */
 	WikitudePlugin.prototype.onWikitudeOK = function() {};
