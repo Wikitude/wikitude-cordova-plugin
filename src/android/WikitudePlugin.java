@@ -14,15 +14,14 @@ import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.format.DateUtils;
@@ -39,7 +38,7 @@ import com.wikitude.architect.ArchitectView;
 import com.wikitude.architect.ArchitectView.ArchitectConfig;
 import com.wikitude.architect.ArchitectView.ArchitectUrlListener;
 import com.wikitude.architect.ArchitectView.CaptureScreenCallback;
-import com.wikitude.phonegap.WikitudePlugin.ArchitectViewPhoneGap.OnKeyDownListener;
+import com.wikitude.phonegap.WikitudePlugin.ArchitectViewPhoneGap.OnKeyUpDownListener;
 
 
 
@@ -429,8 +428,10 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			this.openCallback = callContext;
 			PluginResult result = null;
 			try {
-				final String apiKey = args.getString( 0 );
-				final String filePath = args.getString( 1 );
+				final JSONObject params = args.getJSONObject( 0 );
+				final String apiKey = params.getString( "SDKKey" );
+				final String filePath = params.getString( "ARchitectWorldPath" );
+				final String arMode = params.getString( "AugmentedRealityMode" );
 
 				this.cordova.getActivity().runOnUiThread( new Runnable() {
 
@@ -573,16 +574,22 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	private void addArchitectView( final String apiKey, String filePath ) throws IOException {
 		if ( this.architectView == null ) {
 
-		this.architectView = new ArchitectViewPhoneGap( this.cordova.getActivity() , new OnKeyDownListener() {
-			
+		this.architectView = new ArchitectViewPhoneGap( this.cordova.getActivity() , new OnKeyUpDownListener() {
+
 			@Override
-			public boolean onKeyDown(int keyCode, KeyEvent event) {
+			public boolean onKeyUp(int keyCode, KeyEvent event) {
 				if (WikitudePlugin.this.architectView!=null && keyCode == KeyEvent.KEYCODE_BACK) {
 					WikitudePlugin.this.locationProvider.onPause();
 					removeArchitectView();
 					return true;
+				} else {
+					return false;
 				}
-				return false;
+			}
+
+			@Override
+			public boolean onKeyDown(int keyCode, KeyEvent event) {
+				return true;
 			}
 		});
 		
@@ -723,28 +730,36 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	
 	
 	protected static class ArchitectViewPhoneGap extends ArchitectView{
-		public static interface OnKeyDownListener {
+		public static interface OnKeyUpDownListener {
 			public boolean onKeyDown(int keyCode, KeyEvent event);
+			
+			public boolean onKeyUp(int keyCode, KeyEvent event);
 		}
 		
-		private final OnKeyDownListener onKeyDownListener;
+		private final OnKeyUpDownListener onKeyUpDownListener;
 		
 		@Deprecated
 		public ArchitectViewPhoneGap(Context context) {
 			super(context);
-			this.onKeyDownListener = null;
+			this.onKeyUpDownListener = null;
 		}
 		
-		public ArchitectViewPhoneGap(Context context, OnKeyDownListener onKeyDownListener) {
+		public ArchitectViewPhoneGap(Context context, OnKeyUpDownListener onKeyUpDownListener) {
 			super(context);
-			this.onKeyDownListener = onKeyDownListener;
+			this.onKeyUpDownListener = onKeyUpDownListener;
 		}
 
 		@Override
 	    public boolean onKeyDown(int keyCode, KeyEvent event) {
 			// forward onKeyDown events to listener
-			return this.onKeyDownListener!=null &&  this.onKeyDownListener.onKeyDown(keyCode, event);
+			return this.onKeyUpDownListener!=null &&  this.onKeyUpDownListener.onKeyDown(keyCode, event);
 	    }
+		
+		@Override
+		public boolean onKeyUp(int keyCode, KeyEvent event) {
+			// forward onKeyUp events to listener
+			return this.onKeyUpDownListener!=null &&  this.onKeyUpDownListener.onKeyUp(keyCode, event);
+		}
 		
 		@Override
 		protected void onFocusChanged(boolean gainFocus, int direction,
