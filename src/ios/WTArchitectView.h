@@ -12,8 +12,6 @@
 #define WT_DEPRECATED_SINCE(__version__, __msg__) __attribute__((deprecated("Deprecated in Wikitude SDK " #__version__ ". " __msg__)))
 
 
-@protocol WTScreenshotSaver;
-
 @class CMMotionManager;
 @class WTArchitectView;
 
@@ -107,6 +105,8 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 
 @optional
 
+/** @name ARchitect World */
+
 /**
  * This method is called when the provided architect world url finished loading.
  *
@@ -127,7 +127,6 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 - (void)architectView:(WTArchitectView *)architectView didFailLoadWithError:(NSError *)error;
 
 
-/** @name ARchitect World */
 /**
  * Supplied URL was called and should be opened. URL starts with architectsdk:// protocol prefix and is otherwise custom to the ARchitect World that requests it.
  *
@@ -262,7 +261,7 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  *
  * @deprecated since version 3.2.2
  */
-- (void)initializeWithKey:(NSString*)key motionManager:(CMMotionManager*)motionManager WT_DEPRECATED_SINCE(3.2.1, "Use -setLicenseKey: instead.");
+- (void)initializeWithKey:(NSString*)key motionManager:(CMMotionManager*)motionManager WT_DEPRECATED_SINCE(3.2.2, "Use -setLicenseKey: instead.");
 
 
 /**
@@ -346,8 +345,10 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  * Use this method to get the current ARchitect version number
  *
  * @return The current available ARchitect verison within the SDK.
+ *
+ * @deprecated since version 3.2.2
  */
-- (NSString *)versionNumber WT_DEPRECATED_SINCE(3.2.1, "Use +versionNumer instead.");
+- (NSString *)versionNumber WT_DEPRECATED_SINCE(3.2.2, "Use +versionNumer instead.");
 
 
 /**
