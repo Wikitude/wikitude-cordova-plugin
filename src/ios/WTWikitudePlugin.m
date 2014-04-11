@@ -15,6 +15,7 @@
 #define kWTWikitudePlugin_ArgumentKeyARchitectWorldPath @"ARchitectWorldPath"
 #define kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode @"AugmentedRealityMode"
 
+#define kWTWikitudePlugin_AugmentedRealityModeBothCombined @"irandgeo"
 #define kWTWikitudePlugin_AugmentedRealityModeBoth @"both"
 #define kWTWikitudePlugin_AugmentedRealityModeGeo @"geo"
 #define kWTWikitudePlugin_AugmentedRealityModeIR @"ir"
@@ -43,7 +44,9 @@
 {
     WTAugmentedRealityMode augmentedRealityMode = WTAugmentedRealityMode_Both;
     
-    if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeBoth] )
+    if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeBothCombined]
+        ||
+        [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeBoth] )
     {
         augmentedRealityMode = WTAugmentedRealityMode_Both;
     }
