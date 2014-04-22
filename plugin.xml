@@ -72,9 +72,6 @@
             <feature name="WikitudePlugin">
                 <param name="android-package" value="com.wikitude.phonegap.WikitudePlugin"/>
             </feature>
-            <feature name="Geolocation">
-                <param name="android-package" value="org.apache.cordova.GeoBroker" />
-            </feature>
         </config-file>
 
 
