@@ -95,9 +95,7 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 /**
  * WTArchitectViewDelegate
  *
- * The ArchitectUrlListener offers the native app the possibility to react on events that are triggered inside the ARchitect World. To initiate such an event, the ARchitect World simply has to make an request for an url with the "architectsdk" as protocol. E.g.: architectsdk://opendetails?id=123.
- *
- * An registered WTArchitectViewDelegate receives all requested "architectsdk://" urls and must therefore be able to parse the url and parameters to react accordingly.
+ * The WTArchitectViewDelegate offers the possibility to either react on events that are triggered inside the ARchitect World or events that are triggerd because of some interaction with the WTArchitectView.
  *
  */
 @protocol WTArchitectViewDelegate <NSObject>
@@ -128,7 +126,7 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 
 
 /**
- * Supplied URL was called and should be opened. URL starts with architectsdk:// protocol prefix and is otherwise custom to the ARchitect World that requests it.
+ * This method offers the possibility to react on events that are triggered inside the ARchitect World. To initiate such an event, the ARchitect World simply has to make an request for an url with the "architectsdk://" scheme. E.g.: architectsdk://opendetails?id=123.
  *
  * @param architectView The WTArchitectView object which invoked the url.
  *
