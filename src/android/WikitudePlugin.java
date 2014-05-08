@@ -573,6 +573,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 */
 	private void addArchitectView( final String apiKey, String filePath ) throws IOException {
 		if ( this.architectView == null ) {
+			
+		WikitudePlugin.releaseFocusInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
+
 
 		this.architectView = new ArchitectViewPhoneGap( this.cordova.getActivity() , new OnKeyUpDownListener() {
 
@@ -659,6 +662,18 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	}
 	
 	
+	private static void releaseFocusInCordovaWebView(View rootView) {
+		if (rootView instanceof CordovaWebView) { 
+			((CordovaWebView)rootView).clearFocus();
+		}
+		else if (rootView instanceof ViewGroup) {
+			final int childCount = ((ViewGroup)rootView).getChildCount();
+			for (int i=0; i< childCount; i++) {
+				WikitudePlugin.releaseFocusInCordovaWebView(((ViewGroup)rootView).getChildAt(i));
+			}
+		}		
+	}
+
 	/**
 	 * 
 	 * @return true if device chip has neon-command support
