@@ -104,6 +104,7 @@
 
 
         <!-- Additional WikitudePlugin libraries and frameworks -->
+        <framework src="Accelerate.framework" />
         <framework src="AssetsLibrary.framework" />
         <framework src="AVFoundation.framework" />
         <framework src="CFNetwork.framework" />
