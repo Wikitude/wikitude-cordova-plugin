@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.wikitude.phonegap.WikitudePlugin"
-    version="3.3.1">
+    version="4.0.0">
 
     <name>Augmented Reality - Wikitude SDK Plugin</name>
     
@@ -104,6 +104,7 @@
 
 
         <!-- Additional WikitudePlugin libraries and frameworks -->
+        <framework src="Accelerate.framework" />
         <framework src="AssetsLibrary.framework" />
         <framework src="AVFoundation.framework" />
         <framework src="CFNetwork.framework" />
@@ -137,7 +138,7 @@
         <info>
             Have fun using world's first AR plugin for PhoneGap. Visit http://developer.wikitude.com/documentation/phonegap for technical support.
 
-            Ensure that your SDK key matches your bundle identifier (e.g. "com.yourapp.id" ). This will remove the watermark and intro animation. For more information the online store at http://www.wikitude.com/store
+            Make sure that you enter your Wikitude SDK license key in `WikitudePlugin.js` line 12. If you havent bought a license please visit http://www.wikitude.com/store.
 
             If you want to contribute to the open source project, please visit us at github, http://github.com/Wikitude
         </info>

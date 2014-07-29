@@ -210,7 +210,9 @@
     }
     
     
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    if (command) {
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
 }
 
 - (void)show:(CDVInvokedUrlCommand *)command
