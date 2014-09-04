@@ -204,46 +204,60 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 				try {
 					captureMode = ( args.getBoolean( 0 )) ? ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM_AND_WEBVIEW : ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM;
+					
 				} catch (Exception e) {
 					// unexpected error;
 				}
+				String name = "";
+				if (args.length() > 1 && !args.isNull(1)) {
+					try {
+		 				name = args.getString(1);
+					} catch (final Exception e) {
+						e.printStackTrace();
+					}
+				}
 
+				final String fileName = name;
+				
 				architectView.captureScreen(captureMode, new CaptureScreenCallback() {
 					
 					@Override
 					public void onScreenCaptured(Bitmap screenCapture) {
+						final File screenCaptureFile;
 						try {
-						// final File imageDirectory = cordova.getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-						final File imageDirectory = Environment.getExternalStorageDirectory();
-						if (imageDirectory == null) {
-							callContext.error("External storage not available");
-						}
+							if (fileName.equals("")) {
+ 								final File imageDirectory = Environment.getExternalStorageDirectory();
+								if (imageDirectory == null) {
+									callContext.error("External storage not available");
+								}
+		 						String name = System.currentTimeMillis() + ".jpg";
+								screenCaptureFile = new File (imageDirectory, name);
+							} else {
+								screenCaptureFile = new File (fileName);
+							}
+							if (screenCaptureFile.exists()) {
+								screenCaptureFile.delete();
+							}
+							final FileOutputStream out = new FileOutputStream(screenCaptureFile);
+							screenCapture.compress(Bitmap.CompressFormat.JPEG, 90, out);
+							out.flush();
+							out.close();
 							
-						final File screenCaptureFile = new File (imageDirectory, System.currentTimeMillis() + ".jpg");
-						
-						if (screenCaptureFile.exists()) {
-							screenCaptureFile.delete();
-						}
-						final FileOutputStream out = new FileOutputStream(screenCaptureFile);
-						screenCapture.compress(Bitmap.CompressFormat.JPEG, 90, out);
-						out.flush();
-						out.close();
-						
-						cordova.getActivity().runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								final String absoluteCaptureImagePath = screenCaptureFile.getAbsolutePath();
-								callContext.success(absoluteCaptureImagePath);
+							cordova.getActivity().runOnUiThread(new Runnable() {
 								
+								@Override
+								public void run() {
+									final String absoluteCaptureImagePath = screenCaptureFile.getAbsolutePath();
+									callContext.success(absoluteCaptureImagePath);
+									
 // 								in case you want to sent the pic to other applications, uncomment these lines (for future use)
 //								final Intent share = new Intent(Intent.ACTION_SEND);
 //								share.setType("image/jpg");
 //								share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(screenCaptureFile));
 //								final String chooserTitle = "Share Snaphot";
 //								cordova.getActivity().startActivity(Intent.createChooser(share, chooserTitle));
-							}
-						});
+								}
+							});
 						} catch (Exception e) {
 							callContext.error(e.getMessage());
 						}
