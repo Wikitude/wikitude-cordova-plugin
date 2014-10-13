@@ -42,13 +42,13 @@
 
 + (WTAugmentedRealityMode)augmentedRealityModeFromString:(NSString *)string
 {
-    WTAugmentedRealityMode augmentedRealityMode = WTAugmentedRealityMode_Both;
+    WTAugmentedRealityMode augmentedRealityMode = WTAugmentedRealityMode_GeoAndImageRecognition;
     
     if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeBothCombined]
         ||
         [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeBoth] )
     {
-        augmentedRealityMode = WTAugmentedRealityMode_Both;
+        augmentedRealityMode = WTAugmentedRealityMode_GeoAndImageRecognition;
     }
     else if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeGeo] )
     {
@@ -56,7 +56,7 @@
     }
     else if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeIR] )
     {
-        augmentedRealityMode = WTAugmentedRealityMode_IR;
+        augmentedRealityMode = WTAugmentedRealityMode_ImageRecognition;
     }
     
     return augmentedRealityMode;
@@ -149,7 +149,7 @@
             
             if (!_arViewController)
             {
-                self.arViewController = [[WTArchitectViewController alloc] initWithNibName:nil bundle:nil motionManager:nil augmentedRealityMode:augmentedRealityMode];
+                self.arViewController = [[WTArchitectViewController alloc] initWithNibName:nil bundle:nil motionManager:nil];
                 
                 [self.arViewController.architectView setLicenseKey:sdkKey];
                 
@@ -166,7 +166,7 @@
             NSURL *architectWorldURL = [WTWikitudePlugin architectWorldURLFromString:architectWorldFilePath];
             if ( architectWorldURL )
             {
-                [self.arViewController.architectView loadArchitectWorldFromUrl:architectWorldURL];
+                [self.arViewController.architectView loadArchitectWorldFromURL:architectWorldURL withAugmentedRealityMode:augmentedRealityMode];
                 
                 self.loadArchitectWorldCallbackId = command.callbackId;
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];

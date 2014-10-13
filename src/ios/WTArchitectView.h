@@ -1,8 +1,8 @@
 //
-//  WikitudeArchitectSDK.h
-//  WikitudeArchitectSDK
+//  WTArchitectView.h
+//  WikitudeSDK
 //
-//  Copyright (c) 2012 Wikitude. All rights reserved.
+//  Copyright (c) 2014 Wikitude. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -13,6 +13,7 @@
 
 
 @class CMMotionManager;
+@class WTNavigation;
 @class WTArchitectView;
 
 
@@ -23,20 +24,28 @@ extern NSString * const kWTScreenshotImageKey;
 
 /**
  *
- * The WTARMode is used to specify which type of augmented reality is used in an ARchitect World. Based on the ARMode, different device capabilities are required and the -isDeviceSupported: method returns different results.
+ * The WTAugmentedRealityMode is used to specify which type of augmented reality is used in an ARchitect World. Based on the WTAugmentedRealityMode, different device capabilities are required and different components of the SDK are used.
  *
- * When only image recognition Worlds are loaded, more devices are supported because e.g. the iPod touch 5th gen is missing an compass and can therefore not support geo augmented reality.
+ * By setting the appropriate augmented reality mode for a ARchitect World the best performance can be provided by the SDK.
  *
  */
 typedef NS_ENUM(NSUInteger, WTAugmentedRealityMode){
-    /** The ARchitect World is using both, geo augmented reality and image recognition */
+    /** Use this augmented reality mode if your ARchitect World is using e.g. AR.GeoLocations and AR.GeoObjects. This mode requires access to the camera and the user location so please make sure to specify a value for the 'NSLocationWhenInUseUsageDescription' key in your *-Info.plist when using the SDK on iOS 8 or later. Note that this mode also supports image recognition functionality. */
     WTAugmentedRealityMode_Geo = 1,
     
-    /** The ARchitect World is only using image recongnition. */
-    WTAugmentedRealityMode_IR,
+    /** Use this augmented reality mode if your ARchitect World is using e.g. AR.Tracker and AR.Trackable2DObjects. This mode does require access to the camera. Note that this mode does not support geo functionality! */
+    WTAugmentedRealityMode_ImageRecognition,
+    /** Same as WTAugmentedRealityMode_ImageRecognition 
+     * @deprecated since version 4.0.2
+     */
+    WTAugmentedRealityMode_IR WT_DEPRECATED_SINCE(4.0.2, "use WTAugmentedRealityMode_ImageRecognition instead."),
     
-    /** A combinded mode for mixed ARchitect Worlds */
-    WTAugmentedRealityMode_Both
+    /** A combinded augmented reality mode for mixed ARchitect Worlds that are using geo and image recognition functionality. */
+    WTAugmentedRealityMode_GeoAndImageRecognition,
+    /** Same as WTAugmentedRealityMode_GeoAndImageRecognition 
+     * @deprecated since version 4.0.2
+     */
+    WTAugmentedRealityMode_Both WT_DEPRECATED_SINCE(4.0.2, "use WTAugmentedRealityMode_GeoAndImageRecognition instead.")
 };
 
 /**
@@ -106,33 +115,51 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 /** @name ARchitect World */
 
 /**
+ * This method is called when the provided architect world url finished loading. The resulting navigation object contains the original load url as well as the final resolved url.
+ *
+ * @param architectView The architect view that finished loading.
+ * @param navigation The navigation that finished loading.
+ */
+- (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation;
+
+/**
  * This method is called when the provided architect world url finished loading.
  *
- * @param architectView The ArchitectView which finished loading.
- *
+ * @param architectView The ArchitectView that finished loading.
  * @param url The URL that is loaded.
+ *
+ * @deprecated since version 4.0.2
  */
-- (void)architectView:(WTArchitectView *)architectView didFinishLoad:(NSURL *)url;
+- (void)architectView:(WTArchitectView *)architectView didFinishLoad:(NSURL *)url WT_DEPRECATED_SINCE(4.0.2, "use -architectView:didFinishLoadArchitectWorldNavigation: instead.");
 
 
 /**
  * This method is called when the provided architect world url failed to load.
  *
  * @param architectView The ArchitectView which failed to load the url.
- *
- * @param error An NSError object containing more informations why the load did fail.
+ * @param navigation The navigation which failed to load.
+ * @param error An error object containing more informations why the load did fail.
  */
-- (void)architectView:(WTArchitectView *)architectView didFailLoadWithError:(NSError *)error;
+- (void)architectView:(WTArchitectView *)architectView didFailToLoadArchitectWorldNavigation:(WTNavigation *)navigation withError:(NSError *)error;
+
+/**
+ * This method is called when the provided architect world url failed to load.
+ *
+ * @param architectView The ArchitectView which failed to load the url.
+ * @param error An error object containing more informations why the load did fail.
+ *
+ * @deprecated since version 4.0.2
+ */
+- (void)architectView:(WTArchitectView *)architectView didFailLoadWithError:(NSError *)error WT_DEPRECATED_SINCE(4.0.2, "use -architectView:didFailToLoadArchitectWorldNavigation:withError: instead.");
 
 
 /**
  * This method offers the possibility to react on events that are triggered inside the ARchitect World. To initiate such an event, the ARchitect World simply has to make an request for an url with the "architectsdk://" scheme. E.g.: architectsdk://opendetails?id=123.
  *
  * @param architectView The WTArchitectView object which invoked the url.
- *
  * @param url The url which was called in javascript.
  */
-- (void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)url;
+- (void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL;
 
 
 /** @name Screen capturing */
@@ -140,7 +167,6 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  * This method is called when the WTArchitectView did finish capturing a screenshot
  *
  * @param architectView The ArchitectView which generated the screenshot.
- *
  * @param context A NSDictionary, containig at least CaptureMode (Key = WTScreenshotCaptureMode) and SavingMode (Key = WTScreenshotSaveMode). Optional objects are given for the different SaveModes.
  *
  * @discussion The context contains different objects depending on the SaveMode. SaveMode PhotoLibrary contains the two standard objects (CaptureMode & SaveMode). SaveMode PhotoLibrary contains additional a UIImage object (the Screenshot, Key = WTScreenshotKey). SaveMode BundleDirectory contains a NSString object representing the file path in the bundle (Key = WTScreenshotPath).
@@ -152,7 +178,6 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  * This method is called when the WTArchitectView couldn't finish capturing a screenshot
  *
  * @param architectView The ArchitectView which couldn't finish the capturing.
- *
  * @param error A NSError, providing more information on what was failing.
  */
 - (void)architectView:(WTArchitectView *)architectView didFailCaptureScreenWithError:(NSError *)error;
@@ -189,8 +214,8 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 /**
  * WTArchitectView class
  *
- *This class allows you to load and display the content from ARchitect Worlds.
- *It is the "Entry Point" to the SDK which exposes all SDK functionality. Instantiating and adding this Component to the UI should be sufficient to use ARchitect in any application.
+ * This class allows you to load and display the content from ARchitect Worlds.
+ * It is the "Entry Point" to the SDK which exposes all SDK functionality. Instantiating and adding this Component to the UI should be sufficient to use ARchitect in any application.
  *
  */
 @interface WTArchitectView : UIView
@@ -198,7 +223,6 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 /** @name Managing the Delegate */
 /**
  * The object that acts as the delegate of the receiving WTArchitectView
- *
  */
 @property (nonatomic, weak) id<WTArchitectViewDelegate>                                 delegate;
 @property (nonatomic, readonly) BOOL                                                    isRunning;
@@ -231,6 +255,19 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 
 /** @name Initializing a WTArchitectView Object */
 /**
+* Returns a newly initialized architect view with the given motion manager object.
+*
+* @param frame A CGRect describing the size of the view
+* @param motionManagerOrNil  A CMMotionManager object which should be used from the SDK. If nil is given, the SDK will create there own CMMotionManager object.
+*
+* @return A newly initialized WTArchitectView object.
+*
+* @discussion This is the designated initializer for this class.
+*
+*/
+- (instancetype)initWithFrame:(CGRect)frame motionManager:(CMMotionManager *)motionManagerOrNil;//NS_DESIGNATED_INITIALIZER;
+
+/**
  * Returns a newly initialized architect view with the given motion manager object, capable of running ARchitect Worlds in the given augmented reality mode.
  *
  * @param frame A CGRect describing the size of the view
@@ -245,8 +282,9 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  *
  * @warning If the architect view object is initialized with WTAugmentedRealityMode_IR, it is not possible to load an ARchitect World correctly that uses ARGeoObjects or ARGeoLocations objects.
  *
+ * @deprecated since version 4.0.2. Use -initWithFrame:motionManager: instead.
  */
-- (id)initWithFrame:(CGRect)frame motionManager:(CMMotionManager *)motionManagerOrNil augmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode;
+- (id)initWithFrame:(CGRect)frame motionManager:(CMMotionManager *)motionManagerOrNil augmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode WT_DEPRECATED_SINCE(4.0.2, "Use -initWithFrame:motionManager: instead.");
 
 
 /**
@@ -274,88 +312,51 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 
 /** @name Loading Architect Worlds */
 /**
- * Replaces the existing content of the ArchitectView with the one from the supplied URL.
+ * Loads the ARchitect World specified by the given URL. If an ARchitect World is already loaded all it's created objects are destroyed before the new one will be loaded.
  *
- *  @param architectWorldUrl The url that points to the Architect world. This can be eather a local .html file or a url, pointing to a file on a server or to your dropbox.
+ * Architect Worlds can be either loaded from the application bundle or a remote server.
+ * 
+ * Architect Worlds can be loaded with different augmented reality modes. The augmented reality mode specifies which SDK functionalities are required by the World. For example the WTAugmentedRealityMode_ImageRecognition does not start any GPS location related APIs and the user is not interrupted with a location access alert. As a result any geo related SDK functionalities do not work but the target image recognition is faster and the SDK does not cosume as much CPU performance than with an enabled GPS module. Choose the most suitable mode for your ARchitect World to experience the full functionality and the best performance.
+ *
+ * It is possible to load a different Architect World with a different augmented reality mode using the same architect view instance.
+ *
+ * @param architectWorldURL The URL that points to the ARchitect world.
+ * @param augmentedRealityMode The augmented reality mode that specifies details about the functionality that is required by the ARchitect World.
+ *
+ * @return WTNavigation * a navigation object representing the requested URL load and the finally loaded URL (They may differ because of some redirects)
  */
-- (void)loadArchitectWorldFromUrl:(NSURL *)architectWorldUrl;
+- (WTNavigation *)loadArchitectWorldFromURL:(NSURL *)architectWorldURL withAugmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode;
+
+/**
+ * The same as -loadArchitectWorldFromURL:withAugmentedRealityMode: but specifies a default augmented reality mode of WTAugmentedRealityMode_GeoAndImageRecognition.
+ *
+ * @param architectWorldURL The URL that points to the ARchitect world.
+ *
+ * @deprecated since version 4.0.2
+ */
+- (void)loadArchitectWorldFromUrl:(NSURL *)architectWorldUrl WT_DEPRECATED_SINCE(4.0.2, "use -loadArchitectWorldFromURL:withAugmentedRealityMode: instead.");
+
+
+/** @name Managing the WTArchitectView updates */
+/**
+ * Starts activity of the ARchitect view (starts UI updates of background camera, AR objects etc).
+ */
+- (void)start;
+
+/**
+ * Stops all activity of the ARchitect view (suspends UI updates of background camera, AR objects etc).
+ */
+- (void)stop;
 
 
 /** @name Interacting with Architect Worlds */
 /**
- * Executes the passed JavaScript string in the context of the currently loaded ARchitect World. This can be used to pass data to the ARchitect World or to notify it of external events.
+ * Executes the passed JavaScript string in the context of the currently loaded ARchitect World.
+ * This can be used to pass data to the ARchitect World or to notify it of external events.
+ *
  * @param javaScript A string, representing the javascript code which should be executed.
  */
 - (void)callJavaScript:(NSString*)javaScript;
-
-
-/** @name Injecting Locations */
-/**
- * Injects the supplied location information. To use the injected location setUseInjectedLocation(true) has to be called.
- * @param latitude The latitude that has to be simulated.
- * @param longitude The longitude that has to be simulated.
- * @param altitude The to altitude that has to be simulated.
- * @param accuracy The accuracy of the simulated location.
- */
-- (void)injectLocationWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude altitude:(CLLocationDistance)altitude accuracy:(CLLocationAccuracy)accuracy;
-
-
-/**
- * Injects the supplied location information. To use the injected location setUseInjectedLocation(true) has to be called.
- * @param latitude The latitude that has to be simulated.
- * @param longitude The longitude that has to be simulated.
- * @param accuracy The accuracy of the simulated location.
- */
-- (void)injectLocationWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude accuracy:(CLLocationAccuracy)accuracy;
-
-
-/**
- * If true is supplied the injected location will be used. If false is supplied the default location provider will be used.
- * @param useInjectedLocation The location simulation status
- */
-- (void)setUseInjectedLocation:(BOOL)useInjectedLocation;
-
-
-/**
- * True if an injected location is currently used. false if default location provider is used.
- * @return Indicates, if the location provider is simulating the injected location.
- */
-- (BOOL)isUsingInjectedLocation;
-
-
-/** @name Manipulating Object Visibility */
-/**
- * Sets the culling distance in meters. Objects in AR that are further away won’t be visible. The default value is 50000 meters (= 50 km).
- * @param cullingDistance The culling distance that has to be applied to your AR objects.
- */
-- (void)setCullingDistance:(float)cullingDistance;
-
-
-/**
- * Retrieves the current culling distance in meters.
- * @return The current culling distance, used by the SDK.
- */
-- (float)cullingDistance;
-
-
-/** @name Accessing ARchitect settings */
-/**
- * Use this method to get the current ARchitect version number
- *
- * @return The current available ARchitect verison within the SDK.
- *
- * @deprecated since version 3.2.2
- */
-- (NSString *)versionNumber WT_DEPRECATED_SINCE(3.2.2, "Use +versionNumer instead.");
-
-
-/**
- * Use this method to clear all cached data and requests.
- *
- * This method clears the internal SDK cache, as well as the cache used by the webView.
- *
- */
-- (void)clearCache;
 
 
 /** @name Managing the WTArchitectView rotation behavior */
@@ -378,27 +379,6 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 - (BOOL)isRotatingToInterfaceOrientation;
 
 
-/** @name Managing the WTArchitectView updates */
-/**
- * Stops all activity of the ARchitect view (suspends UI updates of background camera, AR objects etc).
- */
-- (void)stop;
-
-
-/**
- * Starts activity of the ARchitect view (starts UI updates of background camera, AR objects etc).
- */
-- (void)start;
-
-
-/** @name Interacting with Device Motion */
-/**
- * Returns the motion manager used by the Wikitude SDK.
- * @return  The CMMotionManager instance, provided in the method "InitializeWithKey:motionManager", otherwise nil;
- */
-- (CMMotionManager*)motionManager;
-
-
 /** @name Accessing WTArchitectView content */
 /**
  * Triggers the generation of a UIImage which contains a screenshot of the next available frame.
@@ -409,5 +389,88 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  * @param context A NSDictionary containing information about the CaptureMode, SaveMode and SaveMode specific objects. See Protocol reference for more information.
  */
 - (void)captureScreenWithMode:(WTScreenshotCaptureMode)captureMode usingSaveMode:(WTScreenshotSaveMode)saveMode saveOptions:(WTScreenshotSaveOptions)options context:(NSDictionary *)context;
+
+
+/** @name Injecting Locations */
+/**
+ * Injects the supplied location information. To use the injected location setUseInjectedLocation(true) has to be called.
+ *
+ * @param latitude The latitude that has to be simulated.
+ * @param longitude The longitude that has to be simulated.
+ * @param altitude The to altitude that has to be simulated.
+ * @param accuracy The accuracy of the simulated location.
+ */
+- (void)injectLocationWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude altitude:(CLLocationDistance)altitude accuracy:(CLLocationAccuracy)accuracy;
+
+
+/**
+ * Injects the supplied location information. To use the injected location setUseInjectedLocation(true) has to be called.
+ *
+ * @param latitude The latitude that has to be simulated.
+ * @param longitude The longitude that has to be simulated.
+ * @param accuracy The accuracy of the simulated location.
+ */
+- (void)injectLocationWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude accuracy:(CLLocationAccuracy)accuracy;
+
+
+/**
+ * If true is supplied the injected location will be used. If false is supplied the default location provider will be used.
+ *
+ * @param useInjectedLocation The location simulation status
+ */
+- (void)setUseInjectedLocation:(BOOL)useInjectedLocation;
+
+
+/**
+ * True if an injected location is currently used. false if default location provider is used.
+ *
+ * @return Indicates, if the location provider is simulating the injected location.
+ */
+- (BOOL)isUsingInjectedLocation;
+
+
+/** @name Manipulating Object Visibility */
+/**
+ * Sets the culling distance in meters. Objects in AR that are further away won’t be visible. The default value is 50000 meters (= 50 km).
+ *
+ * @param cullingDistance The culling distance that has to be applied to your AR objects.
+ */
+- (void)setCullingDistance:(float)cullingDistance;
+
+
+/**
+ * Retrieves the current culling distance in meters.
+ *
+ * @return The current culling distance, used by the SDK.
+ */
+- (float)cullingDistance;
+
+
+/** @name Accessing ARchitect settings */
+/**
+ * Use this method to get the current ARchitect version number
+ *
+ * @return The current available ARchitect verison within the SDK.
+ *
+ * @deprecated since version 3.2.2
+ */
+- (NSString *)versionNumber WT_DEPRECATED_SINCE(3.2.2, "Use +versionNumer instead.");
+
+
+/**
+ * Use this method to clear all cached data and requests.
+ *
+ * This method clears the internal SDK cache, as well as the cache used by the webView.
+ */
+- (void)clearCache;
+
+
+/** @name Interacting with Device Motion */
+/**
+ * Returns the motion manager used by the Wikitude SDK.
+ *
+ * @return  The CMMotionManager instance, provided in the method "InitializeWithKey:motionManager", otherwise nil;
+ */
+- (CMMotionManager*)motionManager;
 
 @end
