@@ -48,7 +48,7 @@
         ||
         [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeBoth] )
     {
-        augmentedRealityMode = WTAugmentedRealityMode_GeoAndImageRecognition;
+        augmentedRealityMode = WTAugmentedRealityMode_Geo;
     }
     else if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeGeo] )
     {
