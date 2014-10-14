@@ -161,7 +161,6 @@
             
             [self addNotificationObserver];
             
-            [self.arViewController.architectView start];
             
             NSURL *architectWorldURL = [WTWikitudePlugin architectWorldURLFromString:architectWorldFilePath];
             if ( architectWorldURL )
@@ -177,6 +176,9 @@
                 self.loadArchitectWorldCallbackId = nil;
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[NSString stringWithFormat:@"Unable to determine what the url to load should be: %@", architectWorldFilePath]];
             }
+            
+            
+            [self.arViewController.architectView start];
         }
     }
     
