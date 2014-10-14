@@ -35,6 +35,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.wikitude.architect.ArchitectView;
+import com.wikitude.architect.ArchitectView.ARMode;
 import com.wikitude.architect.ArchitectView.ArchitectConfig;
 import com.wikitude.architect.ArchitectView.ArchitectUrlListener;
 import com.wikitude.architect.ArchitectView.CaptureScreenCallback;
@@ -224,16 +225,21 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 					@Override
 					public void onScreenCaptured(Bitmap screenCapture) {
 						final File screenCaptureFile;
+						final String name = System.currentTimeMillis() + ".jpg";
 						try {
 							if (fileName.equals("")) {
  								final File imageDirectory = Environment.getExternalStorageDirectory();
 								if (imageDirectory == null) {
 									callContext.error("External storage not available");
 								}
-		 						String name = System.currentTimeMillis() + ".jpg";
 								screenCaptureFile = new File (imageDirectory, name);
 							} else {
-								screenCaptureFile = new File (fileName);
+								File screenCapturePath = new File (fileName);
+								if (screenCapturePath.isDirectory()) {
+									screenCaptureFile = new File (screenCapturePath, name);
+								} else { 
+									screenCaptureFile = screenCapturePath;
+								}
 							}
 							if (screenCaptureFile.exists()) {
 								screenCaptureFile.delete();
@@ -452,7 +458,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 					@Override
 					public void run() {
 						try {
-							WikitudePlugin.this.addArchitectView( apiKey, filePath );
+							WikitudePlugin.this.addArchitectView( apiKey, filePath, arMode );
 
 							/* call success method once architectView was added successfully */
 							if ( openCallback != null ) {
@@ -570,11 +576,16 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	/**
 	 * Architect-Configuration required for proper set-up
 	 * @param apiKey
+	 * @param arMode 
 	 * @return
 	 */
-	protected ArchitectConfig getArchitectConfig( final String apiKey ) {
+	protected ArchitectConfig getArchitectConfig( final String apiKey, String arMode ) {
 		/* no special set-up required in default Wikitude-Plugin, further things required in advanced usage (e.g. Vuforia Image Recognition) */
-		ArchitectConfig config = new ArchitectConfig( apiKey );
+		ArchitectConfig config = new ArchitectConfig( apiKey,
+				arMode.equals("IR") ? ARMode.IR :
+				arMode.equals("Geo") ? ARMode.GEO :
+				ARMode.GEO | ARMode.IR
+			);
 		config.setOrigin( ArchitectConfig.ORIGIN_PHONEGAP );
 		return config;
 	}
@@ -583,13 +594,13 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 * add architectView to current screen
 	 * @param apiKey developers's api key to use (hides watermarking/intro-animation if it matches your package-name)
 	 * @param filePath the url (starting with http:// for online use; starting with LOCAL_ASSETS_PATH_ROOT if oyu want to load assets within your app-assets folder)
+	 * @param arMode Augmented Reality mode ()
 	 * @throws IOException might be thrown from ARchitect-SDK
 	 */
-	private void addArchitectView( final String apiKey, String filePath ) throws IOException {
+	private void addArchitectView( final String apiKey, String filePath, String arMode ) throws IOException {
 		if ( this.architectView == null ) {
 			
 		WikitudePlugin.releaseFocusInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
-
 
 		this.architectView = new ArchitectViewPhoneGap( this.cordova.getActivity() , new OnKeyUpDownListener() {
 
@@ -647,7 +658,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		
 
 		/* fake life-cycle calls, because activity is already up and running */
-		this.architectView.onCreate( getArchitectConfig( apiKey ) );
+		this.architectView.onCreate( getArchitectConfig( apiKey, arMode ) );
 		this.architectView.onPostCreate();
 
 		/* register self as url listener to fwd these native calls to PhoneGap */
