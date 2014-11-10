@@ -1,12 +1,9 @@
 package com.wikitude.phonegap;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Scanner;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -22,10 +19,10 @@ import android.graphics.Rect;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -190,7 +187,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 		/* return success only if view is opened (no matter if visible or not) */
 		if ( WikitudePlugin.ACTION_IS_DEVICE_SUPPORTED.equals( action ) ) {
-			if ( ArchitectView.isDeviceSupported( this.cordova.getActivity() ) && hasNeonSupport() ) {
+			if ( ArchitectView.getSupportedARModeForDevice( this.cordova.getActivity() ) == (ARMode.GEO | ARMode.IR) ) {
 				callContext.success( action + ": this device is ARchitect-ready" );
 			} else {
 				callContext.error( action + action + ":Sorry, this device is NOT ARchitect-ready" );
@@ -551,7 +548,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		if ( dir != null && dir.isDirectory() ) {
 			try {
 				for ( File child : dir.listFiles() ) {
-
+ 
 					//first delete subdirectories recursively
 					if ( child.isDirectory() ) {
 						deletedFiles += clearCacheFolder( child, numDays );
@@ -606,7 +603,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 			@Override
 			public boolean onKeyUp(int keyCode, KeyEvent event) {
-				if (WikitudePlugin.this.architectView!=null && keyCode == KeyEvent.KEYCODE_BACK) {
+				if (architectView!=null && keyCode == KeyEvent.KEYCODE_BACK) {
 					WikitudePlugin.this.locationProvider.onPause();
 					removeArchitectView();
 					return true;
@@ -617,7 +614,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 			@Override
 			public boolean onKeyDown(int keyCode, KeyEvent event) {
-				return true;
+				return architectView!=null && keyCode == KeyEvent.KEYCODE_BACK;
 			}
 		});
 		
@@ -655,7 +652,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 		/* add content view and fake initial life-cycle */
 		(this.cordova.getActivity()).addContentView( this.architectView, new ViewGroup.LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT ) );
-		
+		(this.cordova.getActivity()).setVolumeControlStream( AudioManager.STREAM_MUSIC );
 
 		/* fake life-cycle calls, because activity is already up and running */
 		this.architectView.onCreate( getArchitectConfig( apiKey, arMode ) );
@@ -699,58 +696,6 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		}		
 	}
 
-	/**
-	 * 
-	 * @return true if device chip has neon-command support
-	 */
-	private boolean hasNeonSupport() {
-		/* Read cpu info */
-
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream("/proc/cpuinfo");
-
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return false;
-		}
-
-		Scanner scanner = new Scanner(fis);
-
-		boolean neonSupport = false;
-
-		try {
-
-			while (scanner.hasNextLine()) {
-
-				if (!neonSupport && (scanner.findInLine("neon") != null)) {
-
-					neonSupport = true;
-
-				}
-
-				scanner.nextLine();
-
-			}
-
-		} catch (Exception e) {
-
-			Log.i("Wikitudeplugin",
-					"error while getting info about neon support"
-							+ e.getMessage());
-			e.printStackTrace();
-
-		} finally {
-
-			scanner.close();
-
-		}
-
-		return neonSupport;
-	}
-	
-	
 	/**
 	 * To avoid JavaScript in Cordova staying paused after CordovaWebView lost focus call "handleResume" of the CordovaView in current Activity
 	 * @param rootView the root view to search recursively for a CordovaWebView
