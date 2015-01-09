@@ -187,7 +187,16 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 		/* return success only if view is opened (no matter if visible or not) */
 		if ( WikitudePlugin.ACTION_IS_DEVICE_SUPPORTED.equals( action ) ) {
-			if ( ArchitectView.getSupportedARModeForDevice( this.cordova.getActivity() ) == (ARMode.GEO | ARMode.IR) ) {
+			String mode;
+			try {
+				mode = args.getString(0);
+			} catch (JSONException e) {
+				mode = "IrAndGeo";
+			}
+			int arMode = mode.equalsIgnoreCase("IR") ? ARMode.IR :
+				mode.equalsIgnoreCase("GEO") ? ARMode.GEO :
+					( ARMode.IR | ARMode.GEO );
+			if ( (ArchitectView.getSupportedARModeForDevice( this.cordova.getActivity() ) & arMode) == arMode ) {
 				callContext.success( action + ": this device is ARchitect-ready" );
 			} else {
 				callContext.error( action + action + ":Sorry, this device is NOT ARchitect-ready" );
