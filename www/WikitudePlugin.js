@@ -24,7 +24,8 @@
 		 *      * IR means that only image recognition is used in the ARchitect World.
 		 *  When your ARchitect World uses both, geo and ir, than set this value to "IrAndGeo". Otherwise, if the ARchitectWorld only needs image recognition, placing "IR" will require less features from the device and therefore, support a wider range of devices. Keep in mind that image recognition requires a dual core cpu to work satisfyingly.
 		 */
-		this._augmentedRealityMode = "IrAndGeo"; // "IR" for image recognition worlds only, "Geo" if you want to use Geo AR only
+		this.ARModeGeo = (1<<0);
+		this.ARModeIR  = (1<<1);
 
 
 		/**
@@ -58,15 +59,14 @@
 	 * @param {function} successCallback A callback which is called if the device is capable of running ARchitect Worlds.
 	 * @param {function} errorCallback A callback which is called if the device is not capable of running ARchitect Worlds.
 	 */
-	WikitudePlugin.prototype.isDeviceSupported = function(successCallback, errorCallback) {
+	WikitudePlugin.prototype.isDeviceSupported = function(successCallback, errorCallback, arMode) {
 
 		// Store a reference to the success and error callback function because we intercept the callbacks ourself but need to call the developer ones afterwards
 		this._onDeviceSupportedCallback = successCallback;
 		this._onDeviceNotSupportedCallback = errorCallback;
 
-
-		// Check if the current device is capable of running Architect Worlds
-		cordova.exec(this.deviceIsARchitectReady, this.deviceIsNotARchitectReady, "WikitudePlugin", "isDeviceSupported", [this._augmentedRealityMode]);
+        // Check if the current device is capable of running Architect Worlds
+        cordova.exec(this.deviceIsARchitectReady, this.deviceIsNotARchitectReady, "WikitudePlugin", "isDeviceSupported", [arMode]);
 	};
 
 	/**
@@ -74,7 +74,7 @@
 	 *
 	 * 	@param {String} worldPath The path to an ARchitect world, ether on the device or on e.g. your Dropbox.
 	 */
-	WikitudePlugin.prototype.loadARchitectWorld = function(worldPath) {
+	WikitudePlugin.prototype.loadARchitectWorld = function(worldPath, arMode) {
 
 		// before we actually call load, we check again if the device is able to open the world
 		if (this._isDeviceSupported) {
@@ -86,7 +86,7 @@
 			cordova.exec(this.worldLaunched, this.worldFailedLaunching, "WikitudePlugin", "open", [{
 				"SDKKey": this._sdkKey,
 				"ARchitectWorldPath": worldPath,
-				"AugmentedRealityMode": this._augmentedRealityMode
+				"AugmentedRealityMode": arMode
 			}]);
 
 

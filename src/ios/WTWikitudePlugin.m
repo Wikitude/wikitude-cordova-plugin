@@ -15,10 +15,8 @@
 #define kWTWikitudePlugin_ArgumentKeyARchitectWorldPath @"ARchitectWorldPath"
 #define kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode @"AugmentedRealityMode"
 
-#define kWTWikitudePlugin_AugmentedRealityModeBothCombined @"irandgeo"
-#define kWTWikitudePlugin_AugmentedRealityModeBoth @"both"
-#define kWTWikitudePlugin_AugmentedRealityModeGeo @"geo"
-#define kWTWikitudePlugin_AugmentedRealityModeIR @"ir"
+#define kWTWikitudePlugin_AugmentedRealityModeGeo (1<<0)
+#define kWTWikitudePlugin_AugmentedRealityModeIR  (1<<1)
 
 #define kWTWikitudePlugin_RemoteURLPrefix @"http"
 
@@ -40,26 +38,18 @@
 
 @implementation WTWikitudePlugin
 
-+ (WTAugmentedRealityMode)augmentedRealityModeFromString:(NSString *)string
++ (WTAugmentedRealityMode)augmentedRealityModeFromNumber:(NSNumber *)mode
 {
-    WTAugmentedRealityMode augmentedRealityMode = WTAugmentedRealityMode_GeoAndImageRecognition;
-    
-    if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeBothCombined]
-        ||
-        [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeBoth] )
+    NSInteger modeFlags = [mode integerValue];
+    if( modeFlags == kWTWikitudePlugin_AugmentedRealityModeGeo )
     {
-        augmentedRealityMode = WTAugmentedRealityMode_Geo;
+        return WTAugmentedRealityMode_Geo;
     }
-    else if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeGeo] )
+    else if( modeFlags == kWTWikitudePlugin_AugmentedRealityModeIR )
     {
-        augmentedRealityMode = WTAugmentedRealityMode_Geo;
+        return WTAugmentedRealityMode_ImageRecognition;
     }
-    else if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeIR] )
-    {
-        augmentedRealityMode = WTAugmentedRealityMode_ImageRecognition;
-    }
-    
-    return augmentedRealityMode;
+    return WTAugmentedRealityMode_GeoAndImageRecognition;
 }
 
 + (NSURL *)architectWorldURLFromString:(NSString *)architectWorldFilePath
@@ -103,8 +93,8 @@
     
     if ( [command.arguments count] >= 1 )
     {
-        NSString *augmentedRealityModeArgument = [command.arguments objectAtIndex:0];
-        WTAugmentedRealityMode augmentedRealityMode = [WTWikitudePlugin augmentedRealityModeFromString:augmentedRealityModeArgument];
+        NSNumber *augmentedRealityModeArgument = [command.arguments objectAtIndex:0];
+        WTAugmentedRealityMode augmentedRealityMode = [WTWikitudePlugin augmentedRealityModeFromNumber:augmentedRealityModeArgument];
         
         self.isDeviceSupported = [WTArchitectViewController isDeviceSupportedForAugmentedRealityMode:augmentedRealityMode];
     }
@@ -145,7 +135,7 @@
             NSString *sdkKey = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeySDKKey];
             NSString *architectWorldFilePath = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeyARchitectWorldPath];
             
-            WTAugmentedRealityMode augmentedRealityMode = [WTWikitudePlugin augmentedRealityModeFromString:[arguments objectForKey:kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode]];
+            WTAugmentedRealityMode augmentedRealityMode = [WTWikitudePlugin augmentedRealityModeFromNumber:[arguments objectForKey:kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode]];
             
             if (!_arViewController)
             {
