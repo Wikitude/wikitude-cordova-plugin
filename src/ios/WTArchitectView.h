@@ -15,6 +15,9 @@
 @class CMMotionManager;
 @class WTNavigation;
 @class WTArchitectView;
+@class WTStartupConfiguration;
+
+@protocol WTArchitectViewDebugDelegate;
 
 
 extern NSString * const kWTScreenshotBundleDirectoryKey;
@@ -29,6 +32,12 @@ extern NSString * const kWTScreenshotImageKey;
  * By setting the appropriate augmented reality mode for a ARchitect World the best performance can be provided by the SDK.
  *
  */
+typedef NS_OPTIONS(NSUInteger, WTFeatures) {
+
+    WTFeature_2DTracking = 1 << 0,
+    WTFeature_Geo = 1 << 2
+};
+
 typedef NS_ENUM(NSUInteger, WTAugmentedRealityMode){
     /** Use this augmented reality mode if your ARchitect World is using e.g. AR.GeoLocations and AR.GeoObjects. This mode requires access to the camera and the user location so please make sure to specify a value for the 'NSLocationWhenInUseUsageDescription' key in your *-Info.plist when using the SDK on iOS 8 or later. Note that this mode also supports image recognition functionality. */
     WTAugmentedRealityMode_Geo = 1,
@@ -102,8 +111,6 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 
 
 /**
- * WTArchitectViewDelegate
- *
  * The WTArchitectViewDelegate offers the possibility to either react on events that are triggered inside the ARchitect World or events that are triggerd because of some interaction with the WTArchitectView.
  *
  */
@@ -225,6 +232,8 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  * The object that acts as the delegate of the receiving WTArchitectView
  */
 @property (nonatomic, weak) id<WTArchitectViewDelegate>                                 delegate;
+@property (nonatomic, weak) id<WTArchitectViewDebugDelegate>                            debugDelegate;
+
 @property (nonatomic, readonly) BOOL                                                    isRunning;
 @property (nonatomic, assign) CLLocationAccuracy                                        desiredLocationAccuracy;
 @property (nonatomic, assign) CLLocationDistance                                        desiredDistanceFilter;
@@ -232,6 +241,16 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 
 
 /** @name Accessing Device Compatibility */
+/**
+ * This method should be used to determine if the current device supports all features that are required.
+ *
+ * @param requiredFeatures Bitmask that describes wich features are used from the Wikitude SDK.
+ * @param error An error object containing more information why the device is not supported if the return value is NO.
+ *
+ * @return true if the device supports all required features, false otherwise.
+ */
++ (BOOL)isDeviceSupportedForRequiredFeatures:(WTFeatures)requiredFeatures error:(NSError **)error;
+
 /**
  * Returns true if the device supports the requested ARMode, false otherwise.
  *
@@ -241,7 +260,7 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  *
  * @discussion If the device supports ARMode_Geo, also ARMode_IR is supported.
  */
-+ (BOOL)isDeviceSupportedForAugmentedRealityMode:(WTAugmentedRealityMode)supportedARMode;
++ (BOOL)isDeviceSupportedForAugmentedRealityMode:(WTAugmentedRealityMode)supportedARMode WT_DEPRECATED_SINCE(4.1.0, "use +isDeviceSupportedForRequiredFeatures: instead.");
 
 
 /** @name Accessing ARchitect settings */
@@ -255,16 +274,15 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 
 /** @name Initializing a WTArchitectView Object */
 /**
-* Returns a newly initialized architect view with the given motion manager object.
-*
-* @param frame A CGRect describing the size of the view
-* @param motionManagerOrNil  A CMMotionManager object which should be used from the SDK. If nil is given, the SDK will create there own CMMotionManager object.
-*
-* @return A newly initialized WTArchitectView object.
-*
-* @discussion This is the designated initializer for this class.
-*
-*/
+ * Returns a newly initialized architect view with the given motion manager object.
+ *
+ * @param frame A CGRect describing the size of the view
+ * @param motionManagerOrNil A CMMotionManager object which should be used from the SDK. If nil is given, the SDK will create there own CMMotionManager object.
+ *
+ * @return A newly initialized WTArchitectView object.
+ *
+ * @discussion This is the designated initializer for this class.
+ */
 - (instancetype)initWithFrame:(CGRect)frame motionManager:(CMMotionManager *)motionManagerOrNil;//NS_DESIGNATED_INITIALIZER;
 
 /**
@@ -325,7 +343,8 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  *
  * @return WTNavigation * a navigation object representing the requested URL load and the finally loaded URL (They may differ because of some redirects)
  */
-- (WTNavigation *)loadArchitectWorldFromURL:(NSURL *)architectWorldURL withAugmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode;
+- (WTNavigation *)loadArchitectWorldFromURL:(NSURL *)architectWorldURL withRequiredFeatures:(WTFeatures)requiredFeatures;
+- (WTNavigation *)loadArchitectWorldFromURL:(NSURL *)architectWorldURL withAugmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode WT_DEPRECATED_SINCE(4.1.0, "use -loadArchitectWorldFromURL: withRequiredFeatures: instead.");
 
 /**
  * The same as -loadArchitectWorldFromURL:withAugmentedRealityMode: but specifies a default augmented reality mode of WTAugmentedRealityMode_GeoAndImageRecognition.
@@ -341,7 +360,7 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 /**
  * Starts activity of the ARchitect view (starts UI updates of background camera, AR objects etc).
  */
-- (void)start;
+- (void)start:(void (^)(WTStartupConfiguration *configuration))startupHandler completion:(void (^)(BOOL isRunning, NSError *error))completionHandler;
 
 /**
  * Stops all activity of the ARchitect view (suspends UI updates of background camera, AR objects etc).
