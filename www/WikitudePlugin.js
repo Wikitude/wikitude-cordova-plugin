@@ -81,27 +81,30 @@
 	 * 	@param {String} worldPath The path to an ARchitect world, ether on the device or on e.g. your Dropbox.
      *	@param {Number} arMode AR mode: OR concatenated flag mask for enabling geo location-based (WikitudePluginARModeGeo) or image recognition-based (WikitudePlugin.ARModeIR)
 	 */
-	WikitudePlugin.prototype.loadARchitectWorld = function(successCallback, errorCallback, worldPath, arMode) {
-		
+	WikitudePlugin.prototype.loadARchitectWorld = function(successCallback, errorCallback, worldPath, mode, config) {
+        
 		//	the 'open' function of the Wikitude Plugin requires some parameters
 		//	@param {String} SDKKey (required) The Wikitude SDK license key that you received with your purchase
 		//	@param {String} ARchitectWorldPath (required) The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
-		//	@param {Number} arMode (optional) determines the AR mode: geo location-based (Geo) or image recognition-based (IR) (see definition of WikitudePlugin.ARModeGeo and WikitudePlugin.ARModeIR)
+		//	@param {Number} mode (optional) determines the AR mode: geo location-based (Geo) or image recognition-based (IR) (see definition of WikitudePlugin.ARModeGeo and WikitudePlugin.ARModeIR)
+		//  @param {json string} (optional) represents the start-up configuration which may look like the following:
+		//                                  {
+		//                       				"cameraPosition": app.WikitudePlugin.CameraPositionBack,
+        //            			 				"cameraFocusMode": app.WikitudePlugin.CameraFocusModeAutoFocus,
+        //            			 				"iOS": {
+		//		        	                        "CaptureSessionPreset" : app.WikitudePlugin.CaptureSessionPreset1280x720,
+        //							                "cameraFocusRangeRestriction" : app.WikitudePlugin.CameraFocusRangeNear,
+        //                							"videoMirrored" : true
+        //			            				}
+		// 								    }
+
 		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "open", [{
-			"SDKKey": this._sdkKey,
-			"ARchitectWorldPath": worldPath,
-			"AugmentedRealityMode": arMode,
-		    "Configuration": {
-		        "cameraPosition": WikitudePlugin.CameraPositionBack,
-		        "cameraFocusMode": WikitudePlugin.CameraFocusModeAutoFocus,
-		        "iOS": {
-		            "CaptureSessionPreset" : WikitudePlugin.CaptureSessionPreset1280x720,
-		            "cameraFocusRangeRestriction" : WikitudePlugin.CameraFocusRangeNear,
-		            "videoMirrored" : true
-		        }
-		    }
-		    }]);
-		   
+				"SDKKey": this._sdkKey,
+				"ARchitectWorldPath": worldPath,
+				"AugmentedRealityMode": mode,
+		    	"Configuration" : config
+			}]);
+		
 		// We add an event listener on the resume and pause event of the application lifecycle
 		document.addEventListener("resume", this.onResume, false);
 		document.addEventListener("pause", this.onPause, false);
