@@ -19,22 +19,22 @@
 
 NSString* const kWTWikitudePlugin_ArgumentKeyARchitectWorldPath = @"ARchitectWorldPath";
 
-#define kWTWikitudePlugin_ArgumentARConfig  @"Configuration"
-#define kWTWikitudePlugin_ArgumentIOSConfig @"iOS"
+#define kWTWikitudePlugin_ArgumentFeatureConfiguration  @"Configuration"
+#define kWTWikitudePlugin_ArgumentIOSConfiguration @"iOS"
 
-NSString* const kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode = @"AugmentedRealityMode";
-#define kWTWikitudePlugin_AugmentedRealityMode_Geo (1<<0)
-#define kWTWikitudePlugin_AugmentedRealityMode_IR  (1<<1)
+NSString* const kWTWikitudePlugin_ArgumentAugmentedRealityFeature = @"AugmentedRealityFeature";
+#define kWTWikitudePlugin_AugmentedRealityFeature_Geo         (1<<0)
+#define kWTWikitudePlugin_AugmentedRealityFeature_2DTracking  (1<<1)
 
-NSString* const kWTWikitudePlugin_ArgumentCamPos = @"cameraPosition";
+NSString* const kWTWikitudePlugin_ArgumentCameraPosition = @"cameraPosition";
 #define kWTWikitudePlugin_cameraPosition_Undefined 0
 #define kWTWikitudePlugin_cameraPosition_Front     1
 #define kWTWikitudePlugin_cameraPosition_Back      2
 
-NSString* const kWTWikitudePlugin_ArgumentIOScaptureDevicePreset = @"CaptureSessionPreset";
+NSString* const kWTWikitudePlugin_ArgumentIOSCaptureSessionPreset = @"captureSessionPreset";
 NSString* const kWTWikitudePlugin_captureSessionPreset_Prefix = @"AVCaptureSessionPreset";
 
-NSString* const kWTWikitudePlugin_ArgumentCamFocus = @"cameraFocusMode";
+NSString* const kWTWikitudePlugin_ArgumentCameraFocusMode = @"cameraFocusMode";
 #define kWTWikitudePlugin_cameraFocusMode_Locked              0
 #define kWTWikitudePlugin_cameraFocusMode_AutoFocus           1
 #define kWTWikitudePlugin_cameraFocusMode_ContinuousAutoFocus 2
@@ -44,7 +44,7 @@ NSString* const kWTWikitudePlugin_ArgumentIOScaptureDeviceFocusRangeRestriction 
 #define kWTWikitudePlugin_cameraFocusRange_Near 1
 #define kWTWikitudePlugin_cameraFocusRange_Far  2
 
-NSString* const kWTWikitudePlugin_ArgumentIOsVideoMirrored = @"videoMirrored";
+NSString* const kWTWikitudePlugin_ArgumentIOSVideoMirrored = @"videoMirrored";
 
 
 //------------ Start-up Configuration - end ---------
@@ -69,93 +69,95 @@ NSString* const kWTWikitudePlugin_ArgumentIOsVideoMirrored = @"videoMirrored";
 
 @implementation WTWikitudePlugin
 
-+ (void)readStartupConfigurationFrom:(NSDictionary *)arguments andApplyTo:(WTStartupConfiguration *)config
++ (void)readStartupConfigurationFrom:(NSDictionary *)arguments andApplyTo:(WTStartupConfiguration *)configuration
 {
-    NSDictionary *arConfig = [arguments objectForKey:kWTWikitudePlugin_ArgumentARConfig];
-    if(arConfig)
+    if (arguments && configuration)
     {
-        NSNumber *camPosJs = [arConfig objectForKey:kWTWikitudePlugin_ArgumentCamPos];
-        if(camPosJs)
+        NSDictionary *featureConfiguration = [arguments objectForKey:kWTWikitudePlugin_ArgumentFeatureConfiguration];
+        if(featureConfiguration)
         {
-            switch([camPosJs integerValue])
+            NSNumber *cameraPosition = [featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentCameraPosition];
+            if(cameraPosition)
             {
-                case kWTWikitudePlugin_cameraPosition_Front:
-                    config.captureDevicePosition = AVCaptureDevicePositionFront;
-                    break;
-                case kWTWikitudePlugin_cameraPosition_Back:
-                    config.captureDevicePosition = AVCaptureDevicePositionBack;
-                    break;
-                default:
-                    config.captureDevicePosition = AVCaptureDevicePositionUnspecified;
-            }
-        }
-        
-        NSNumber *camFocusJs = [arConfig objectForKey:kWTWikitudePlugin_ArgumentCamFocus];
-        if(camFocusJs)
-        {
-            switch([camFocusJs integerValue])
-            {
-                case kWTWikitudePlugin_cameraFocusMode_Locked:
-                    config.captureDeviceFocusMode = AVCaptureFocusModeLocked;
-                    break;
-                case kWTWikitudePlugin_cameraFocusMode_AutoFocus:
-                    config.captureDeviceFocusMode = AVCaptureFocusModeAutoFocus;
-                    break;
-                case kWTWikitudePlugin_cameraFocusMode_ContinuousAutoFocus:
-                    config.captureDeviceFocusMode = AVCaptureFocusModeContinuousAutoFocus;
-                    break;
-            }
-        }
-        
-        NSDictionary* iosConfig = [arConfig objectForKey:kWTWikitudePlugin_ArgumentIOSConfig];
-        if(iosConfig)
-        {
-            
-            NSString *camDevPresetJs = [iosConfig objectForKey:kWTWikitudePlugin_ArgumentIOScaptureDevicePreset];
-            if(camDevPresetJs)
-            {
-                config.captureDevicePreset = kWTWikitudePlugin_captureSessionPreset_Prefix;
-                config.captureDevicePreset = [config.captureDevicePreset stringByAppendingString:camDevPresetJs];
-            }
-            
-            NSNumber *camFocusRestrictJs = [iosConfig objectForKey:kWTWikitudePlugin_ArgumentIOScaptureDeviceFocusRangeRestriction];
-            if(camFocusRestrictJs)
-            {
-                switch([camFocusRestrictJs integerValue])
+                switch([cameraPosition integerValue])
                 {
-                    case kWTWikitudePlugin_cameraFocusRange_None:
-                        config.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionNone;
+                    case kWTWikitudePlugin_cameraPosition_Front:
+                        configuration.captureDevicePosition = AVCaptureDevicePositionFront;
                         break;
-                    case kWTWikitudePlugin_cameraFocusRange_Near:
-                        config.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionNear;
+                    case kWTWikitudePlugin_cameraPosition_Back:
+                        configuration.captureDevicePosition = AVCaptureDevicePositionBack;
                         break;
-                    case kWTWikitudePlugin_cameraFocusRange_Far:
-                        config.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionFar;
+                    default:
+                        configuration.captureDevicePosition = AVCaptureDevicePositionUnspecified;
+                }
+            }
+            
+            NSNumber *cameraFocusMode = [featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentCameraFocusMode];
+            if(cameraFocusMode)
+            {
+                switch([cameraFocusMode integerValue])
+                {
+                    case kWTWikitudePlugin_cameraFocusMode_Locked:
+                        configuration.captureDeviceFocusMode = AVCaptureFocusModeLocked;
+                        break;
+                    case kWTWikitudePlugin_cameraFocusMode_AutoFocus:
+                        configuration.captureDeviceFocusMode = AVCaptureFocusModeAutoFocus;
+                        break;
+                    case kWTWikitudePlugin_cameraFocusMode_ContinuousAutoFocus:
+                        configuration.captureDeviceFocusMode = AVCaptureFocusModeContinuousAutoFocus;
                         break;
                 }
             }
             
-            NSNumber *videoMirroredJs = [iosConfig objectForKey:kWTWikitudePlugin_ArgumentIOsVideoMirrored];
-            if(camDevPresetJs)
+            NSDictionary* iOSConfiguration = [featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentIOSConfiguration];
+            if(iOSConfiguration)
             {
-                config.videoMirrored = [videoMirroredJs boolValue];
+                NSString *captureDevicePreset = [iOSConfiguration objectForKey:kWTWikitudePlugin_ArgumentIOSCaptureSessionPreset];
+                if(captureDevicePreset)
+                {
+                    configuration.captureDevicePreset = kWTWikitudePlugin_captureSessionPreset_Prefix;
+                    configuration.captureDevicePreset = [configuration.captureDevicePreset stringByAppendingString:captureDevicePreset];
+                }
+                
+                NSNumber *captureDeviceFocusRestriction = [iOSConfiguration objectForKey:kWTWikitudePlugin_ArgumentIOScaptureDeviceFocusRangeRestriction];
+                if(captureDeviceFocusRestriction)
+                {
+                    switch([captureDeviceFocusRestriction integerValue])
+                    {
+                        case kWTWikitudePlugin_cameraFocusRange_None:
+                            configuration.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionNone;
+                            break;
+                        case kWTWikitudePlugin_cameraFocusRange_Near:
+                            configuration.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionNear;
+                            break;
+                        case kWTWikitudePlugin_cameraFocusRange_Far:
+                            configuration.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionFar;
+                            break;
+                    }
+                }
+                
+                NSNumber *videoMirrored = [iOSConfiguration objectForKey:kWTWikitudePlugin_ArgumentIOSVideoMirrored];
+                if(videoMirrored)
+                {
+                    configuration.videoMirrored = [videoMirrored boolValue];
+                }
             }
         }
     }
 }
 
 
-+ (WTFeatures)augmentedRealityModeFromNumber:(NSNumber *)mode
++ (WTFeatures)augmentedRealityFeaturesFromJavaScriptFeatureMask:(NSNumber *)javaScriptFeatureMask
 {
     WTFeatures features = 0;
     
-    NSInteger modeFlags = [mode integerValue];
+    NSInteger mask = [javaScriptFeatureMask integerValue];
     
-    if( modeFlags == kWTWikitudePlugin_AugmentedRealityMode_Geo )
+    if( mask == kWTWikitudePlugin_AugmentedRealityFeature_Geo )
     {
         features |= WTFeature_Geo;
     }
-    else if( modeFlags == kWTWikitudePlugin_AugmentedRealityMode_IR )
+    else if( mask == kWTWikitudePlugin_AugmentedRealityFeature_2DTracking )
     {
         features |= WTFeature_2DTracking;
     }
@@ -208,8 +210,7 @@ NSString* const kWTWikitudePlugin_ArgumentIOsVideoMirrored = @"videoMirrored";
     
     if ( [command.arguments count] >= 1 )
     {
-        NSNumber *augmentedRealityModeArgument = [command.arguments objectAtIndex:0];
-        WTFeatures features = [WTWikitudePlugin augmentedRealityModeFromNumber:augmentedRealityModeArgument];
+        WTFeatures features = [WTWikitudePlugin augmentedRealityFeaturesFromJavaScriptFeatureMask:[command.arguments objectAtIndex:0]];
         
         NSError *isDeviceSupportedError = nil;
         self.isDeviceSupported = [WTArchitectView isDeviceSupportedForRequiredFeatures:features error:&isDeviceSupportedError];
@@ -251,7 +252,7 @@ NSString* const kWTWikitudePlugin_ArgumentIOsVideoMirrored = @"videoMirrored";
             NSString *architectWorldFilePath = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeyARchitectWorldPath];
             
             
-            WTFeatures features = [WTWikitudePlugin augmentedRealityModeFromNumber:[arguments objectForKey:kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode]];
+            WTFeatures features = [WTWikitudePlugin augmentedRealityFeaturesFromJavaScriptFeatureMask:[arguments objectForKey:kWTWikitudePlugin_ArgumentAugmentedRealityFeature]];
             
             if (!_arViewController)
             {
@@ -306,10 +307,10 @@ NSString* const kWTWikitudePlugin_ArgumentIOsVideoMirrored = @"videoMirrored";
         [self removeNotificationObserver];
         
         [self.viewController dismissViewControllerAnimated:YES completion:^
-        {
-            /* nil out the strong reference because it’s not longer needed. ‘show’ and ‘hide’ can handle nil controller and are supposed to only used during a active presentation of our plugin */
-            self.arViewController = nil;
-        }];
+         {
+             /* nil out the strong reference because it’s not longer needed. ‘show’ and ‘hide’ can handle nil controller and are supposed to be only used during an active presentation of our plugin */
+             self.arViewController = nil;
+         }];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }

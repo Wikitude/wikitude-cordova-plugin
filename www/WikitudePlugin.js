@@ -17,8 +17,8 @@
 		 *      * IR means that only image recognition is used in the ARchitect World.
 		 *  When your ARchitect World uses both, geo and ir, than set this value to "IrAndGeo". Otherwise, if the ARchitectWorld only needs image recognition, placing "IR" will require less features from the device and therefore, support a wider range of devices. Keep in mind that image recognition requires a dual core cpu to work satisfyingly.
 		 */
-        this.ARModeGeo = (1<<0);
-        this.ARModeIR  = (1<<1);
+        this.FeatureGeo         = (1<<0);
+        this.Feature2DTracking  = (1<<1);
 
         /**
          *  Start-up configuration: camera position (front or back).
@@ -78,31 +78,33 @@
 	 *
      *  @param {function(ur)}  successCallback  function which is called after a successful launch of the AR world.
      *  @param {function(err)} errorCallback    function which is called after a failed launch of the AR world.
-	 * 	@param {String} worldPath The path to an ARchitect world, ether on the device or on e.g. your Dropbox.
-     *	@param {Number} arMode AR mode: OR concatenated flag mask for enabling geo location-based (WikitudePluginARModeGeo) or image recognition-based (WikitudePlugin.ARModeIR)
-	 */
-	WikitudePlugin.prototype.loadARchitectWorld = function(successCallback, errorCallback, worldPath, mode, config) {
+	 *  @param {String} worldPath 	path to an ARchitect world, either on the device or on e.g. your Dropbox.
+     *  @param {Number} featureMask 	augmented reality features: a flags mask for enabling/disablibg 
+     *                                  geographic location-based (WikitudePlugin.FeatureGeo) or image recognition-based (WikitudePlugin.Feature2DTracking) tracking.
+	 *  @param {json object} (optional) 	represents the start-up configuration which may look like the following:
+	 *                                      {
+	 *                                  	    "cameraPosition": app.WikitudePlugin.CameraPositionBack,
+	 *                                      	"cameraFocusMode": app.WikitudePlugin.CameraFocusModeAutoFocus,
+	 *                                  	    "iOS": {
+	 *                                  		    "captureSessionPreset" : app.WikitudePlugin.CaptureSessionPreset1280x720,
+	 *                                      		"cameraFocusRangeRestriction" : app.WikitudePlugin.CameraFocusRangeNear,
+	 *                                      		"videoMirrored" : true
+	 *                                      	}
+	 *                                      }
+	 */	 
+	WikitudePlugin.prototype.loadARchitectWorld = function(successCallback, errorCallback, worldPath, featureMask, startupConfiguration) {
         
 		//	the 'open' function of the Wikitude Plugin requires some parameters
 		//	@param {String} SDKKey (required) The Wikitude SDK license key that you received with your purchase
 		//	@param {String} ARchitectWorldPath (required) The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
-		//	@param {Number} mode (optional) determines the AR mode: geo location-based (Geo) or image recognition-based (IR) (see definition of WikitudePlugin.ARModeGeo and WikitudePlugin.ARModeIR)
-		//  @param {json string} (optional) represents the start-up configuration which may look like the following:
-		//                                  {
-		//                       				"cameraPosition": app.WikitudePlugin.CameraPositionBack,
-        //            			 				"cameraFocusMode": app.WikitudePlugin.CameraFocusModeAutoFocus,
-        //            			 				"iOS": {
-		//		        	                        "CaptureSessionPreset" : app.WikitudePlugin.CaptureSessionPreset1280x720,
-        //							                "cameraFocusRangeRestriction" : app.WikitudePlugin.CameraFocusRangeNear,
-        //                							"videoMirrored" : true
-        //			            				}
-		// 								    }
+		//  @param {Number} feature (optional) determines the AR feature: geo location-based (Geo) or image recognition-based (IR) (see definition of WikitudePlugin.FeatureGeo and WikitudePlugin.Feature2DTracking)
+		//  @param {json object} (optional) represents the start-up configuration (see above)
 
 		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "open", [{
 				"SDKKey": this._sdkKey,
 				"ARchitectWorldPath": worldPath,
-				"AugmentedRealityMode": mode,
-		    	"Configuration" : config
+				"AugmentedRealityFeature": feature,
+		    	"Configuration" : startupConfiguration
 			}]);
 		
 		// We add an event listener on the resume and pause event of the application lifecycle
