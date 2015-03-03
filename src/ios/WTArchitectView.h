@@ -27,23 +27,41 @@ extern NSString * const kWTScreenshotImageKey;
 
 /**
  *
- * The WTAugmentedRealityMode is used to specify which type of augmented reality is used in an ARchitect World. Based on the WTAugmentedRealityMode, different device capabilities are required and different components of the SDK are used.
+ * WTFeatures define which features of the Wikitude SDK are used in an ARchitect World. Based on features, different device capabilities are required.
  *
- * By setting the appropriate augmented reality mode for a ARchitect World the best performance can be provided by the SDK.
- *
+ * By specifying the required features when loading an ARchitect World, the best performance can be achieved.
  */
 typedef NS_OPTIONS(NSUInteger, WTFeatures) {
 
+    /** 
+     * Specifies that 2d tracking is used in an ARchitect World 
+     * This feature requires access to the camera. When using the 'NSCameraUsageDescription' key in the *-Info.plist, a custom text can be displayed when the camera access alert is shown.
+     */
     WTFeature_2DTracking = 1 << 0,
+    
+    /**
+     * Specifies that geo based augmented reality is used where objects are placed on certain locations by providing latitude/longitude values.
+     * This feature requires access to the camera and the user location so please make sure to specify a value for the 'NSLocationWhenInUseUsageDescription' key in your *-Info.plist when using the SDK on iOS 8 or later.
+     */
     WTFeature_Geo = 1 << 2
 };
 
-typedef NS_ENUM(NSUInteger, WTAugmentedRealityMode){
-    /** Use this augmented reality mode if your ARchitect World is using e.g. AR.GeoLocations and AR.GeoObjects. This mode requires access to the camera and the user location so please make sure to specify a value for the 'NSLocationWhenInUseUsageDescription' key in your *-Info.plist when using the SDK on iOS 8 or later. Note that this mode also supports image recognition functionality. */
-    WTAugmentedRealityMode_Geo = 1,
+/**
+ * The WTAugmentedRealityMode is used to specify which type of augmented reality is used in an ARchitect World. Based on the WTAugmentedRealityMode, different device capabilities are required and different components of the SDK are used.
+ * By setting the appropriate augmented reality mode for a ARchitect World the best performance can be provided by the SDK.
+ *
+ * @deprecated since version 4.1
+ */
+typedef NS_ENUM(NSUInteger, WTAugmentedRealityMode) {
+    /** Use this augmented reality mode if your ARchitect World is using e.g. AR.GeoLocations and AR.GeoObjects. This mode requires access to the camera and the user location so please make sure to specify a value for the 'NSLocationWhenInUseUsageDescription' key in your *-Info.plist when using the SDK on iOS 8 or later. Note that this mode also supports image recognition functionality. 
+     * @deprecated since version 4.1
+     */
+    WTAugmentedRealityMode_Geo WT_DEPRECATED_SINCE(4.1.0, "use the WTFeature API and the value WTFeature_Geo instead.") = 1,
     
-    /** Use this augmented reality mode if your ARchitect World is using e.g. AR.Tracker and AR.Trackable2DObjects. This mode does require access to the camera. Note that this mode does not support geo functionality! */
-    WTAugmentedRealityMode_ImageRecognition,
+    /** Use this augmented reality mode if your ARchitect World is using e.g. AR.Tracker and AR.Trackable2DObjects. This mode does require access to the camera. Note that this mode does not support geo functionality! 
+     * @deprecated since version 4.1
+     */
+    WTAugmentedRealityMode_ImageRecognition WT_DEPRECATED_SINCE(4.1.0, "use the WTFeature API and the value WTFeature_2DTracking instead."),
     /** Same as WTAugmentedRealityMode_ImageRecognition 
      * @deprecated since version 4.0.2
      */
@@ -164,7 +182,7 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  * This method offers the possibility to react on events that are triggered inside the ARchitect World. To initiate such an event, the ARchitect World simply has to make an request for an url with the "architectsdk://" scheme. E.g.: architectsdk://opendetails?id=123.
  *
  * @param architectView The WTArchitectView object which invoked the url.
- * @param url The url which was called in javascript.
+ * @param URL The url which was called in javascript.
  */
 - (void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL;
 
@@ -269,7 +287,15 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
  *
  * @return The current available ARchitect verison within the SDK.
  */
-+ (NSString *)versionNumber;
++ (NSString *)sdkVersion;
+
+/**
+ * See `+sdkVersion` for more information
+ *
+ * @return The current available ARchitect verison within the SDK.
+ * @deprecated since version 4.1. Use +sdkVersion instead.
+ */
++ (NSString *)versionNumber WT_DEPRECATED_SINCE(4.1.0, "use +sdkVersion instead.");
 
 
 /** @name Initializing a WTArchitectView Object */
@@ -329,27 +355,40 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 
 
 /** @name Loading Architect Worlds */
+
 /**
  * Loads the ARchitect World specified by the given URL. If an ARchitect World is already loaded all it's created objects are destroyed before the new one will be loaded.
  *
  * Architect Worlds can be either loaded from the application bundle or a remote server.
- * 
- * Architect Worlds can be loaded with different augmented reality modes. The augmented reality mode specifies which SDK functionalities are required by the World. For example the WTAugmentedRealityMode_ImageRecognition does not start any GPS location related APIs and the user is not interrupted with a location access alert. As a result any geo related SDK functionalities do not work but the target image recognition is faster and the SDK does not cosume as much CPU performance than with an enabled GPS module. Choose the most suitable mode for your ARchitect World to experience the full functionality and the best performance.
+ *
+ * Architect Worlds can be loaded with different required features. Features specifies which SDK functionalities are required by the World. For example the WTFeature_2DTracking does not start any GPS location related APIs and the user is not interrupted with a location access alert. As a result any geo related SDK functionalities do not work but the target image recognition is faster and the SDK does not cosume as much CPU performance than with an enabled GPS module. Choose the most suitable mode for your ARchitect World to experience the full functionality and the best performance.
  *
  * It is possible to load a different Architect World with a different augmented reality mode using the same architect view instance.
  *
  * @param architectWorldURL The URL that points to the ARchitect world.
- * @param augmentedRealityMode The augmented reality mode that specifies details about the functionality that is required by the ARchitect World.
+ * @param requiredFeatures Required features who specifies in more detail which functionality is used by the ARchitect World.
  *
- * @return WTNavigation * a navigation object representing the requested URL load and the finally loaded URL (They may differ because of some redirects)
+ * @return WTNavigation a navigation object representing the requested URL load and the finally loaded URL (They may differ because of some redirects)
  */
 - (WTNavigation *)loadArchitectWorldFromURL:(NSURL *)architectWorldURL withRequiredFeatures:(WTFeatures)requiredFeatures;
-- (WTNavigation *)loadArchitectWorldFromURL:(NSURL *)architectWorldURL withAugmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode WT_DEPRECATED_SINCE(4.1.0, "use -loadArchitectWorldFromURL: withRequiredFeatures: instead.");
+
+
+/**
+ * The same as -loadArchitectWorldFromURL:withRequiredFeatures: but uses the old WTAugmentedReality API to define the features used by the ARchitect World.
+ *
+ * @param architectWorldURL The URL that points to the ARchitect world.
+ * @param augmentedRealityMode The augmented reality mode that specifies details about the functionality that is required by the ARchitect World.
+ *
+ * @return WTNavigation a navigation object representing the requested URL load and the finally loaded URL (They may differ because of some redirects)
+ *
+ * @deprecated since version 4.1. Use -loadArchitectWorldFromURL:withRequiredFeatures: instead.
+ */
+- (WTNavigation *)loadArchitectWorldFromURL:(NSURL *)architectWorldURL withAugmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode WT_DEPRECATED_SINCE(4.1.0, "use -loadArchitectWorldFromURL:withRequiredFeatures: instead.");
 
 /**
  * The same as -loadArchitectWorldFromURL:withAugmentedRealityMode: but specifies a default augmented reality mode of WTAugmentedRealityMode_GeoAndImageRecognition.
  *
- * @param architectWorldURL The URL that points to the ARchitect world.
+ * @param architectWorldUrl The URL that points to the ARchitect world.
  *
  * @deprecated since version 4.0.2
  */
@@ -357,10 +396,26 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 
 
 /** @name Managing the WTArchitectView updates */
+
+
 /**
  * Starts activity of the ARchitect view (starts UI updates of background camera, AR objects etc).
+ *
+ * @discussion Since version 4.1 of the Wikitude SDK, the SDK startup behaviour can be defined in more detail. It is now possible to define the camera position and camera options when the SDK starts. See WTStartupConfiguration for more information about the available options and there possible values. Most of the settings can also be set using the JS API.
+ *
+ * As a specific example, use the configuration object to start the SDK with an active front camera instead of the default rear cam.
+ *
+ * @param startupHandler A block which contains a configuration object as parameter. The WTStartupConfiguration parameter can be used to specify the startup behaviour in more detail.
+ * @param completionHandler A block which provices information if the SDK could be started or not.
  */
 - (void)start:(void (^)(WTStartupConfiguration *configuration))startupHandler completion:(void (^)(BOOL isRunning, NSError *error))completionHandler;
+
+/**
+ * The same as -start:completion but without the additional configuration or completion handler.
+ *
+ * @deprecated since verison 4.1. Use -start:completion: instead.
+ */
+- (void)start WT_DEPRECATED_SINCE(4.1.0, "use -start:completion: instead.");
 
 /**
  * Stops all activity of the ARchitect view (suspends UI updates of background camera, AR objects etc).
@@ -479,7 +534,7 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
 /**
  * Use this method to clear all cached data and requests.
  *
- * This method clears the internal SDK cache, as well as the cache used by the webView.
+ * This method clears the cache used by the webView.
  */
 - (void)clearCache;
 

@@ -16,27 +16,12 @@
  */
 @interface WTStartupConfiguration : NSObject
 
-/**
- * The capture device preset that should be used when the SDK starts.
- * If the preset is not supported by the current device, then a default preset is used.
- */
-@property (nonatomic, strong) NSString                              *captureDevicePreset;
-
 
 /**
  * The capture device position that should be used when the SDK starts.
  * If the position is not supported by the current device, then a default position is used.
  */
 @property (nonatomic, assign) AVCaptureDevicePosition               captureDevicePosition;
-
-
-/**
- * The capture device focus mode that should be used when the SDK starts.
- * If the given focus mode is not supported by the current device, then a default focus mode is used.
- *
- * @warning Most front cameras do not support a specific focus mode. They will always fall back to a continuous focus mode
- */
-@property (nonatomic, assign) AVCaptureFocusMode                    captureDeviceFocusMode;
 
 
 /**
@@ -49,6 +34,8 @@
 
 /**
  * Specifies if the capture device output should be mirrored or not.
+ *
+ * The default value is YES
  *
  * @warning This property is only available for AVCaptureDevicePositionFront. All other camera positions ignore this option.
  */
