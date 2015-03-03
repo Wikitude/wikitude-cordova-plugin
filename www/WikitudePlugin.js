@@ -17,8 +17,8 @@
 		 *      * IR means that only image recognition is used in the ARchitect World.
 		 *  When your ARchitect World uses both, geo and ir, than set this value to "IrAndGeo". Otherwise, if the ARchitectWorld only needs image recognition, placing "IR" will require less features from the device and therefore, support a wider range of devices. Keep in mind that image recognition requires a dual core cpu to work satisfyingly.
 		 */
-        this.FeatureGeo         = (1<<0);
-        this.Feature2DTracking  = (1<<1);
+        this.FeatureGeo         = "geo";
+        this.Feature2DTracking  = "2d_tracking";
 
         /**
          *  Start-up configuration: camera position (front or back).
@@ -67,44 +67,42 @@
 	 * @param {function} successCallback A callback which is called if the device is capable of running ARchitect Worlds.
 	 * @param {function} errorCallback A callback which is called if the device is not capable of running ARchitect Worlds.
 	 */
-	WikitudePlugin.prototype.isDeviceSupported = function(successCallback, errorCallback, arMode) {
+	WikitudePlugin.prototype.isDeviceSupported = function(successCallback, errorCallback, requiredFeatures) {
 
 		// Check if the current device is capable of running Architect Worlds
-		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "isDeviceSupported", [arMode]);
+		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "isDeviceSupported", [requiredFeatures]);
 	};
 
 	/**
 	 *	Use this function to load an ARchitect World.
 	 *
-     *  @param {function(ur)}  successCallback  function which is called after a successful launch of the AR world.
-     *  @param {function(err)} errorCallback    function which is called after a failed launch of the AR world.
-	 *  @param {String} worldPath 	path to an ARchitect world, either on the device or on e.g. your Dropbox.
-     *  @param {Number} featureMask 	augmented reality features: a flags mask for enabling/disablibg 
+     *  @param {function(loadedURL)}  	successCallback		function which is called after a successful launch of the AR world.
+     *  @param {function(error)}		 	errorCallback		function which is called after a failed launch of the AR world.
+     *	@param {String} 					architectWorldPath	The path to a local ARchitect world or to a ARchitect world on a server or your 
+	 *  @param {String} 					worldPath			path to an ARchitect world, either on the device or on e.g. your Dropbox.
+     *  @param {Array} 					requiredFeatures		augmented reality features: a flags mask for enabling/disablibg 
      *                                  geographic location-based (WikitudePlugin.FeatureGeo) or image recognition-based (WikitudePlugin.Feature2DTracking) tracking.
-	 *  @param {json object} (optional) 	represents the start-up configuration which may look like the following:
-	 *                                      {
-	 *                                  	    "cameraPosition": app.WikitudePlugin.CameraPositionBack,
-	 *                                      	"cameraFocusMode": app.WikitudePlugin.CameraFocusModeAutoFocus,
-	 *                                  	    "iOS": {
-	 *                                  		    "captureSessionPreset" : app.WikitudePlugin.CaptureSessionPreset1280x720,
-	 *                                      		"cameraFocusRangeRestriction" : app.WikitudePlugin.CameraFocusRangeNear,
-	 *                                      		"videoMirrored" : true
+	 *  @param {json object} (optional) startupConfiguration	represents the start-up configuration which may look like the following:
+	 *									{
+	 *                               		"cameraPosition": app.WikitudePlugin.CameraPositionBack,
+	 *                                  	    	"*OptionalPlatform*": {
+	 *											"*optionalPlatformKey*": "*optionalPlatformValue*"
 	 *                                      	}
-	 *                                      }
+	 *                               	}
 	 */	 
-	WikitudePlugin.prototype.loadARchitectWorld = function(successCallback, errorCallback, worldPath, featureMask, startupConfiguration) {
+	WikitudePlugin.prototype.loadARchitectWorld = function(successCallback, errorCallback, architectWorldPath, requiredFeatures, startupConfiguration) {
         
 		//	the 'open' function of the Wikitude Plugin requires some parameters
 		//	@param {String} SDKKey (required) The Wikitude SDK license key that you received with your purchase
 		//	@param {String} ARchitectWorldPath (required) The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
-		//  @param {Number} feature (optional) determines the AR feature: geo location-based (Geo) or image recognition-based (IR) (see definition of WikitudePlugin.FeatureGeo and WikitudePlugin.Feature2DTracking)
-		//  @param {json object} (optional) represents the start-up configuration (see above)
+		//  @param {Number} RequiredFeatures (optional) represents required features (see above)
+		//  @param {json object} (optional) StartConfiguration represents the start-up configuration (see above)
 
 		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "open", [{
 				"SDKKey": this._sdkKey,
-				"ARchitectWorldPath": worldPath,
-				"AugmentedRealityFeature": feature,
-		    	"Configuration" : startupConfiguration
+				"ARchitectWorldURL": architectWorldPath,
+				"RequiredFeatures": requiredFeatures,
+		    		"StartupConfiguration" : startupConfiguration
 			}]);
 		
 		// We add an event listener on the resume and pause event of the application lifecycle
