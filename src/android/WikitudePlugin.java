@@ -32,8 +32,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.wikitude.architect.ArchitectView;
-import com.wikitude.architect.ArchitectView.ARMode;
-import com.wikitude.architect.ArchitectView.ArchitectConfig;
+import com.wikitude.architect.StartupConfiguration;
 import com.wikitude.architect.ArchitectView.ArchitectUrlListener;
 import com.wikitude.architect.ArchitectView.CaptureScreenCallback;
 import com.wikitude.phonegap.WikitudePlugin.ArchitectViewPhoneGap.OnKeyUpDownListener;
@@ -187,16 +186,14 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 		/* return success only if view is opened (no matter if visible or not) */
 		if ( WikitudePlugin.ACTION_IS_DEVICE_SUPPORTED.equals( action ) ) {
-			String mode;
+			String[] features;
 			try {
-				mode = args.getString(0);
+				features = args.getString(0);
 			} catch (JSONException e) {
-				mode = "IrAndGeo";
+				features = {};
 			}
-			int arMode = mode.equalsIgnoreCase("IR") ? ARMode.IR :
-				mode.equalsIgnoreCase("GEO") ? ARMode.GEO :
-					( ARMode.IR | ARMode.GEO );
-			if ( (ArchitectView.getSupportedARModeForDevice( this.cordova.getActivity() ) & arMode) == arMode ) {
+			convertArFeatures(features);
+			if ( (ArchitectView.getSupportedfeaturesForDevice( this.cordova.getActivity() ) & features) == features ) {
 				callContext.success( action + ": this device is ARchitect-ready" );
 			} else {
 				callContext.error( action + action + ":Sorry, this device is NOT ARchitect-ready" );
@@ -456,15 +453,16 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			try {
 				final JSONObject params = args.getJSONObject( 0 );
 				final String apiKey = params.getString( "SDKKey" );
-				final String filePath = params.getString( "ARchitectWorldPath" );
-				final String arMode = params.getString( "AugmentedRealityMode" );
+				final String filePath = params.getString( "ARchitectWorldURL" );
+				final String features = params.getString( "RequiredFeatures" );
+				final JSONObject startupConfiguration = params.getJSONObject( "StartupConfiguration" );
 
 				this.cordova.getActivity().runOnUiThread( new Runnable() {
 
 					@Override
 					public void run() {
 						try {
-							WikitudePlugin.this.addArchitectView( apiKey, filePath, arMode );
+							WikitudePlugin.this.addArchitectView( apiKey, filePath, features, startupConfiguration );
 
 							/* call success method once architectView was added successfully */
 							if ( openCallback != null ) {
@@ -578,20 +576,43 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		return deletedFiles;
 	}
 
+	private int convertArFeatures(String[] arFeatures) {
+		int featuresBitMap = 0;
+		for (String feature : arFeatures) {
+			if (feature.equalsIgnoreCase("2d_tracking")) {
+				featuresBitMap = featuresBitMap | StartupConfiguration.Features.Tracking2D;
+			} else if (feature.equalsIgnoreCase("geo")) {
+				featuresBitMap = featuresBitMap | StartupConfiguration.Features.Geo;
+			}
+		}
+		if (featuresBitMap == 0) {
+			featuresBitMap = StartupConfiguration.Features.Tracking2D | StartupConfiguration.Features.Geo;
+		}
+		return featuresBitMap;
+	}
 
 	/**
 	 * Architect-Configuration required for proper set-up
 	 * @param apiKey
-	 * @param arMode 
+	 * @param features 
 	 * @return
 	 */
-	protected ArchitectConfig getArchitectConfig( final String apiKey, String arMode ) {
+	protected StartupConfiguration getStartupConfiguration( final String apiKey, String[] features, JSONObject startupConfiguration ) {
+		int featuresBitMap = convertArFeatures(features);
+
+		StartupConfiguration.CameraPosition cameraPosition = CameraPosition.DEFAULT;
+		try {
+			if (startupConfiguration.getString("camera_position").compareToIgnoreCase("front") == 0) {
+				cameraPosition = StartupConfiguration.CameraPosition.FRONT;
+			} else if (startupConfiguration.getString("camera_position").compareToIgnoreCase("back") == 0) {
+				cameraPosition = StartupConfiguration.CameraPosition.BACK;
+			}
+		} catch (JSONException e) {
+			return cameraPosition;
+		}
+
 		/* no special set-up required in default Wikitude-Plugin, further things required in advanced usage (e.g. Vuforia Image Recognition) */
-		ArchitectConfig config = new ArchitectConfig( apiKey,
-				arMode.equals("IR") ? ARMode.IR :
-				arMode.equals("Geo") ? ARMode.GEO :
-				ARMode.GEO | ARMode.IR
-			);
+		StartupConfiguration config = new StartupConfiguration( apiKey, featuresBitMap, cameraPosition);
 		config.setOrigin( ArchitectConfig.ORIGIN_PHONEGAP );
 		return config;
 	}
@@ -600,10 +621,10 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 * add architectView to current screen
 	 * @param apiKey developers's api key to use (hides watermarking/intro-animation if it matches your package-name)
 	 * @param filePath the url (starting with http:// for online use; starting with LOCAL_ASSETS_PATH_ROOT if oyu want to load assets within your app-assets folder)
-	 * @param arMode Augmented Reality mode ()
+	 * @param features Augmented Reality mode ()
 	 * @throws IOException might be thrown from ARchitect-SDK
 	 */
-	private void addArchitectView( final String apiKey, String filePath, String arMode ) throws IOException {
+	private void addArchitectView( final String apiKey, String filePath, String[] features, JSONObject startupConfiguration) throws IOException {
 		if ( this.architectView == null ) {
 			
 		WikitudePlugin.releaseFocusInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
@@ -664,7 +685,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		(this.cordova.getActivity()).setVolumeControlStream( AudioManager.STREAM_MUSIC );
 
 		/* fake life-cycle calls, because activity is already up and running */
-		this.architectView.onCreate( getArchitectConfig( apiKey, arMode ) );
+		this.architectView.onCreate( getStartupConfiguration( apiKey, features, startupConfiguration ) );
 		this.architectView.onPostCreate();
 
 		/* register self as url listener to fwd these native calls to PhoneGap */

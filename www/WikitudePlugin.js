@@ -102,7 +102,7 @@
 				"SDKKey": this._sdkKey,
 				"ARchitectWorldURL": architectWorldPath,
 				"RequiredFeatures": requiredFeatures,
-		    		"StartupConfiguration" : startupConfiguration
+		    	"StartupConfiguration" : startupConfiguration
 			}]);
 		
 		// We add an event listener on the resume and pause event of the application lifecycle
