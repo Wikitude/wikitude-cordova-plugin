@@ -32,9 +32,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.wikitude.architect.ArchitectView;
-import com.wikitude.architect.StartupConfiguration;
 import com.wikitude.architect.ArchitectView.ArchitectUrlListener;
 import com.wikitude.architect.ArchitectView.CaptureScreenCallback;
+import com.wikitude.architect.StartupConfiguration;
+import com.wikitude.architect.StartupConfiguration.CameraPosition;
 import com.wikitude.phonegap.WikitudePlugin.ArchitectViewPhoneGap.OnKeyUpDownListener;
 
 
@@ -186,14 +187,13 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 		/* return success only if view is opened (no matter if visible or not) */
 		if ( WikitudePlugin.ACTION_IS_DEVICE_SUPPORTED.equals( action ) ) {
-			String[] features;
+			JSONArray jsonArray = null;
 			try {
-				features = args.getString(0);
+				jsonArray = args.getJSONArray( 0 );
 			} catch (JSONException e) {
-				features = {};
 			}
-			convertArFeatures(features);
-			if ( (ArchitectView.getSupportedfeaturesForDevice( this.cordova.getActivity() ) & features) == features ) {
+			int featuresBitMap = convertArFeatures(jsonArray);
+			if ( (ArchitectView.getSupportedFeaturesForDevice( this.cordova.getActivity() ) & featuresBitMap) == featuresBitMap ) {
 				callContext.success( action + ": this device is ARchitect-ready" );
 			} else {
 				callContext.error( action + action + ":Sorry, this device is NOT ARchitect-ready" );
@@ -289,7 +289,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 					public void run() {
 						WikitudePlugin.this.architectView.onResume();
 						callContext.success( action + ": architectView is present" );
-						locationProvider.onResume();
+						if (locationProvider != null) {
+							locationProvider.onResume();
+						}
 					}
 				} );
 
@@ -308,7 +310,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 					@Override
 					public void run() {
 						WikitudePlugin.this.architectView.onPause();
-						locationProvider.onPause();
+						if (locationProvider != null) {
+							locationProvider.onPause();
+						}
 					}
 				} );
 
@@ -454,9 +458,24 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 				final JSONObject params = args.getJSONObject( 0 );
 				final String apiKey = params.getString( "SDKKey" );
 				final String filePath = params.getString( "ARchitectWorldURL" );
-				final String features = params.getString( "RequiredFeatures" );
-				final JSONObject startupConfiguration = params.getJSONObject( "StartupConfiguration" );
-
+				int featuresTmp = 0;
+				
+				try {
+					final JSONArray jsonArray = params.getJSONArray( "RequiredFeatures" );
+					featuresTmp = convertArFeatures(jsonArray);
+				} catch (JSONException e) {
+					featuresTmp = StartupConfiguration.Features.Geo | StartupConfiguration.Features.Tracking2D;
+				}
+				final int features = featuresTmp;
+				
+				JSONObject startupConfigurationTmp;
+				try {
+					startupConfigurationTmp = params.getJSONObject( "StartupConfiguration" );
+				} catch (Exception e) {
+					startupConfigurationTmp = null;
+				}
+				final JSONObject startupConfiguration = startupConfigurationTmp;
+				
 				this.cordova.getActivity().runOnUiThread( new Runnable() {
 
 					@Override
@@ -576,9 +595,14 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		return deletedFiles;
 	}
 
-	private int convertArFeatures(String[] arFeatures) {
+	private int convertArFeatures(JSONArray jsonArray) {
 		int featuresBitMap = 0;
-		for (String feature : arFeatures) {
+		for (int i = 0; i < jsonArray.length(); i++) {
+			String feature = "";
+			try {
+				feature = (String) jsonArray.get(0);
+			} catch (JSONException e) {
+			}
 			if (feature.equalsIgnoreCase("2d_tracking")) {
 				featuresBitMap = featuresBitMap | StartupConfiguration.Features.Tracking2D;
 			} else if (feature.equalsIgnoreCase("geo")) {
@@ -597,23 +621,22 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 * @param features 
 	 * @return
 	 */
-	protected StartupConfiguration getStartupConfiguration( final String apiKey, String[] features, JSONObject startupConfiguration ) {
-		int featuresBitMap = convertArFeatures(features);
-
+	protected StartupConfiguration getStartupConfiguration( final String apiKey, int features, JSONObject startupConfiguration ) {
 		StartupConfiguration.CameraPosition cameraPosition = CameraPosition.DEFAULT;
 		try {
-			if (startupConfiguration.getString("camera_position").compareToIgnoreCase("front") == 0) {
-				cameraPosition = StartupConfiguration.CameraPosition.FRONT;
-			} else if (startupConfiguration.getString("camera_position").compareToIgnoreCase("back") == 0) {
-				cameraPosition = StartupConfiguration.CameraPosition.BACK;
+			if (startupConfiguration != null) {
+				if (startupConfiguration.getString("camera_position").compareToIgnoreCase("front") == 0) {
+					cameraPosition = StartupConfiguration.CameraPosition.FRONT;
+				} else if (startupConfiguration.getString("camera_position").compareToIgnoreCase("back") == 0) {
+					cameraPosition = StartupConfiguration.CameraPosition.BACK;
+				}
 			}
 		} catch (JSONException e) {
-			return cameraPosition;
 		}
 
 		/* no special set-up required in default Wikitude-Plugin, further things required in advanced usage (e.g. Vuforia Image Recognition) */
-		StartupConfiguration config = new StartupConfiguration( apiKey, featuresBitMap, cameraPosition);
-		config.setOrigin( ArchitectConfig.ORIGIN_PHONEGAP );
+		StartupConfiguration config = new StartupConfiguration( apiKey, features, cameraPosition);
+		config.setOrigin( StartupConfiguration.ORIGIN_PHONEGAP );
 		return config;
 	}
 
@@ -624,86 +647,87 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 * @param features Augmented Reality mode ()
 	 * @throws IOException might be thrown from ARchitect-SDK
 	 */
-	private void addArchitectView( final String apiKey, String filePath, String[] features, JSONObject startupConfiguration) throws IOException {
+	private void addArchitectView( final String apiKey, String filePath, int features, JSONObject startupConfiguration) throws IOException {
 		if ( this.architectView == null ) {
 			
-		WikitudePlugin.releaseFocusInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
-
-		this.architectView = new ArchitectViewPhoneGap( this.cordova.getActivity() , new OnKeyUpDownListener() {
-
-			@Override
-			public boolean onKeyUp(int keyCode, KeyEvent event) {
-				if (architectView!=null && keyCode == KeyEvent.KEYCODE_BACK) {
-					WikitudePlugin.this.locationProvider.onPause();
-					removeArchitectView();
-					return true;
-				} else {
-					return false;
-				}
-			}
-
-			@Override
-			public boolean onKeyDown(int keyCode, KeyEvent event) {
-				return architectView!=null && keyCode == KeyEvent.KEYCODE_BACK;
-			}
-		});
-		
-		this.architectView.setFocusableInTouchMode(true);
-		this.architectView.requestFocus();
-		
-		this.locationListener = new LocationListener() {
-
-			@Override
-			public void onStatusChanged( String provider, int status, Bundle extras ) {
-			}
-
-			@Override
-			public void onProviderEnabled( String provider ) {
-			}
-
-			@Override
-			public void onProviderDisabled( String provider ) {
-			}
-
-			@Override
-			public void onLocationChanged( final Location location ) {
-				if (location!=null && !WikitudePlugin.this.useCustomLocation) {
-					WikitudePlugin.this.lastKnownLocaton = location;
-				if ( WikitudePlugin.this.architectView != null ) {
-					if ( location.hasAltitude() ) {
-						WikitudePlugin.this.architectView.setLocation( location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getAccuracy() );
+			WikitudePlugin.releaseFocusInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
+	
+			this.architectView = new ArchitectViewPhoneGap( this.cordova.getActivity() , new OnKeyUpDownListener() {
+	
+				@Override
+				public boolean onKeyUp(int keyCode, KeyEvent event) {
+					if (architectView!=null && keyCode == KeyEvent.KEYCODE_BACK) {
+						if (WikitudePlugin.this.locationProvider != null) {
+							WikitudePlugin.this.locationProvider.onPause();
+						}
+						removeArchitectView();
+						return true;
 					} else {
-						WikitudePlugin.this.architectView.setLocation( location.getLatitude(), location.getLongitude(), location.getAccuracy() );
+						return false;
 					}
 				}
+	
+				@Override
+				public boolean onKeyDown(int keyCode, KeyEvent event) {
+					return architectView!=null && keyCode == KeyEvent.KEYCODE_BACK;
 				}
+			});
+			
+			this.architectView.setFocusableInTouchMode(true);
+			this.architectView.requestFocus();
+
+			this.locationListener = new LocationListener() {
+	
+				@Override
+				public void onStatusChanged( String provider, int status, Bundle extras ) {
+				}
+	
+				@Override
+				public void onProviderEnabled( String provider ) {
+				}
+	
+				@Override
+				public void onProviderDisabled( String provider ) {
+				}
+	
+				@Override
+				public void onLocationChanged( final Location location ) {
+					if (location!=null && !WikitudePlugin.this.useCustomLocation) {
+						WikitudePlugin.this.lastKnownLocaton = location;
+					if ( WikitudePlugin.this.architectView != null ) {
+						if ( location.hasAltitude() ) {
+							WikitudePlugin.this.architectView.setLocation( location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getAccuracy() );
+						} else {
+							WikitudePlugin.this.architectView.setLocation( location.getLatitude(), location.getLongitude(), location.getAccuracy() );
+						}
+					}
+					}
+				}
+			};
+
+			/* add content view and fake initial life-cycle */
+			(this.cordova.getActivity()).addContentView( this.architectView, new ViewGroup.LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT ) );
+			(this.cordova.getActivity()).setVolumeControlStream( AudioManager.STREAM_MUSIC );
+	
+			/* fake life-cycle calls, because activity is already up and running */
+			this.architectView.onCreate( getStartupConfiguration( apiKey, features, startupConfiguration ) );
+			this.architectView.onPostCreate();
+	
+			/* register self as url listener to fwd these native calls to PhoneGap */
+			this.architectView.registerUrlListener( WikitudePlugin.this );
+	
+			/* load asset from local directory if prefix is used */
+			if ( filePath.startsWith( WikitudePlugin.LOCAL_ASSETS_PATH_ROOT ) ) {
+				filePath = filePath.substring( WikitudePlugin.LOCAL_ASSETS_PATH_ROOT.length() );
 			}
-		};
-
-		/* add content view and fake initial life-cycle */
-		(this.cordova.getActivity()).addContentView( this.architectView, new ViewGroup.LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT ) );
-		(this.cordova.getActivity()).setVolumeControlStream( AudioManager.STREAM_MUSIC );
-
-		/* fake life-cycle calls, because activity is already up and running */
-		this.architectView.onCreate( getStartupConfiguration( apiKey, features, startupConfiguration ) );
-		this.architectView.onPostCreate();
-
-		/* register self as url listener to fwd these native calls to PhoneGap */
-		this.architectView.registerUrlListener( WikitudePlugin.this );
-
-		/* load asset from local directory if prefix is used */
-		if ( filePath.startsWith( WikitudePlugin.LOCAL_ASSETS_PATH_ROOT ) ) {
-			filePath = filePath.substring( WikitudePlugin.LOCAL_ASSETS_PATH_ROOT.length() );
-		}
-		this.architectView.load( filePath );
-
-		/* also a fake-life-cycle call (the last one before it is really shown in UI */
-		this.architectView.onResume();
-		
-		this.locationProvider = new LocationProvider( this.cordova.getActivity(), this.locationListener );
-		
-		this.locationProvider.onResume();
-		
+			this.architectView.load( filePath );
+	
+			/* also a fake-life-cycle call (the last one before it is really shown in UI */
+			this.architectView.onResume();
+			if ((features & StartupConfiguration.Features.Geo) == features) {
+				this.locationProvider = new LocationProvider( this.cordova.getActivity(), this.locationListener );
+				this.locationProvider.onResume();
+			}
 		}
 		
 		// hide keyboard when adding AR view on top of views
