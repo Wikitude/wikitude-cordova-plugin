@@ -101,6 +101,10 @@
 
         <header-file src="src/ios/WTArchitectView.h" />
         <header-file src="src/ios/WTNavigation.h" />
+        <header-file src="src/ios/WTStartupConfiguration.h" />
+        
+        <header-file src="src/ios/WikitudeSDK.h" />
+
         <source-file src="src/ios/libWikitudeSDK.a" framework="true" />
 
 

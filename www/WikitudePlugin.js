@@ -1,6 +1,6 @@
-
+	
 	/**
-	 * Release date: 29.07.14
+	 * Release date: 15.01.15
 	 */
 
 	var WikitudePlugin = function() {
@@ -11,34 +11,43 @@
 		 */
 		this._sdkKey = "ENTER-YOUR-KEY-HERE";
 
-
-		/**
-		 *  This variable represents if the current device is capable of running ARchitect Worlds.
-		 */
-		this._isDeviceSupported = false;
-
-
 		/**
 		 *  The Wikitude SDK can run in different modes.
 		 *      * Geo means, that objects are placed at latitude/longitude positions.
 		 *      * IR means that only image recognition is used in the ARchitect World.
 		 *  When your ARchitect World uses both, geo and ir, than set this value to "IrAndGeo". Otherwise, if the ARchitectWorld only needs image recognition, placing "IR" will require less features from the device and therefore, support a wider range of devices. Keep in mind that image recognition requires a dual core cpu to work satisfyingly.
 		 */
-		this._augmentedRealityMode = "IrAndGeo"; // "IR" for image recognition worlds only, "Geo" if you want to use Geo AR only
+        this.FeatureGeo         = "geo";
+        this.Feature2DTracking  = "2d_tracking";
 
-
-		/**
-		 *  Callbacks that are used during device compatibilty checks.
-		 */
-		this._onDeviceSupportedCallback = null;
-		this._onDeviceNotSupportedCallback = null;
-
-
-		/**
-		 *  Callbacks that are used if an ARchitect World was launched successfully or not.
-		 */
-		this._onARchitectWorldLaunchedCallback = null;
-		this._onARchitectWorldFailedLaunchingCallback = null;
+        /**
+         *  Start-up configuration: camera position (front or back).
+         */
+        this.CameraPositionUndefined = 0;
+        this.CameraPositionFront     = 1;
+        this.CameraPositionBack      = 2;
+        
+        /**
+         *  Start-up configuration: camera focus mode (locked, auto focus, continuous auto focus).
+         */
+        this.CameraFocusModeLocked              = 0;
+        this.CameraFocusModeAutoFocus           = 1;
+        this.CameraFocusModeContinuousAutoFocus = 2;
+        
+       /**
+        *  Start-up configuration: camera resolution (for iOS only).
+        */
+        this.CaptureSessionPreset320x240  = "320x240";
+        this.CaptureSessionPreset640x480  = "640x480";
+        this.CaptureSessionPreset1280x720 = "1280x720";
+               
+        /**
+         *  Start-up configuration: camera focus range restriction (for iOS only).
+         */
+        this.CameraFocusRangeNone = 0;
+        this.CameraFocusRangeNear = 1;
+        this.CameraFocusRangeFar  = 2;
+        
 	};
 
 
@@ -58,49 +67,47 @@
 	 * @param {function} successCallback A callback which is called if the device is capable of running ARchitect Worlds.
 	 * @param {function} errorCallback A callback which is called if the device is not capable of running ARchitect Worlds.
 	 */
-	WikitudePlugin.prototype.isDeviceSupported = function(successCallback, errorCallback) {
-
-		// Store a reference to the success and error callback function because we intercept the callbacks ourself but need to call the developer ones afterwards
-		this._onDeviceSupportedCallback = successCallback;
-		this._onDeviceNotSupportedCallback = errorCallback;
-
+	WikitudePlugin.prototype.isDeviceSupported = function(successCallback, errorCallback, requiredFeatures) {
 
 		// Check if the current device is capable of running Architect Worlds
-		cordova.exec(this.deviceIsARchitectReady, this.deviceIsNotARchitectReady, "WikitudePlugin", "isDeviceSupported", [this._augmentedRealityMode]);
+		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "isDeviceSupported", [requiredFeatures]);
 	};
 
 	/**
 	 *	Use this function to load an ARchitect World.
 	 *
-	 * 	@param {String} worldPath The path to an ARchitect world, ether on the device or on e.g. your Dropbox.
-	 */
-	WikitudePlugin.prototype.loadARchitectWorld = function(worldPath) {
+     *  @param {function(loadedURL)}  	successCallback		function which is called after a successful launch of the AR world.
+     *  @param {function(error)}		 	errorCallback		function which is called after a failed launch of the AR world.
+     *	@param {String} 					architectWorldPath	The path to a local ARchitect world or to a ARchitect world on a server or your 
+	 *  @param {String} 					worldPath			path to an ARchitect world, either on the device or on e.g. your Dropbox.
+     *  @param {Array} 					requiredFeatures		augmented reality features: a flags mask for enabling/disablibg 
+     *                                  geographic location-based (WikitudePlugin.FeatureGeo) or image recognition-based (WikitudePlugin.Feature2DTracking) tracking.
+	 *  @param {json object} (optional) startupConfiguration	represents the start-up configuration which may look like the following:
+	 *									{
+	 *                               		"cameraPosition": app.WikitudePlugin.CameraPositionBack,
+	 *                                  	    	"*OptionalPlatform*": {
+	 *											"*optionalPlatformKey*": "*optionalPlatformValue*"
+	 *                                      	}
+	 *                               	}
+	 */	 
+	WikitudePlugin.prototype.loadARchitectWorld = function(successCallback, errorCallback, architectWorldPath, requiredFeatures, startupConfiguration) {
+        
+		//	the 'open' function of the Wikitude Plugin requires some parameters
+		//	@param {String} SDKKey (required) The Wikitude SDK license key that you received with your purchase
+		//	@param {String} ARchitectWorldPath (required) The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
+		//  @param {Number} RequiredFeatures (optional) represents required features (see above)
+		//  @param {json object} (optional) StartConfiguration represents the start-up configuration (see above)
 
-		// before we actually call load, we check again if the device is able to open the world
-		if (this._isDeviceSupported) {
-
-			//	the 'open' function of the Wikitude Plugin requires some parameters
-			//	@param {String} SDKKey (required) The Wikitude SDK license key that you received with your purchase
-			//	@param {String} ARchitectWorldPath (required) The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
-			//	@param {String} AugmentedRealityMode (optional) describes in more detail how the Wikitude SDK should be instantiated
-			cordova.exec(this.worldLaunched, this.worldFailedLaunching, "WikitudePlugin", "open", [{
+		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "open", [{
 				"SDKKey": this._sdkKey,
-				"ARchitectWorldPath": worldPath,
-				"AugmentedRealityMode": this._augmentedRealityMode
+				"ARchitectWorldURL": architectWorldPath,
+				"RequiredFeatures": requiredFeatures,
+		    	"StartupConfiguration" : startupConfiguration
 			}]);
-
-
-			// We add an event listener on the resume and pause event of the application lifecycle
-			document.addEventListener("resume", this.onResume, false);
-			document.addEventListener("pause", this.onPause, false);
-
-		} else {
-
-			// If the device is not supported, we call the device not supported callback again.
-			if (this._onDeviceNotSupportedCallback) {
-				this._onDeviceNotSupportedCallback();
-			}
-		}
+		
+		// We add an event listener on the resume and pause event of the application lifecycle
+		document.addEventListener("resume", this.onResume, false);
+		document.addEventListener("pause", this.onPause, false);
 	};
 
 	/* Managing the Wikitude SDK Lifecycle */
@@ -165,10 +172,13 @@
 	/**
 	 *  Use this function to generate a screenshot from the current Wikitude SDK view.
 	 *
+     *  @param {function(ur)}  successCallback  function which is called after the screen capturing succeeded.
+     *  @param {function(err)} errorCallback    function which is called after capturing the screen has failed.
 	 *  @param includeWebView Indicates if the ARchitect web view should be included in the generated screenshot or not.
 	 *  @param imagePathInBundleorNullForPhotoLibrary If a file path or file name is given, the generated screenshot will be saved in the application bundle. Passing null will save the photo in the device photo library.
 	 */
-	WikitudePlugin.prototype.captureScreen = function(includeWebView, imagePathInBundleOrNullForPhotoLibrary, successCallback, errorCallback) {
+	WikitudePlugin.prototype.captureScreen = function(successCallback, errorCallback, includeWebView, imagePathInBundleOrNullForPhotoLibrary)
+    {
 		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "captureScreen", [includeWebView, imagePathInBundleOrNullForPhotoLibrary]);
 	};
 
@@ -180,52 +190,6 @@
 	 *	=============================================================================================================================
 	 */
 
-
-	/**
-	 *  This function gets called if the Wikitude Plugin reports that the device is able to start the Wikitude SDK
-	 */
-	WikitudePlugin.prototype.deviceIsARchitectReady = function() {
-
-		// Keep track of the device status
-		module.exports._isDeviceSupported = true;
-
-		// if the developer passed in a device supported callback, call it
-		if (module.exports._onDeviceSupportedCallback) {
-			module.exports._onDeviceSupportedCallback();
-		}
-	};
-
-	/**
-	 *  This function gets called if the Wikitude Plugin reports that the device is not able of starting the Wikitude SDK.
-	 */
-	WikitudePlugin.prototype.deviceIsNotARchitectReady = function() {
-
-		// Keep track of the device status
-		module.exports._isDeviceSupported = false;
-
-		// if the developer passed in a device not supported callback, call it
-		if (module.exports._onDeviceNotSupportedCallback) {
-			module.exports._onDeviceNotSupportedCallback();
-		}
-	};
-
-	/**
-	 *	Use this callback to get notified when the ARchitect World was loaded successfully.
-	 */
-	WikitudePlugin.prototype.worldLaunched = function(url) {
-		if (module.exports._onARchitectWorldLaunchedCallback) {
-			module.exports._onARchitectWorldLaunchedCallback(url);
-		}
-	};
-
-	/**
-	 *	Use this callback to get notified when the ARchitect World could not be loaded.
-	 */
-	WikitudePlugin.prototype.worldFailedLaunching = function(err) {
-		if (module.exports._onARchitectWorldFailedLaunchingCallback) {
-			module.exports._onARchitectWorldFailedLaunchingCallback(err);
-		}
-	};
 
 	/* Lifecycle updates */
 	/**
