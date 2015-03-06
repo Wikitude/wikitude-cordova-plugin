@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -22,6 +23,8 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.text.format.DateUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -251,6 +254,14 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 							screenCapture.compress(Bitmap.CompressFormat.JPEG, 90, out);
 							out.flush();
 							out.close();
+							
+							ContentValues values = new ContentValues();
+						    values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis());
+						    values.put(Images.Media.MIME_TYPE, "image/jpeg");
+						    values.put(MediaStore.MediaColumns.DATA, screenCaptureFile.getAbsolutePath());
+
+						    Context context= cordova.getActivity().getApplicationContext();
+						    context.getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values);
 							
 							cordova.getActivity().runOnUiThread(new Runnable() {
 								
