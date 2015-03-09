@@ -30,11 +30,6 @@ NSString * const WTArchitectNotificationErrorKey = @"Error";
 
 @implementation WTArchitectViewController
 
-+ (BOOL)isDeviceSupportedForAugmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode
-{
-    return [WTArchitectView isDeviceSupportedForAugmentedRealityMode:augmentedRealityMode];
-}
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil motionManager:(CMMotionManager *)motionManagerOrNil
 {
@@ -181,7 +176,9 @@ NSString * const WTArchitectNotificationErrorKey = @"Error";
 - (void)didReceivedDeviceDidBecomeActiveNotification:(NSNotification *)aNotification
 {
     if ( self.presentingViewController && ![self.architectView isRunning] ) {
-        [self.architectView start];
+        [self.architectView start:^(WTStartupConfiguration *configuration) {
+            configuration = self.startupConfiguration;
+        } completion:nil];
     }
 }
 

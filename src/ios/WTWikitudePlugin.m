@@ -10,56 +10,159 @@
 #import "WTARViewController.h"
 #import "WTArchitectView.h"
 
+//------------ Start-up Configuration - begin -------
+//
+// Note: The keys and values used here have to be in accordance with those specified in WikitudePlungin.js
+//
 
-#define kWTWikitudePlugin_ArgumentKeySDKKey @"SDKKey"
-#define kWTWikitudePlugin_ArgumentKeyARchitectWorldPath @"ARchitectWorldPath"
-#define kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode @"AugmentedRealityMode"
+NSString * const kWTWikitudePlugin_ArgumentKeyLicenseKey = @"SDKKey";
 
-#define kWTWikitudePlugin_AugmentedRealityModeBothCombined @"irandgeo"
-#define kWTWikitudePlugin_AugmentedRealityModeBoth @"both"
-#define kWTWikitudePlugin_AugmentedRealityModeGeo @"geo"
-#define kWTWikitudePlugin_AugmentedRealityModeIR @"ir"
+NSString * const kWTWikitudePlugin_ArgumentKeyARchitectWorldURL     = @"ARchitectWorldURL";
 
-#define kWTWikitudePlugin_RemoteURLPrefix @"http"
+NSString * const kWTWikitudePlugin_ArgumentFeatureConfiguration     = @"StartupConfiguration";
+NSString * const kWTWikitudePlugin_ArgumentIOSConfiguration         = @"iOS";
+
+NSString * const kWTWikitudePlugin_ArgumentRequiredFeatures         = @"RequiredFeatures";
+NSString * const kWTWikitudePlugin_requiredFeature_Geo              = @"geo";
+NSString * const kWTWikitudePlugin_requiredFeature_2DTracking       = @"2d_tracking";
+
+NSString * const kWTWikitudePlugin_ArgumentCameraPosition           = @"camera_position";
+NSString * const kWTWikitudePlugin_cameraPosition_Undefined         = @"undefined";
+NSString * const kWTWikitudePlugin_cameraPosition_Front             = @"front";
+NSString * const kWTWikitudePlugin_cameraPosition_Back              = @"back";
+
+NSString * const kWTWikitudePlugin_ArgumentCaptureSessionPreset     = @"captureSessionPreset";
+NSString * const kWTWikitudePlugin_captureSessionPreset_Prefix      = @"AVCaptureSessionPreset";
+
+NSString * const kWTWikitudePlugin_ArgumentCameraFocusMode          = @"cameraFocusMode";
+NSString * const kWTWikitudePlugin_cameraFocusMode_Locked           = @"locked";
+NSString * const kWTWikitudePlugin_cameraFocusMode_AutoFocus        = @"autoFocus";
+NSString * const kWTWikitudePlugin_cameraFocusMode_ContinuousAutoFocus = @"continuousAutoFocus";
+
+NSString * const kWTWikitudePlugin_ArgumentCaptureDeviceFocusRangeRestriction = @"cameraFocusRangeRestriction";
+NSString * const kWTWikitudePlugin_cameraFocusRange_None            = @"none";
+NSString * const kWTWikitudePlugin_cameraFocusRange_Near            = @"near";
+NSString * const kWTWikitudePlugin_cameraFocusRange_Far             = @"far";
+
+NSString * const kWTWikitudePlugin_ArgumentVideoMirrored            = @"videoMirrored";
+
+//------------ Start-up Configuration - end ---------
+
+NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 
 
 
 @interface WTWikitudePlugin () <WTArchitectViewDelegate, WTArchitectViewControllerDelegate>
 
-@property (nonatomic, strong) WTArchitectViewController                     *arViewController;
+@property (nonatomic, strong) WTArchitectViewController             *arViewController;
 
-@property (nonatomic, strong) NSString                                      *loadArchitectWorldCallbackId;
-@property (nonatomic, strong) NSString                                      *urlInvokedCallbackId;
-@property (nonatomic, strong) NSString                                      *screenshotCallbackId;
+@property (nonatomic, strong) NSString                              *loadArchitectWorldCallbackId;
+@property (nonatomic, strong) NSString                              *urlInvokedCallbackId;
+@property (nonatomic, strong) NSString                              *screenshotCallbackId;
 
-@property (nonatomic, assign) BOOL                                          isUsingInjectedLocation;
-@property (nonatomic, assign) BOOL                                          isDeviceSupported;
+@property (nonatomic, assign) BOOL                                  isUsingInjectedLocation;
+@property (nonatomic, assign) BOOL                                  isDeviceSupported;
 
 @end
 
 
 @implementation WTWikitudePlugin
 
-+ (WTAugmentedRealityMode)augmentedRealityModeFromString:(NSString *)string
++ (void)readStartupConfigurationFrom:(NSDictionary *)arguments andApplyTo:(WTStartupConfiguration *)configuration
 {
-    WTAugmentedRealityMode augmentedRealityMode = WTAugmentedRealityMode_GeoAndImageRecognition;
+    if (arguments && configuration)
+    {
+        NSDictionary *featureConfiguration = [arguments objectForKey:kWTWikitudePlugin_ArgumentFeatureConfiguration];
+        if(featureConfiguration)
+        {
+            NSString *cameraPosition = [featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentCameraPosition];
+            if(cameraPosition)
+            {
+                if ( [kWTWikitudePlugin_cameraPosition_Front isEqualToString:cameraPosition] )
+                {
+                    configuration.captureDevicePosition = AVCaptureDevicePositionFront;
+                }
+                else if ( [kWTWikitudePlugin_cameraPosition_Back isEqualToString:cameraPosition] )
+                {
+                    configuration.captureDevicePosition = AVCaptureDevicePositionBack;
+                }
+                else
+                {
+                    configuration.captureDevicePosition = AVCaptureDevicePositionUnspecified;
+                }
+            }
+
+            /** Disabled
+            NSString *cameraFocusMode = [[featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentCameraFocusMode] stringValue];
+            if(cameraFocusMode)
+            {
+                if ( [kWTWikitudePlugin_cameraFocusMode_Locked isEqualToString:cameraFocusMode] )
+                {
+                    configuration.captureDeviceFocusMode = AVCaptureFocusModeLocked;
+                }
+                else if ( [kWTWikitudePlugin_cameraFocusMode_AutoFocus isEqualToString:cameraFocusMode] )
+                {
+                    configuration.captureDeviceFocusMode = AVCaptureFocusModeAutoFocus;
+                }
+                else if ( [kWTWikitudePlugin_cameraFocusMode_ContinuousAutoFocus isEqualToString:cameraFocusMode] )
+                {
+                    configuration.captureDeviceFocusMode = AVCaptureFocusModeContinuousAutoFocus;
+                }
+            }
+            */
+            
+            NSDictionary* iOSConfiguration = [featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentIOSConfiguration];
+            if(iOSConfiguration)
+            {
+                NSString *captureDeviceFocusRestriction = [iOSConfiguration objectForKey:kWTWikitudePlugin_ArgumentCaptureDeviceFocusRangeRestriction];
+                if(captureDeviceFocusRestriction)
+                {
+                    if ( [kWTWikitudePlugin_cameraFocusRange_None isEqualToString:captureDeviceFocusRestriction] )
+                    {
+                        configuration.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionNone;
+                    }
+                    else if ( [kWTWikitudePlugin_cameraFocusRange_Near isEqualToString:captureDeviceFocusRestriction] )
+                    {
+                        configuration.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionNear;
+                    }
+                    else if ( [kWTWikitudePlugin_cameraFocusRange_Far isEqualToString:captureDeviceFocusRestriction] )
+                    {
+                        configuration.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionFar;
+                    }
+                }
+
+                if( [iOSConfiguration objectForKey:kWTWikitudePlugin_ArgumentVideoMirrored] )
+                {
+                    configuration.videoMirrored = [[iOSConfiguration objectForKey:kWTWikitudePlugin_ArgumentVideoMirrored] boolValue];
+                }
+            }
+        }
+    }
+}
+
+
++ (WTFeatures)requiredFeaturesFromArray:(NSArray *)stringArray
+{
+    WTFeatures requiredFeatures = 0;
     
-    if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeBothCombined]
-        ||
-        [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeBoth] )
+    for (id object in stringArray)
     {
-        augmentedRealityMode = WTAugmentedRealityMode_Geo;
+        if ( [object isKindOfClass:[NSString class]] )
+        {
+            NSString *featureString = (NSString *)object;
+
+            if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_Geo] )
+            {
+                requiredFeatures |= WTFeature_Geo;
+            }
+            else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_2DTracking] )
+            {
+                requiredFeatures |= WTFeature_2DTracking;
+            }
+        }
     }
-    else if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeGeo] )
-    {
-        augmentedRealityMode = WTAugmentedRealityMode_Geo;
-    }
-    else if ( [[string lowercaseString] isEqualToString:kWTWikitudePlugin_AugmentedRealityModeIR] )
-    {
-        augmentedRealityMode = WTAugmentedRealityMode_ImageRecognition;
-    }
-    
-    return augmentedRealityMode;
+
+    return requiredFeatures;
 }
 
 + (NSURL *)architectWorldURLFromString:(NSString *)architectWorldFilePath
@@ -90,35 +193,36 @@
 }
 
 
+
 #pragma mark - Plugin Methods
 #pragma mark Device Support
 
 - (void)isDeviceSupported:(CDVInvokedUrlCommand *)command
 {
-    
     CDVPluginResult* pluginResult = nil;
     
-
     self.isDeviceSupported = NO;
     
     if ( [command.arguments count] >= 1 )
     {
-        NSString *augmentedRealityModeArgument = [command.arguments objectAtIndex:0];
-        WTAugmentedRealityMode augmentedRealityMode = [WTWikitudePlugin augmentedRealityModeFromString:augmentedRealityModeArgument];
-        
-        self.isDeviceSupported = [WTArchitectViewController isDeviceSupportedForAugmentedRealityMode:augmentedRealityMode];
-    }
-    
-    
-    if (self.isDeviceSupported)
-    {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:self.isDeviceSupported];
-    }
-    else
-    {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt:self.isDeviceSupported];
-    }
+        if ( [[command.arguments objectAtIndex:0] isKindOfClass:[NSArray class]] )
+        {
+            WTFeatures requiredFeatures = [WTWikitudePlugin requiredFeaturesFromArray:[command.arguments objectAtIndex:0]];
 
+            NSError *isDeviceSupportedError = nil;
+            self.isDeviceSupported = [WTArchitectView isDeviceSupportedForRequiredFeatures:requiredFeatures error:&isDeviceSupportedError];
+
+
+            if (self.isDeviceSupported)
+            {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsInt:self.isDeviceSupported];
+            }
+            else
+            {
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[isDeviceSupportedError localizedDescription]];
+            }
+        }
+    }
     
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -131,9 +235,8 @@
     
     CDVPluginResult* pluginResult = nil;
     
-    
-    BOOL enabled = self.isDeviceSupported;
-    if ( enabled && 1 == command.arguments.count )
+
+    if ( self.isDeviceSupported && command.arguments.count )
     {
         id argumentDictionary = [command.arguments firstObject];
         
@@ -141,11 +244,11 @@
         {
             NSDictionary *arguments = (NSDictionary *)argumentDictionary;
             
+            NSString *sdkKey = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeyLicenseKey];
+            NSString *architectWorldURLString = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeyARchitectWorldURL];
             
-            NSString *sdkKey = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeySDKKey];
-            NSString *architectWorldFilePath = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeyARchitectWorldPath];
             
-            WTAugmentedRealityMode augmentedRealityMode = [WTWikitudePlugin augmentedRealityModeFromString:[arguments objectForKey:kWTWikitudePlugin_ArgumentKeyAugmentedRealityMode]];
+            WTFeatures requiredFeatures = [WTWikitudePlugin requiredFeaturesFromArray:[arguments objectForKey:kWTWikitudePlugin_ArgumentRequiredFeatures]];
             
             if (!_arViewController)
             {
@@ -162,10 +265,10 @@
             [self addNotificationObserver];
             
             
-            NSURL *architectWorldURL = [WTWikitudePlugin architectWorldURLFromString:architectWorldFilePath];
+            NSURL *architectWorldURL = [WTWikitudePlugin architectWorldURLFromString:architectWorldURLString];
             if ( architectWorldURL )
             {
-                [self.arViewController.architectView loadArchitectWorldFromURL:architectWorldURL withAugmentedRealityMode:augmentedRealityMode];
+                [self.arViewController.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:requiredFeatures];
                 
                 self.loadArchitectWorldCallbackId = command.callbackId;
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
@@ -174,16 +277,17 @@
             else
             {
                 self.loadArchitectWorldCallbackId = nil;
-                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[NSString stringWithFormat:@"Unable to determine what the url to load should be: %@", architectWorldFilePath]];
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[NSString stringWithFormat:@"Unable to determine the url to load: %@", architectWorldURLString]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
             }
             
-            
-            [self.arViewController.architectView start];
+
+            [self.arViewController.architectView start:^(WTStartupConfiguration *configuration) {
+                [WTWikitudePlugin readStartupConfigurationFrom:arguments andApplyTo:configuration];
+                self.arViewController.startupConfiguration = configuration;
+            } completion:nil];
         }
     }
-    
-
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)close:(CDVInvokedUrlCommand *)command
@@ -199,10 +303,10 @@
         [self removeNotificationObserver];
         
         [self.viewController dismissViewControllerAnimated:YES completion:^
-        {
-            /* nil out the strong reference because it’s not longer needed. ‘show’ and ‘hide’ can handle nil controller and are supposed to only used during a active presentation of our plugin */
-            self.arViewController = nil;
-        }];
+         {
+             /* nil out the strong reference because it’s not longer needed. ‘show’ and ‘hide’ can handle nil controller and are supposed to be only used during an active presentation of our plugin */
+             self.arViewController = nil;
+         }];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }

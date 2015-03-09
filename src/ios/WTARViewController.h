@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "WTArchitectView.h"
+#import "WikitudeSDK.h"
 
 
 extern NSString * const WTArchitectDidLoadWorldNotification;
@@ -37,9 +37,7 @@ extern NSString * const WTArchitectNotificationErrorKey;
 @property (nonatomic, weak) id<WTArchitectViewControllerDelegate>       architectDelegate;
 @property (nonatomic, readonly) WTArchitectView                         *architectView;
 
-
-+ (BOOL)isDeviceSupportedForAugmentedRealityMode:(WTAugmentedRealityMode)augmentedRealityMode;
-
+@property (nonatomic, strong) WTStartupConfiguration                    *startupConfiguration;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil motionManager:(CMMotionManager *)motionManagerOrNil;
 
