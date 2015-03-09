@@ -1,6 +1,6 @@
 	
 	/**
-	 * Release date: 15.01.15
+	 * Release date: 09.03.15
 	 */
 
 	var WikitudePlugin = function() {
@@ -26,21 +26,7 @@
         this.CameraPositionUndefined = 0;
         this.CameraPositionFront     = 1;
         this.CameraPositionBack      = 2;
-        
-        /**
-         *  Start-up configuration: camera focus mode (locked, auto focus, continuous auto focus).
-         */
-        this.CameraFocusModeLocked              = 0;
-        this.CameraFocusModeAutoFocus           = 1;
-        this.CameraFocusModeContinuousAutoFocus = 2;
-        
-       /**
-        *  Start-up configuration: camera resolution (for iOS only).
-        */
-        this.CaptureSessionPreset320x240  = "320x240";
-        this.CaptureSessionPreset640x480  = "640x480";
-        this.CaptureSessionPreset1280x720 = "1280x720";
-               
+                       
         /**
          *  Start-up configuration: camera focus range restriction (for iOS only).
          */
@@ -76,11 +62,11 @@
 	/**
 	 *	Use this function to load an ARchitect World.
 	 *
-     *  @param {function(loadedURL)}  	successCallback		function which is called after a successful launch of the AR world.
+     *  @param {function(loadedURL)}  		successCallback		function which is called after a successful launch of the AR world.
      *  @param {function(error)}		 	errorCallback		function which is called after a failed launch of the AR world.
      *	@param {String} 					architectWorldPath	The path to a local ARchitect world or to a ARchitect world on a server or your 
 	 *  @param {String} 					worldPath			path to an ARchitect world, either on the device or on e.g. your Dropbox.
-     *  @param {Array} 					requiredFeatures		augmented reality features: a flags mask for enabling/disablibg 
+     *  @param {Array} 						requiredFeatures	augmented reality features: a flags mask for enabling/disablibg 
      *                                  geographic location-based (WikitudePlugin.FeatureGeo) or image recognition-based (WikitudePlugin.Feature2DTracking) tracking.
 	 *  @param {json object} (optional) startupConfiguration	represents the start-up configuration which may look like the following:
 	 *									{
@@ -92,12 +78,6 @@
 	 */	 
 	WikitudePlugin.prototype.loadARchitectWorld = function(successCallback, errorCallback, architectWorldPath, requiredFeatures, startupConfiguration) {
         
-		//	the 'open' function of the Wikitude Plugin requires some parameters
-		//	@param {String} SDKKey (required) The Wikitude SDK license key that you received with your purchase
-		//	@param {String} ARchitectWorldPath (required) The path to a local ARchitect world or to a ARchitect world on a server or your dropbox
-		//  @param {Number} RequiredFeatures (optional) represents required features (see above)
-		//  @param {json object} (optional) StartConfiguration represents the start-up configuration (see above)
-
 		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "open", [{
 				"SDKKey": this._sdkKey,
 				"ARchitectWorldURL": architectWorldPath,
