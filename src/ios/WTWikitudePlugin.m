@@ -59,6 +59,7 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 @property (nonatomic, strong) NSString                              *loadArchitectWorldCallbackId;
 @property (nonatomic, strong) NSString                              *urlInvokedCallbackId;
 @property (nonatomic, strong) NSString                              *screenshotCallbackId;
+@property (nonatomic, strong) NSString                              *errorHandlerCallbackId;
 
 @property (nonatomic, assign) BOOL                                  isUsingInjectedLocation;
 @property (nonatomic, assign) BOOL                                  isDeviceSupported;
@@ -514,6 +515,19 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+#pragma mark Error handling
+- (void)setErrorHandler:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult *pluginResult = nil;
+
+    self.errorHandlerCallbackId = command.callbackId;
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+    [pluginResult setKeepCallbackAsBool:YES];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 #pragma mark - Notifications
 #pragma mark WTArchitectViewController
 
@@ -599,6 +613,19 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.screenshotCallbackId];
 }
 
+- (void)didReceivedArchitectDebugMessageNotification:(NSNotification *)aNotification
+{
+    CDVPluginResult *pluginResult = nil;
+
+    if ( self.errorHandlerCallbackId )
+    {
+        NSError *error = [[aNotification userInfo] objectForKey:WTArchitectDebugDelegateMessageKey];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:@{@"code": @(error.code), @"message": [error localizedDescription]}];
+    }
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.errorHandlerCallbackId];
+}
+
 
 #pragma mark - Delegation
 #pragma mark WTARViewControllerDelegate
@@ -624,6 +651,9 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDidCatpuredScreenNotification:) name:WTArchitectDidCaptureScreenNotification object:self.arViewController];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedCaptureScreenDidFailNotification:) name:WTArchitectDidFailToCaptureScreenNotification object:self.arViewController];
+
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedArchitectDebugMessageNotification:) name:WTArchitectDebugDelegateNotification object:self.arViewController];
 }
 
 - (void)removeNotificationObserver

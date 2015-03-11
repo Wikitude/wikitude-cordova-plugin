@@ -161,6 +161,20 @@
     {
 		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "captureScreen", [includeWebView, imagePathInBundleOrNullForPhotoLibrary]);
 	};
+	
+	/**
+	 * Use this function to set a callback that is called every time the Wikitude SDK encounters an internal error or warning. 
+	 * Internal errors can occur at any time and might not be related to any WikitudePlugin function invocation.
+	 * An error code and message are passed in form of a JSON object.
+	 *
+	 *  @param {function(jsonObject)}  errorHandler  function which is called every time the SDK encounters an internal error.
+	 *
+	 * NOTE: The errorHandler is currently only called by the Wikitude iOS SDK!
+	 */
+	WikitudePlugin.prototype.setErrorHandler = function(errorHandler)
+	{
+		cordova.exec(this.onWikitudeOK, errorHandler, "WikitudePlugin", "setErrorHandler", []);
+	}
 
 	/*
 	 *	=============================================================================================================================
