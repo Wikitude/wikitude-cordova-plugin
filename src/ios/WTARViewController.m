@@ -7,6 +7,7 @@
 
 #import "WTARViewController.h"
 #import "WTArchitectView.h"
+#import "WTArchitectViewDebugDelegate.h"
 
 
 NSString * const WTArchitectDidLoadWorldNotification = @"WTArchitectDidLoadWorldNotification";
@@ -15,9 +16,13 @@ NSString * const WTArchitectInvokedURLNotification = @"WTArchitectInvokedURLNoti
 NSString * const WTArchitectDidCaptureScreenNotification = @"WTArchitectDidCaptureScreenNotification";
 NSString * const WTArchitectDidFailToCaptureScreenNotification = @"WTArchitectDidFailToCaptureScreenNotification";
 
+NSString * const WTArchitectDebugDelegateNotification = @"WTArchitectDebugDelegateNotification";
+
 NSString * const WTArchitectNotificationURLKey = @"URL";
 NSString * const WTArchitectNotificationContextKey = @"Context";
 NSString * const WTArchitectNotificationErrorKey = @"Error";
+
+NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegateMessageKey";
 
 
 
@@ -39,6 +44,7 @@ NSString * const WTArchitectNotificationErrorKey = @"Error";
         
         self.architectView = [[WTArchitectView alloc] initWithFrame:[[UIScreen mainScreen] bounds] motionManager:motionManagerOrNil];
         self.architectView.delegate = self;
+        self.architectView.debugDelegate = self;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -160,6 +166,17 @@ NSString * const WTArchitectNotificationErrorKey = @"Error";
 - (void)architectView:(WTArchitectView *)architectView willPresentViewController:(UIViewController *)presentedViewController onViewController:(UIViewController *)presentingViewController
 {
     /* Intentionally left blank */
+}
+
+#pragma mark WTArchitectViewDebugDelegate
+- (void)architectView:(WTArchitectView *)architectView didEncounterInternalWarning:(WTWarning *)warning
+{
+    /* Intentionally Left Blank */
+}
+
+- (void)architectView:(WTArchitectView *)architectView didEncounterInternalError:(NSError *)error
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDebugDelegateNotification object:self userInfo:@{WTArchitectDebugDelegateMessageKey: error}];
 }
 
 
