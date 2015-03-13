@@ -8,6 +8,8 @@
 #import <UIKit/UIKit.h>
 
 #import "WikitudeSDK.h"
+#import "WTArchitectViewDebugDelegate.h"
+
 
 
 extern NSString * const WTArchitectDidLoadWorldNotification;
@@ -16,9 +18,13 @@ extern NSString * const WTArchitectInvokedURLNotification;
 extern NSString * const WTArchitectDidCaptureScreenNotification;
 extern NSString * const WTArchitectDidFailToCaptureScreenNotification;
 
+extern NSString * const WTArchitectDebugDelegateNotification;
+
 extern NSString * const WTArchitectNotificationURLKey;
 extern NSString * const WTArchitectNotificationContextKey;
 extern NSString * const WTArchitectNotificationErrorKey;
+
+extern NSString * const WTArchitectDebugDelegateMessageKey;
 
 
 
@@ -32,7 +38,7 @@ extern NSString * const WTArchitectNotificationErrorKey;
 @end
 
 
-@interface WTArchitectViewController : UIViewController <WTArchitectViewDelegate>
+@interface WTArchitectViewController : UIViewController <WTArchitectViewDelegate, WTArchitectViewDebugDelegate>
 
 @property (nonatomic, weak) id<WTArchitectViewControllerDelegate>       architectDelegate;
 @property (nonatomic, readonly) WTArchitectView                         *architectView;
