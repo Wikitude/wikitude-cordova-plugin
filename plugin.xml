@@ -2,22 +2,24 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.wikitude.phonegap.WikitudePlugin"
-    version="4.0.0">
+    version="4.1.0">
 
     <name>Augmented Reality - Wikitude SDK Plugin</name>
     
     <author>Wikitude GmbH</author>
-    <keywords>AR,Augmented Reality,Wikitude</keywords>
+    <keywords>AR,augmented reality,Wikitude,image recognition,cloud recognition</keywords>
 
     <description>
         The Wikitude PhoneGap Plugin enables developers to embed an augmented reality view into their PhoneGap project. You can create a fully featured app with advanced augmented reality features, including image recognition, purely using HTML, CSS and JavaScript.
     </description>
 
-    <license>Apache 2.0</license>
+    <repo>https://github.com/Wikitude/wikitude-phonegap.git</repo>
+
+    <license>(c) 2015 Wikitude GmbH - see License.md for details of the license</license>
     
     
     <engines>
-      <engine name="cordova" version=">=2.8.1" />
+      <engine name="cordova" version=">=3.0.0" />
     </engines>  
 
     <!-- copy WikitudePlugin wrapper file into www-folder -->
@@ -77,9 +79,9 @@
 
         <!-- visible after installation -->
         <info>
-            Have fun using world's first AR plugin for PhoneGap. Visit http://developer.wikitude.com/documentation/phonegap for technical support.
+            Have fun using world's first AR plugin for PhoneGap. Visit http://www.wikitude.com/developer/documentation/phonegap for detailed documentation for the plugin.
             
-            Make sure that you enter your Wikitude SDK license key in `WikitudePlugin.js` line 12. If you havent bought a license please visit http://www.wikitude.com/store.
+            Make sure that you enter your Wikitude SDK trial license key in `WikitudePlugin.js` line 12. If you havent bought a license please visit http://www.wikitude.com/store.
             
             If you want to contribute to the open source project, please visit us at github, http://github.com/Wikitude
         </info>
@@ -142,10 +144,10 @@
 
         <!-- visible after installation -->
         <info>
-            Have fun using world's first AR plugin for PhoneGap. Visit http://developer.wikitude.com/documentation/phonegap for technical support.
-
-            Make sure that you enter your Wikitude SDK license key in `WikitudePlugin.js` line 53. If you havent bought a license please visit http://www.wikitude.com/store.
-
+            Have fun using world's first AR plugin for PhoneGap. Visit http://www.wikitude.com/developer/documentation/phonegap for detailed documentation for the plugin.
+            
+            Make sure that you enter your Wikitude SDK trial license key in `WikitudePlugin.js` line 53. If you havent bought a license please visit http://www.wikitude.com/store.
+            
             If you want to contribute to the open source project, please visit us at github, http://github.com/Wikitude
         </info>
         
