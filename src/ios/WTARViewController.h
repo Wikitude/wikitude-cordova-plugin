@@ -8,6 +8,8 @@
 #import <UIKit/UIKit.h>
 
 #import "WikitudeSDK.h"
+#import "WTArchitectViewDebugDelegate.h"
+
 
 
 extern NSString * const WTArchitectDidLoadWorldNotification;

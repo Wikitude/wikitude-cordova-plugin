@@ -7,7 +7,7 @@
 
 #import "WTARViewController.h"
 #import "WTArchitectView.h"
-#import "WTArchitectViewDebugDelegate.h"
+
 
 
 NSString * const WTArchitectDidLoadWorldNotification = @"WTArchitectDidLoadWorldNotification";
@@ -176,7 +176,9 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
 - (void)architectView:(WTArchitectView *)architectView didEncounterInternalError:(NSError *)error
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDebugDelegateNotification object:self userInfo:@{WTArchitectDebugDelegateMessageKey: error}];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDebugDelegateNotification object:self userInfo:@{WTArchitectDebugDelegateMessageKey: error}];
+    });
 }
 
 
