@@ -197,9 +197,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			}
 			int featuresBitMap = convertArFeatures(jsonArray);
 			if ( (ArchitectView.getSupportedFeaturesForDevice( this.cordova.getActivity() ) & featuresBitMap) == featuresBitMap ) {
-				callContext.success( action + ": this device is ARchitect-ready" );
+				callContext.success("This device is supported" );
 			} else {
-				callContext.error( action + action + ":Sorry, this device is NOT ARchitect-ready" );
+				callContext.error("This device is NOT supported" );
 			}
 			return true;
 		}
