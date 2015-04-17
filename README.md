@@ -1,20 +1,17 @@
-
-[![Analytics](https://ga-beacon.appspot.com/UA-11754809-17/wikitude-phonegap/home?pixel)](https://github.com/igrigorik/ga-beacon)
-
-
 # Augmented Reality - Wikitude SDK Plugin
 by Wikitude GmbH - [www.wikitude.com](http://www.wikitude.com)
 
-The first PhoneGap Plugin providing image recognition and location based augmented reality.
+The first Cordova Plugin providing image recognition and location based augmented reality.
 
 # Documentation & Samples
-- Please find details about plugin installation, a comprehensive getting started guide and other informtation in the [Wikitude Developer Documentation for PhoneGap](http://www.wikitude.com/developer/documentation/phonegap).
-- There is a [separate git with an Android and iPhone sample application](https://github.com/Wikitude/wikitude-phonegap-samples) , ready to run on your mobile device.
+- Please find details about plugin installation, a comprehensive getting started guide and other information in the [Wikitude Developer Documentation for Cordova](http://www.wikitude.com/developer/documentation/phonegap).
+- There is a [separate git repository with a sample application](https://github.com/Wikitude/wikitude-phonegap-samples) , ready to run on your mobile device.
 
 
 **Note: This plugin has hard and software requirements for Android and iOS devices and does not run on a desktop browser.**
 
-# LICENSE
+The Wikitude Plugin is under Apache 2.0 license (see below), where the Wikitude SDK library (pre-bundled) itself follows a proprietary license scheme (see [LICENSE.MD](LICENSE.MD) for details).
+
 
 ``` 
    Copyright 2012-2015 Wikitude GmbH, http://www.wikitude.com

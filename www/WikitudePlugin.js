@@ -7,7 +7,7 @@
 
 		/**
 		 *  This is the SDK Key, provided to you after you purchased the Wikitude SDK from http =//www.wikitude.com/store/.
-		 *  If you're having a trial version, leave this string empty.
+		 *  You can obtain a free trial key at http =//www.wikitude.com/developer/licenses .
 		 */
 		this._sdkKey = "ENTER-YOUR-KEY-HERE";
 
@@ -66,7 +66,7 @@
      *  @param {function(error)}		 	errorCallback		function which is called after a failed launch of the AR world.
      *	@param {String} 					architectWorldPath	The path to a local ARchitect world or to a ARchitect world on a server or your 
 	 *  @param {String} 					worldPath			path to an ARchitect world, either on the device or on e.g. your Dropbox.
-     *  @param {Array} 						requiredFeatures	augmented reality features: a flags mask for enabling/disablibg 
+     *  @param {Array} 						requiredFeatures	augmented reality features: a flags mask for enabling/disabling 
      *                                  geographic location-based (WikitudePlugin.FeatureGeo) or image recognition-based (WikitudePlugin.Feature2DTracking) tracking.
 	 *  @param {json object} (optional) startupConfiguration	represents the start-up configuration which may look like the following:
 	 *									{
@@ -85,7 +85,7 @@
 		    	"StartupConfiguration" : startupConfiguration
 			}]);
 		
-		// We add an event listener on the resume and pause event of the application lifecycle
+		// We add an event listener on the resume and pause event of the application life-cycle
 		document.addEventListener("resume", this.onResume, false);
 		document.addEventListener("pause", this.onPause, false);
 	};
@@ -119,7 +119,7 @@
 	/* Interacting with the Wikitude SDK */
 
 	/**
-	 *	Use this function to call javascript which will be executed in the context of the currently loaded ARchitect World.
+	 *	Use this function to call JavaScript which will be executed in the context of the currently loaded ARchitect World.
 	 *
 	 * @param js The JavaScript that should be evaluated in the ARchitect View.
 	 */
@@ -138,7 +138,7 @@
 	};
 
 	/**
-	 *  Use this function to inject a location into the Wikituce SDK.
+	 *  Use this function to inject a location into the Wikitude SDK.
 	 *
 	 *  @param latitude The latitude which should be simulated
 	 *  @param longitude The longitude which should be simulated
