@@ -615,15 +615,15 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 
 - (void)didReceivedArchitectDebugMessageNotification:(NSNotification *)aNotification
 {
-    CDVPluginResult *pluginResult = nil;
-
     if ( self.errorHandlerCallbackId )
     {
+        CDVPluginResult *pluginResult = nil;
+        
         NSError *error = [[aNotification userInfo] objectForKey:WTArchitectDebugDelegateMessageKey];
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:@{@"code": @(error.code), @"message": [error localizedDescription]}];
+        
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.errorHandlerCallbackId];
     }
-
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.errorHandlerCallbackId];
 }
 
 
