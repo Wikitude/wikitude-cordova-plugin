@@ -662,9 +662,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		if ( this.architectView == null ) {
 			
 			WikitudePlugin.releaseFocusInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
-	
+
 			this.architectView = new ArchitectViewPhoneGap( this.cordova.getActivity() , new OnKeyUpDownListener() {
-	
+
 				@Override
 				public boolean onKeyUp(int keyCode, KeyEvent event) {
 					if (architectView!=null && keyCode == KeyEvent.KEYCODE_BACK) {
@@ -673,11 +673,12 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 						}
 						removeArchitectView();
 						return true;
+
 					} else {
 						return false;
 					}
 				}
-	
+
 				@Override
 				public boolean onKeyDown(int keyCode, KeyEvent event) {
 					return architectView!=null && keyCode == KeyEvent.KEYCODE_BACK;
@@ -735,6 +736,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	
 			/* also a fake-life-cycle call (the last one before it is really shown in UI */
 			this.architectView.onResume();
+
 			if ((features & StartupConfiguration.Features.Geo) == features) {
 				this.locationProvider = new LocationProvider( this.cordova.getActivity(), this.locationListener );
 				this.locationProvider.onResume();
@@ -742,18 +744,17 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		}
 		
 		// hide keyboard when adding AR view on top of views
-		InputMethodManager inputManager = (InputMethodManager)            
-				(this.cordova.getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE); 
-				    inputManager.hideSoftInputFromWindow((this.cordova.getActivity()).getCurrentFocus().getWindowToken(),      
+		InputMethodManager inputManager = (InputMethodManager)
+				(this.cordova.getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+				    inputManager.hideSoftInputFromWindow((this.cordova.getActivity()).getCurrentFocus().getWindowToken(),
 				    InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 	
 	
 	private static void releaseFocusInCordovaWebView(View rootView) {
-		if (rootView instanceof CordovaWebView) { 
-			((CordovaWebView)rootView).clearFocus();
-		}
-		else if (rootView instanceof ViewGroup) {
+		if (rootView instanceof CordovaWebView) {
+        ((CordovaWebView)rootView).getView().clearFocus();
+		} else if (rootView instanceof ViewGroup) {
 			final int childCount = ((ViewGroup)rootView).getChildCount();
 			for (int i=0; i< childCount; i++) {
 				WikitudePlugin.releaseFocusInCordovaWebView(((ViewGroup)rootView).getChildAt(i));
@@ -767,9 +768,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 */
 	private static void handleResumeInCordovaWebView(final View rootView) {
 		if (rootView instanceof CordovaWebView) { 
-			((CordovaWebView)rootView).handleResume(true, true);
-			((CordovaWebView)rootView).clearFocus();
-			((CordovaWebView)rootView).requestFocus();
+			((CordovaWebView)rootView).handleResume(true);
 		}
 		else if (rootView instanceof ViewGroup) {
 			final int childCount = ((ViewGroup)rootView).getChildCount();
@@ -780,7 +779,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	}
 	
 	
-	protected static class ArchitectViewPhoneGap extends ArchitectView{
+	protected static class ArchitectViewPhoneGap extends ArchitectView {
 		public static interface OnKeyUpDownListener {
 			public boolean onKeyDown(int keyCode, KeyEvent event);
 			
@@ -805,7 +804,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			// forward onKeyDown events to listener
 			return this.onKeyUpDownListener!=null &&  this.onKeyUpDownListener.onKeyDown(keyCode, event);
 	    }
-		
+
 		@Override
 		public boolean onKeyUp(int keyCode, KeyEvent event) {
 			// forward onKeyUp events to listener
