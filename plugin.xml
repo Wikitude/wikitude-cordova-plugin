@@ -138,7 +138,6 @@
             <feature name="WikitudePlugin">
                 <param name="ios-package" value="WTWikitudePlugin"/>
             </feature>
-            <access origin="*" />
         </config-file>
         
 
