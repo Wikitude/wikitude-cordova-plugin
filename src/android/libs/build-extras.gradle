@@ -1,0 +1,10 @@
+dependencies {
+    compile (name: 'wikitudesdk', ext:'aar')
+}
+
+repositories {
+    flatDir{
+        dirs 'libs'
+    }
+}
+
