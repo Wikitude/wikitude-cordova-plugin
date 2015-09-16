@@ -30,10 +30,11 @@
     <!-- android -->
     <platform name="android">
 
-
         <!-- declare implementation of WikitudePlugin -->
         <source-file src="src/android/WikitudePlugin.java" target-dir="src/com/wikitude/phonegap" />
 
+        <!-- copy build extras, necessary for wikitude.aar -->
+        <source-file src="src/android/libs/build-extras.gradle" target-dir="." />
 
         <!-- add permissions and requirements -->
         <config-file target="AndroidManifest.xml" parent="/manifest">
@@ -52,8 +53,7 @@
             <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
-
-
+        
         <!-- adds MediaPlayerActivity, required for startVideo feature-->
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity android:name="com.wikitude.tools.activities.MediaPlayerActivity" android:screenOrientation="landscape">
@@ -66,7 +66,7 @@
 
 
         <!-- copy wikitude sdk -->
-        <source-file src="src/android/libs/wikitudesdk.jar" target-dir="libs/" />
+        <source-file src="src/android/libs/wikitudesdk.aar" target-dir="libs/" />
 
 
         <!-- adds WikitudePlugin in project's config.xml -->
