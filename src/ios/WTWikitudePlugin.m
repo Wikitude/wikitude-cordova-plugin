@@ -44,8 +44,6 @@ NSString * const kWTWikitudePlugin_cameraFocusRange_None            = @"none";
 NSString * const kWTWikitudePlugin_cameraFocusRange_Near            = @"near";
 NSString * const kWTWikitudePlugin_cameraFocusRange_Far             = @"far";
 
-NSString * const kWTWikitudePlugin_ArgumentVideoMirrored            = @"videoMirrored";
-
 //------------ Start-up Configuration - end ---------
 
 NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
@@ -130,11 +128,6 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
                     {
                         configuration.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionFar;
                     }
-                }
-
-                if( [iOSConfiguration objectForKey:kWTWikitudePlugin_ArgumentVideoMirrored] )
-                {
-                    configuration.videoMirrored = [[iOSConfiguration objectForKey:kWTWikitudePlugin_ArgumentVideoMirrored] boolValue];
                 }
             }
         }

@@ -14,7 +14,7 @@
 		/**
 		 *  The Wikitude SDK can run in different modes.
 		 *      * Geo means, that objects are placed at latitude/longitude positions.
-		 *      * IR means that only image recognition is used in the ARchitect World.
+		 *      * 2DTracking means that only image recognition is used in the ARchitect World.
 		 *  When your ARchitect World uses both, geo and ir, than set this value to "IrAndGeo". Otherwise, if the ARchitectWorld only needs image recognition, placing "IR" will require less features from the device and therefore, support a wider range of devices. Keep in mind that image recognition requires a dual core cpu to work satisfyingly.
 		 */
         this.FeatureGeo         = "geo";
