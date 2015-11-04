@@ -6,5 +6,6 @@
 //
 
 #import "WTArchitectView.h"
+#import "WTWikitudeTypes.h"
 #import "WTNavigation.h"
 #import "WTStartupConfiguration.h"
