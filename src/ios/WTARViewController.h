@@ -18,6 +18,8 @@ extern NSString * const WTArchitectInvokedURLNotification;
 extern NSString * const WTArchitectDidCaptureScreenNotification;
 extern NSString * const WTArchitectDidFailToCaptureScreenNotification;
 
+extern NSString * const WTArchitectNeedsHeadingCalibrationNotification;
+
 extern NSString * const WTArchitectDebugDelegateNotification;
 
 extern NSString * const WTArchitectNotificationURLKey;

@@ -178,6 +178,18 @@
 		cordova.exec(this.onWikitudeOK, errorHandler, "WikitudePlugin", "setErrorHandler", []);
 	}
 
+	/**
+	 * Use this function to set a callback that is called every time the iOS SDK would display the compass calibration screen.
+	 *
+	 * @param {function()} calibrationHandler function which is called every time the iOS SDK would display the compass calibration screen.
+	 *
+	 * Note: The calibrationHandler is currently only called by the Wikitude iOS SDK!
+	 */
+	WikitudePlugin.prototype.setHeadingCalibrationHandler = function(calibrationHandler)
+	{
+		cordova.exec(calibrationHandler, this.onWikitudeError(), "WikitudePlugin", "setHeadingCalibrationHandler", []);
+	}
+
 	/*
 	 *	=============================================================================================================================
 	 *
