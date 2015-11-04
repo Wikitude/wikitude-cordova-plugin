@@ -1,6 +1,6 @@
 	
 	/**
-	 * Release date: 09.03.15
+	 * Release date: 04.11.15
 	 */
 
 	var WikitudePlugin = function() {
