@@ -77,4 +77,13 @@ static inline CMTime WTMakeTargetFrameRate30FPS()
  */
 @property (nonatomic, assign) GLuint                                cameraRenderingTargetTexture;
 
+
+/**
+ * Defines if the iOS heading calibration display or the Wikitude delegate method should be used to inform about required heading calibration
+ *
+ * @default YES
+ * @discussion For iOS 9, NO is the default value. Thats because the heading calibration issue appears only on iOS 9 and will be hopefully fixed in a later iOS version, so the default value might change for iOS 9 as well in the future.
+ */
+@property (nonatomic, assign) BOOL                                  shouldUseSystemHeadingCalibrationDisplay;
+
 @end

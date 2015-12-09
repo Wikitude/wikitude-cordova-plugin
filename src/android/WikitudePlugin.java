@@ -611,7 +611,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		for (int i = 0; i < jsonArray.length(); i++) {
 			String feature = "";
 			try {
-				feature = (String) jsonArray.get(0);
+				feature = (String) jsonArray.get(i);
 			} catch (JSONException e) {
 			}
 			if (feature.equalsIgnoreCase("2d_tracking")) {
@@ -645,7 +645,6 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		} catch (JSONException e) {
 		}
 
-		/* no special set-up required in default Wikitude-Plugin, further things required in advanced usage (e.g. Vuforia Image Recognition) */
 		StartupConfiguration config = new StartupConfiguration( apiKey, features, cameraPosition);
 		config.setOrigin( StartupConfiguration.ORIGIN_PHONEGAP );
 		return config;
@@ -737,7 +736,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			/* also a fake-life-cycle call (the last one before it is really shown in UI */
 			this.architectView.onResume();
 
-			if ((features & StartupConfiguration.Features.Geo) == features) {
+			if ((features & StartupConfiguration.Features.Geo) == StartupConfiguration.Features.Geo) {
 				this.locationProvider = new LocationProvider( this.cordova.getActivity(), this.locationListener );
 				this.locationProvider.onResume();
 			}
