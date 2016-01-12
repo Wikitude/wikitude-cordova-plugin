@@ -16,6 +16,8 @@ NSString * const WTArchitectInvokedURLNotification = @"WTArchitectInvokedURLNoti
 NSString * const WTArchitectDidCaptureScreenNotification = @"WTArchitectDidCaptureScreenNotification";
 NSString * const WTArchitectDidFailToCaptureScreenNotification = @"WTArchitectDidFailToCaptureScreenNotification";
 
+NSString * const WTArchitectNeedsHeadingCalibrationNotification = @"WTArchitectNeedsHeadingCalibrationNotification";
+
 NSString * const WTArchitectDebugDelegateNotification = @"WTArchitectDebugDelegateNotification";
 
 NSString * const WTArchitectNotificationURLKey = @"URL";
@@ -109,7 +111,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     return [self.presentingViewController shouldAutorotate];
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return [self.presentingViewController supportedInterfaceOrientations];
 }
@@ -166,6 +168,13 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 - (void)architectView:(WTArchitectView *)architectView willPresentViewController:(UIViewController *)presentedViewController onViewController:(UIViewController *)presentingViewController
 {
     /* Intentionally left blank */
+}
+
+- (void)architectViewNeedsHeadingCalibration:(WTArchitectView *)architectView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectNeedsHeadingCalibrationNotification object:self];
+    });
 }
 
 #pragma mark WTArchitectViewDebugDelegate

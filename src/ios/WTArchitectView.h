@@ -110,6 +110,14 @@ extern NSString * const kWTScreenshotImageKey;
  */
 - (void)architectView:(WTArchitectView *)architectView willPresentViewController:(UIViewController *)presentedViewController onViewController:(UIViewController *)presentingViewController;
 
+/**
+ * This method is called when the underlaying CLLocationManager needs a heading calibration and the WTStartupConfiguration 'shouldUseSystemHeadingCalibrationDisplay' parameter is set to NO.
+ *
+ * Once the method is called, a custom view or dialog can be shown, saying that the user should perform the compass calibration motion.
+ *
+ */
+- (void)architectViewNeedsHeadingCalibration:(WTArchitectView *)architectView;
+
 @end
 
 

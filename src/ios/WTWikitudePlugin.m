@@ -58,6 +58,7 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 @property (nonatomic, strong) NSString                              *urlInvokedCallbackId;
 @property (nonatomic, strong) NSString                              *screenshotCallbackId;
 @property (nonatomic, strong) NSString                              *errorHandlerCallbackId;
+@property (nonatomic, strong) NSString                              *headingCalibrationCallbackId;
 
 @property (nonatomic, assign) BOOL                                  isUsingInjectedLocation;
 @property (nonatomic, assign) BOOL                                  isDeviceSupported;
@@ -275,10 +276,10 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
             }
             
-
+            __weak WTWikitudePlugin *weakSelf = self;
             [self.arViewController.architectView start:^(WTStartupConfiguration *configuration) {
                 [WTWikitudePlugin readStartupConfigurationFrom:arguments andApplyTo:configuration];
-                self.arViewController.startupConfiguration = configuration;
+                weakSelf.arViewController.startupConfiguration = configuration;
             } completion:nil];
         }
     }
@@ -296,10 +297,11 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
         
         [self removeNotificationObserver];
         
+        __weak WTWikitudePlugin *weakSelf = self;
         [self.viewController dismissViewControllerAnimated:YES completion:^
          {
              /* nil out the strong reference because it’s not longer needed. ‘show’ and ‘hide’ can handle nil controller and are supposed to be only used during an active presentation of our plugin */
-             self.arViewController = nil;
+             weakSelf.arViewController = nil;
          }];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -508,6 +510,19 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+#pragma mark Heading calibration
+- (void)setHeadingCalibrationHandler:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult *pluginResult = nil;
+
+    self.headingCalibrationCallbackId = command.callbackId;
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+    [pluginResult setKeepCallbackAsBool:YES];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 #pragma mark Error handling
 - (void)setErrorHandler:(CDVInvokedUrlCommand *)command
 {
@@ -606,6 +621,18 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.screenshotCallbackId];
 }
 
+- (void)didReceivedArchitectNeedsHeadingCalibrationNotification:(NSNotification *)aNotification
+{
+    if ( self.headingCalibrationCallbackId )
+    {
+        CDVPluginResult *pluginResult = nil;
+
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.headingCalibrationCallbackId];
+    }
+}
+
 - (void)didReceivedArchitectDebugMessageNotification:(NSNotification *)aNotification
 {
     if ( self.errorHandlerCallbackId )
@@ -645,6 +672,7 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedCaptureScreenDidFailNotification:) name:WTArchitectDidFailToCaptureScreenNotification object:self.arViewController];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedArchitectNeedsHeadingCalibrationNotification:) name:WTArchitectNeedsHeadingCalibrationNotification object:self.arViewController];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedArchitectDebugMessageNotification:) name:WTArchitectDebugDelegateNotification object:self.arViewController];
 }
