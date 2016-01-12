@@ -50,6 +50,8 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveDeviceWillChangeStatusBarOrientationNotification:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
     }
     
     return self;
@@ -207,6 +209,15 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
         [self.architectView start:^(WTStartupConfiguration *configuration) {
             configuration = self.startupConfiguration;
         } completion:nil];
+    }
+}
+
+- (void)didReceiveDeviceWillChangeStatusBarOrientationNotification:(NSNotification *)aNotification
+{
+    if ( !self.presentingViewController )
+    {
+        UIInterfaceOrientation newInterfaceOrientation = [[[aNotification userInfo] objectForKey:UIApplicationStatusBarOrientationUserInfoKey] integerValue];
+        [self.architectView setShouldRotate:YES toInterfaceOrientation:newInterfaceOrientation];
     }
 }
 
