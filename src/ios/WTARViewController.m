@@ -83,11 +83,10 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
         [self.architectView performSelector:@selector(setPresentingViewController:) withObject:self];
     }
 #pragma clang diagnostic pop
-    
-    [self.architectView setShouldRotate:YES
-                 toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-    
-    
+
+    [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+
+
     UISwipeGestureRecognizer *swipeBackRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeBack:)];
     swipeBackRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
     
