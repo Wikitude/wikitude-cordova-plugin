@@ -132,6 +132,8 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 	private static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
 
+    private static final int WRITE_TO_EXTERNAL_STORAGE_REQUEST_CODE = 3;
+
 	/**
 	 * the Wikitude ARchitectview
 	 */
@@ -146,6 +148,11 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 * callback-id of "open"-action method
 	 */
 	private CallbackContext		openCallback				= null;
+
+    /**
+     * callback-id for capture screen
+     */
+    private CallbackContext captureScreenCallbackContext = null;
 
 	/**
 	 * last known location of the user, used internally for content-loading after user location was fetched
@@ -171,6 +178,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 	private JSONArray openArgs;
 	private String action;
+
+	private String screenCaptureName;
+    private Bitmap screenCapture;
 
 
 	@Override
@@ -224,7 +234,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		if (WikitudePlugin.ACTION_CAPTURE_SCREEN.equals(action) ) {
 			if (architectView!=null) {
 
-				int captureMode = ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM_AND_WEBVIEW;
+                WikitudePlugin.this.captureScreenCallbackContext = callContext;
+
+                int captureMode = ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM_AND_WEBVIEW;
 
 				try {
 					captureMode = ( args.getBoolean( 0 )) ? ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM_AND_WEBVIEW : ArchitectView.CaptureScreenCallback.CAPTURE_MODE_CAM;
@@ -241,64 +253,19 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 					}
 				}
 
-				final String fileName = name;
+				WikitudePlugin.this.screenCaptureName = name;
 
 				architectView.captureScreen(captureMode, new CaptureScreenCallback() {
 
 					@Override
 					public void onScreenCaptured(Bitmap screenCapture) {
-						final File screenCaptureFile;
-						final String name = System.currentTimeMillis() + ".jpg";
-						try {
-							if (fileName.equals("")) {
- 								final File imageDirectory = Environment.getExternalStorageDirectory();
-								if (imageDirectory == null) {
-									callContext.error("External storage not available");
-								}
-								screenCaptureFile = new File (imageDirectory, name);
-							} else {
-								File screenCapturePath = new File (fileName);
-								if (screenCapturePath.isDirectory()) {
-									screenCaptureFile = new File (screenCapturePath, name);
-								} else {
-									screenCaptureFile = screenCapturePath;
-								}
-							}
-							if (screenCaptureFile.exists()) {
-								screenCaptureFile.delete();
-							}
-							final FileOutputStream out = new FileOutputStream(screenCaptureFile);
-							screenCapture.compress(Bitmap.CompressFormat.JPEG, 90, out);
-							out.flush();
-							out.close();
 
-							ContentValues values = new ContentValues();
-						    values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis());
-						    values.put(Images.Media.MIME_TYPE, "image/jpeg");
-						    values.put(MediaStore.MediaColumns.DATA, screenCaptureFile.getAbsolutePath());
-
-						    Context context= cordova.getActivity().getApplicationContext();
-						    context.getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values);
-
-							cordova.getActivity().runOnUiThread(new Runnable() {
-
-								@Override
-								public void run() {
-									final String absoluteCaptureImagePath = screenCaptureFile.getAbsolutePath();
-									callContext.success(absoluteCaptureImagePath);
-
-// 								in case you want to sent the pic to other applications, uncomment these lines (for future use)
-//								final Intent share = new Intent(Intent.ACTION_SEND);
-//								share.setType("image/jpg");
-//								share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(screenCaptureFile));
-//								final String chooserTitle = "Share Snaphot";
-//								cordova.getActivity().startActivity(Intent.createChooser(share, chooserTitle));
-								}
-							});
-						} catch (Exception e) {
-							callContext.error(e.getMessage());
-						}
-
+                        if ( !cordova.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ) {
+                            WikitudePlugin.this.screenCapture = screenCapture;
+                            WikitudePlugin.this.cordova.requestPermission(WikitudePlugin.this, WRITE_TO_EXTERNAL_STORAGE_REQUEST_CODE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        } else {
+                            WikitudePlugin.this.saveScreenCapture(screenCapture);
+                        }
 					}
 				});
 				return true;
@@ -791,7 +758,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		InputMethodManager inputManager = (InputMethodManager)
 				(this.cordova.getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
 				    inputManager.hideSoftInputFromWindow((this.cordova.getActivity()).getCurrentFocus().getWindowToken(),
-				    InputMethodManager.HIDE_NOT_ALWAYS);
+							InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 
@@ -817,10 +784,65 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 		else if (rootView instanceof ViewGroup) {
 			final int childCount = ((ViewGroup)rootView).getChildCount();
 			for (int i=0; i< childCount; i++) {
-				WikitudePlugin.handleResumeInCordovaWebView(((ViewGroup)rootView).getChildAt(i));
+				WikitudePlugin.handleResumeInCordovaWebView(((ViewGroup) rootView).getChildAt(i));
 			}
 		}
 	}
+
+    private void saveScreenCapture(Bitmap screenCapture) {
+
+        final File screenCaptureFile;
+        final String name = System.currentTimeMillis() + ".jpg";
+        try {
+            if (WikitudePlugin.this.screenCaptureName .equals("")) {
+                final File imageDirectory = Environment.getExternalStorageDirectory();
+                if (imageDirectory == null) {
+					WikitudePlugin.this.captureScreenCallbackContext.error("External storage not available");
+                }
+                screenCaptureFile = new File (imageDirectory, name);
+            } else {
+                File screenCapturePath = new File (WikitudePlugin.this.screenCaptureName);
+                if (screenCapturePath.isDirectory()) {
+                    screenCaptureFile = new File (screenCapturePath, name);
+                } else {
+                    screenCaptureFile = screenCapturePath;
+                }
+            }
+            if (screenCaptureFile.exists()) {
+                screenCaptureFile.delete();
+            }
+            final FileOutputStream out = new FileOutputStream(screenCaptureFile);
+            screenCapture.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+
+            ContentValues values = new ContentValues();
+            values.put(Images.Media.DATE_TAKEN, System.currentTimeMillis());
+            values.put(Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.MediaColumns.DATA, screenCaptureFile.getAbsolutePath());
+
+            Context context= cordova.getActivity().getApplicationContext();
+            context.getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            cordova.getActivity().runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    final String absoluteCaptureImagePath = screenCaptureFile.getAbsolutePath();
+                    WikitudePlugin.this.captureScreenCallbackContext.success(absoluteCaptureImagePath);
+
+//                        in case you want to sent the pic to other applications, uncomment these lines (for future use)
+//                        final Intent share = new Intent(Intent.ACTION_SEND);
+//                        share.setType("image/jpg");
+//                        share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(screenCaptureFile));
+//                        final String chooserTitle = "Share Snaphot";
+//                        cordova.getActivity().startActivity(Intent.createChooser(share, chooserTitle));
+                }
+            });
+        } catch (Exception e) {
+            WikitudePlugin.this.captureScreenCallbackContext.error(e.getMessage());
+        }
+    }
 
 
 	protected static class ArchitectViewPhoneGap extends ArchitectView {
@@ -995,7 +1017,13 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 				} else {
 					this.openCallback.error("Location permission wasn't granted");
 				}
-			}
+            } else if ( permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) ) {
+                if (grantResults.length > 0 && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    WikitudePlugin.this.saveScreenCapture(WikitudePlugin.this.screenCapture);
+                } else {
+                    WikitudePlugin.this.captureScreenCallbackContext.error("External storage permission wasn't granted");
+                }
+            }
 		}
 	}
 }
