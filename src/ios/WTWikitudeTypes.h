@@ -26,6 +26,12 @@ typedef NS_OPTIONS(NSUInteger, WTFeatures) {
     WTFeature_2DTracking = 1 << 0,
     
     /**
+     * Specifies that 3d tracking is used in an ARchitect World
+     * This feature requires access to the camera and the gyroscope. When using the 'NSCameraUsageDescription' key in the *-Info.plist, a custom text can be displayed when the camera access alert is shown.
+     */
+    WTFeature_3DTracking = 1 << 1,
+    
+    /**
      * Specifies that geo based augmented reality is used where objects are placed on certain locations by providing latitude/longitude values.
      * This feature requires access to the camera and the user location so please make sure to specify a value for the 'NSLocationWhenInUseUsageDescription' key in your *-Info.plist when using the SDK on iOS 8 or later.
      */

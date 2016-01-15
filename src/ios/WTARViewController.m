@@ -16,6 +16,8 @@ NSString * const WTArchitectInvokedURLNotification = @"WTArchitectInvokedURLNoti
 NSString * const WTArchitectDidCaptureScreenNotification = @"WTArchitectDidCaptureScreenNotification";
 NSString * const WTArchitectDidFailToCaptureScreenNotification = @"WTArchitectDidFailToCaptureScreenNotification";
 
+NSString * const WTArchitectNeedsHeadingCalibrationNotification = @"WTArchitectNeedsHeadingCalibrationNotification";
+
 NSString * const WTArchitectDebugDelegateNotification = @"WTArchitectDebugDelegateNotification";
 
 NSString * const WTArchitectNotificationURLKey = @"URL";
@@ -48,6 +50,8 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveDeviceWillChangeStatusBarOrientationNotification:) name:UIApplicationWillChangeStatusBarOrientationNotification object:nil];
     }
     
     return self;
@@ -79,11 +83,10 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
         [self.architectView performSelector:@selector(setPresentingViewController:) withObject:self];
     }
 #pragma clang diagnostic pop
-    
-    [self.architectView setShouldRotate:YES
-                 toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-    
-    
+
+    [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+
+
     UISwipeGestureRecognizer *swipeBackRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeBack:)];
     swipeBackRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
     
@@ -109,7 +112,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     return [self.presentingViewController shouldAutorotate];
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return [self.presentingViewController supportedInterfaceOrientations];
 }
@@ -168,6 +171,13 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     /* Intentionally left blank */
 }
 
+- (void)architectViewNeedsHeadingCalibration:(WTArchitectView *)architectView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectNeedsHeadingCalibrationNotification object:self];
+    });
+}
+
 #pragma mark WTArchitectViewDebugDelegate
 - (void)architectView:(WTArchitectView *)architectView didEncounterInternalWarning:(WTWarning *)warning
 {
@@ -198,6 +208,15 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
         [self.architectView start:^(WTStartupConfiguration *configuration) {
             configuration = self.startupConfiguration;
         } completion:nil];
+    }
+}
+
+- (void)didReceiveDeviceWillChangeStatusBarOrientationNotification:(NSNotification *)aNotification
+{
+    if ( !self.presentingViewController )
+    {
+        UIInterfaceOrientation newInterfaceOrientation = [[[aNotification userInfo] objectForKey:UIApplicationStatusBarOrientationUserInfoKey] integerValue];
+        [self.architectView setShouldRotate:YES toInterfaceOrientation:newInterfaceOrientation];
     }
 }
 
