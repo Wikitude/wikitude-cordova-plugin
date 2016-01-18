@@ -135,12 +135,12 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 #pragma mark - Delegation
 #pragma mark WTArchitectView
 
-- (void)architectView:(WTArchitectView *)architectView didFinishLoad:(NSURL *)url
+- (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDidLoadWorldNotification object:self userInfo:@{WTArchitectNotificationURLKey: url}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDidLoadWorldNotification object:self userInfo:@{WTArchitectNotificationURLKey: navigation.finalURL}];
 }
 
-- (void)architectView:(WTArchitectView *)architectView didFailLoadWithError:(NSError *)error
+- (void)architectView:(WTArchitectView *)architectView didFailToLoadArchitectWorldNavigation:(WTNavigation *)navigation withError:(NSError *)error
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDidFailToLoadWorldNotification object:self userInfo:@{WTArchitectNotificationErrorKey: error}];
 }
