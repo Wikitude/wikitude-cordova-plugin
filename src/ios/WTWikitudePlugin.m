@@ -327,10 +327,6 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
     {
         [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
         
-        [self.arViewController.architectView start:^(WTStartupConfiguration *configuration) {
-            configuration = self.arViewController.startupConfiguration;
-        } completion:nil];
-
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
     else
@@ -351,7 +347,6 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
     
     if (self.arViewController)
     {
-        [self.arViewController.architectView stop];
         [self.viewController dismissViewControllerAnimated:YES completion:nil];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
