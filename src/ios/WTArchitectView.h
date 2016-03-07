@@ -276,7 +276,7 @@ extern NSString * const kWTScreenshotImageKey;
 
 /** @name Injecting Locations */
 /**
- * Injects the supplied location information. To use the injected location setUseInjectedLocation(true) has to be called.
+ * Injects the supplied location information. To use the injected location -setUseInjectedLocation:YES has to be called.
  *
  * @param latitude The latitude that has to be simulated.
  * @param longitude The longitude that has to be simulated.
@@ -287,7 +287,7 @@ extern NSString * const kWTScreenshotImageKey;
 
 
 /**
- * Injects the supplied location information. To use the injected location setUseInjectedLocation(true) has to be called.
+ * Injects the supplied location information. To use the injected location -setUseInjectedLocation:YES has to be called.
  *
  * @param latitude The latitude that has to be simulated.
  * @param longitude The longitude that has to be simulated.
