@@ -1,27 +1,33 @@
 # Cordova Plugin Release Notes
-## Plugin 3.2.1 (SDK 5.1.3)
-### Cordova Plugin 5.1.3-3.2.1
-Release Date: 07.03.2016
+## Plugin 3.2.1 (SDK 5.1.4)
+### Cordova Plugin 5.1.4-3.2.1
+Release Date: 11.03.2016
+#### New
+- Integrates Wikitude SDK 5.1.4 for Android and iOS (see detailed release notes for <a href="http://www.wikitude.com/developer/documentation/android" target="_top">Android</a> and <a href="http://www.wikitude.com/developer/documentation/ios" target="_top">iOS</a>)
+
+
+### PhoneGap Plugin 5.1.3-3.2.1
+Release Date: 25.02.2016
 #### New
 - Integrates Wikitude SDK 5.1.3 for Android and iOS (see detailed release notes for <a href="http://www.wikitude.com/developer/documentation/android" target="_top">Android</a> and <a href="http://www.wikitude.com/developer/documentation/ios" target="_top">iOS</a>)
  
 
 ## Plugin 3.2.1 (SDK 5.1.2)
 ### PhoneGap Plugin 5.1.2-3.2.1
-Release Date: 28.02.2016
+Release Date: 09.03.15
 #### New
 - Integrates Wikitude SDK 5.1.2 for Android and iOS (see detailed release notes for <a href="http://www.wikitude.com/developer/documentation/android" target="_top">Android</a> and <a href="http://www.wikitude.com/developer/documentation/ios" target="_top">iOS</a>)
-
+- 
 ## Plugin 3.0.0 (SDK 4.1.0)
 ### PhoneGap Plugin 4.1.0-3.0.0
-Release Date: 09.03.2015
+Release Date: 09.03.15
 #### New
 - Integrates Wikitude SDK 4.1.0 for Android and iOS (see detailed release notes for <a href="http://www.wikitude.com/developer/documentation/android" target="_top">Android</a> and <a href="http://www.wikitude.com/developer/documentation/ios" target="_top">iOS</a>)
 - Updated API (see <a href="http://www.wikitude.com/external/doc/documentation/latest/phonegap/migration.html" target="_top">Migration Guide for details</a>)
 
 ## Plugin 2.0 (SDK 4.0.0)
 ### PhoneGap Plugin 4.0.0-2.1.0 
-Release Date: 29.07.2014
+Release Date: 29.07.14
 
 #### New
 - Integrates Wikitude SDK 4.0.0 for Android and iOS (see detailed release notes for <a href="http://www.wikitude.com/developer/documentation/android" target="_top">Android</a> and <a href="http://www.wikitude.com/developer/documentation/ios" target="_top">iOS</a>)
