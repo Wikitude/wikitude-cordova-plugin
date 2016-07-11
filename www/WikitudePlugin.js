@@ -1,4 +1,4 @@
-	
+
 	/**
 	 * Release date: 11.03.16
 	 */
@@ -26,14 +26,13 @@
         this.CameraPositionUndefined = 0;
         this.CameraPositionFront     = 1;
         this.CameraPositionBack      = 2;
-                       
+
         /**
          *  Start-up configuration: camera focus range restriction (for iOS only).
          */
         this.CameraFocusRangeNone = 0;
         this.CameraFocusRangeNear = 1;
         this.CameraFocusRangeFar  = 2;
-        
 	};
 
 
@@ -64,9 +63,9 @@
 	 *
      *  @param {function(loadedURL)}  		successCallback		function which is called after a successful launch of the AR world.
      *  @param {function(error)}		 	errorCallback		function which is called after a failed launch of the AR world.
-     *	@param {String} 					architectWorldPath	The path to a local ARchitect world or to a ARchitect world on a server or your 
+     *	@param {String} 					architectWorldPath	The path to a local ARchitect world or to a ARchitect world on a server or your
 	 *  @param {String} 					worldPath			path to an ARchitect world, either on the device or on e.g. your Dropbox.
-     *  @param {Array} 						requiredFeatures	augmented reality features: a flags mask for enabling/disabling 
+     *  @param {Array} 						requiredFeatures	augmented reality features: a flags mask for enabling/disabling
      *                                  geographic location-based (WikitudePlugin.FeatureGeo) or image recognition-based (WikitudePlugin.Feature2DTracking) tracking.
 	 *  @param {json object} (optional) startupConfiguration	represents the start-up configuration which may look like the following:
 	 *									{
@@ -75,16 +74,16 @@
 	 *											"*optionalPlatformKey*": "*optionalPlatformValue*"
 	 *                                      	}
 	 *                               	}
-	 */	 
+	 */
 	WikitudePlugin.prototype.loadARchitectWorld = function(successCallback, errorCallback, architectWorldPath, requiredFeatures, startupConfiguration) {
-        
+
 		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "open", [{
-				"SDKKey": this._sdkKey,
-				"ARchitectWorldURL": architectWorldPath,
-				"RequiredFeatures": requiredFeatures,
-		    	"StartupConfiguration" : startupConfiguration
-			}]);
-		
+			"SDKKey": this._sdkKey,
+			"ARchitectWorldURL": architectWorldPath,
+			"RequiredFeatures": requiredFeatures,
+		    "StartupConfiguration" : startupConfiguration
+		}]);
+
 		// We add an event listener on the resume and pause event of the application life-cycle
 		document.addEventListener("resume", this.onResume, false);
 		document.addEventListener("pause", this.onPause, false);
@@ -163,9 +162,9 @@
     {
 		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "captureScreen", [includeWebView, imagePathInBundleOrNullForPhotoLibrary]);
 	};
-	
+
 	/**
-	 * Use this function to set a callback that is called every time the Wikitude SDK encounters an internal error or warning. 
+	 * Use this function to set a callback that is called every time the Wikitude SDK encounters an internal error or warning.
 	 * Internal errors can occur at any time and might not be related to any WikitudePlugin function invocation.
 	 * An error code and message are passed in form of a JSON object.
 	 *
@@ -179,15 +178,43 @@
 	}
 
 	/**
-	 * Use this function to set a callback that is called every time the iOS SDK would display the compass calibration screen.
+	 * Use this function to set a callback that is called every time the iOS SDK need to calibrate device sensors.
 	 *
-	 * @param {function()} calibrationHandler function which is called every time the iOS SDK would display the compass calibration screen.
+	 * @param {function()} startCalibrationHandler function which is called every time the iOS SDK would like to calibrate device sensors.
 	 *
-	 * Note: The calibrationHandler is currently only called by the Wikitude iOS SDK!
+	 * Note: The startCalibrationHandler is currently only called by the Wikitude iOS Cordova Plugin!
 	 */
-	WikitudePlugin.prototype.setHeadingCalibrationHandler = function(calibrationHandler)
+	WikitudePlugin.prototype.setDeviceSensorsNeedCalibrationHandler = function(startCalibrationHandler)
 	{
-		cordova.exec(calibrationHandler, this.onWikitudeError(), "WikitudePlugin", "setHeadingCalibrationHandler", []);
+		cordova.exec(startCalibrationHandler, this.onWikitudeError(), "WikitudePlugin", "setDeviceSensorsNeedCalibrationHandler", []);
+	}
+
+    /**
+     * Use this function to set a callback that is called every time the iOS SDK finished device sensor calibration.
+     *
+     * @param {function()} finishedCalibrationHandler function which is called every time the iOS SDK finished calibrating device sensors.
+     *
+     * Note: The finishedCalibrationHandler is currently only called by the Wikitude iOS Cordova Plugin!
+     */
+    WikitudePlugin.prototype.setDeviceSensorsFinishedCalibrationHandler = function(finishedCalibrationHandler)
+    {
+        cordova.exec(finishedCalibrationHandler, this.onWikitudeError(), "WikitudePlugin", "setDeviceSensorsFinishedCalibrationHandler", []);
+    }
+
+	/**
+	 * Use this function to set a callback that is called every time the back button is pressed while the Wikitude Cordova Plugin is presented.
+	 *
+	 * @param {function()} onBackButtonCallback function which is called every time the Android back button is pressed.
+	 *
+	 * Note: The function is only implemented for Android!
+	 */
+	WikitudePlugin.prototype.setBackButtonCallback = function(onBackButtonCallback)
+	{
+	    if ( cordova.platformId == "android" ) {
+	        cordova.exec(onBackButtonCallback, this.onWikitudeError, "WikitudePlugin", "setBackButtonCallback", []);
+	    } else {
+	        alert('setBackButtonCallback is only available on Android and not on' + cordova.platformId);
+	    }
 	}
 
 	/*

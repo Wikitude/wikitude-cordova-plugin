@@ -79,11 +79,11 @@ static inline CMTime WTMakeTargetFrameRate30FPS()
 
 
 /**
- * Defines if the iOS heading calibration display or the Wikitude delegate method should be used to inform about required heading calibration
+ * Defines if the iOS SDK device sensor calibration display should be shown or not in case device sensors calibration is needed.
  *
- * @default YES
- * @discussion For iOS 9, NO is the default value. Thats because the heading calibration issue appears only on iOS 9 and will be hopefully fixed in a later iOS version, so the default value might change for iOS 9 as well in the future.
+ * @default NO
+ * @discussion For iOS 9, the current view controller will receive calls to -viewWillDisappear:/-viewWillAppear: in case the system calibration screen is shown. Please make sure that the Wikitude SDK is not stopped/started as this would constantly switch between the calibration view and Wikitude SDK view. Implement the Wikitude SDK delegate method -: in order to observe the calibration status and to not pause the Wikitude SDK during that time.
  */
-@property (nonatomic, assign) BOOL                                  shouldUseSystemHeadingCalibrationDisplay;
+@property (nonatomic, assign) BOOL                                  shouldUseSystemDeviceSensorCalibrationDisplay;
 
 @end

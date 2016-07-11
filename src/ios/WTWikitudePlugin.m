@@ -44,9 +44,16 @@ NSString * const kWTWikitudePlugin_cameraFocusRange_None            = @"none";
 NSString * const kWTWikitudePlugin_cameraFocusRange_Near            = @"near";
 NSString * const kWTWikitudePlugin_cameraFocusRange_Far             = @"far";
 
+NSString * const kWTWikitudePlugin_ArgumentSystemDeviceSensorCalibrationDisplay     = @"shouldUseSystemDeviceSensorCalibrationDisplay";
+NSString * const kWTWikitudePlugin_useSystemDeviceSensorCalibrationDispaly_NO       = @"NO";
+NSString * const kWTWikitudePlugin_useSystemDeviceSensorCalibrationDispaly_YES      = @"YES";
+
 //------------ Start-up Configuration - end ---------
 
-NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
+
+//------------ plist keys - begin -------
+NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordovaPluginLocalPathPrefix";
+//------------ plist keys - end ---------
 
 
 
@@ -58,7 +65,8 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 @property (nonatomic, strong) NSString                              *urlInvokedCallbackId;
 @property (nonatomic, strong) NSString                              *screenshotCallbackId;
 @property (nonatomic, strong) NSString                              *errorHandlerCallbackId;
-@property (nonatomic, strong) NSString                              *headingCalibrationCallbackId;
+@property (nonatomic, strong) NSString                              *deviceSensorsNeedCalibrationCallbackId;
+@property (nonatomic, strong) NSString                              *deviceSensorsFinishedCalibrationCallbackId;
 
 @property (nonatomic, assign) BOOL                                  isUsingInjectedLocation;
 @property (nonatomic, assign) BOOL                                  isDeviceSupported;
@@ -130,6 +138,19 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
                         configuration.captureDeviceFocusRangeRestriction = AVCaptureAutoFocusRangeRestrictionFar;
                     }
                 }
+
+                NSString *systemDeviceSensorCalibrationSetting = [iOSConfiguration objectForKey:kWTWikitudePlugin_ArgumentSystemDeviceSensorCalibrationDisplay];
+                if (systemDeviceSensorCalibrationSetting)
+                {
+                    if ( [kWTWikitudePlugin_useSystemDeviceSensorCalibrationDispaly_NO isEqualToString:systemDeviceSensorCalibrationSetting] )
+                    {
+                        configuration.shouldUseSystemDeviceSensorCalibrationDisplay = NO;
+                    }
+                    else if ( [kWTWikitudePlugin_useSystemDeviceSensorCalibrationDispaly_YES isEqualToString:systemDeviceSensorCalibrationSetting] )
+                    {
+                        configuration.shouldUseSystemDeviceSensorCalibrationDisplay = YES;
+                    }
+                }
             }
         }
     }
@@ -139,7 +160,7 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 + (WTFeatures)requiredFeaturesFromArray:(NSArray *)stringArray
 {
     WTFeatures requiredFeatures = 0;
-    
+
     for (id object in stringArray)
     {
         if ( [object isKindOfClass:[NSString class]] )
@@ -163,31 +184,63 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 + (NSURL *)architectWorldURLFromString:(NSString *)architectWorldFilePath
 {
     NSURL *architectWorldURL = nil;
-    
-    
+
     if ( architectWorldFilePath && ![architectWorldFilePath isKindOfClass:[NSNull class]] )
     {
-        // remote URL
-        if ([architectWorldFilePath hasPrefix:kWTWikitudePlugin_RemoteURLPrefix])
-        {
-            architectWorldURL = [NSURL URLWithString:architectWorldFilePath];
-        }
-        else // bundle URL
-        {
-            NSString *worldName = [architectWorldFilePath lastPathComponent];
-            worldName = [worldName stringByDeletingPathExtension];
-            NSString *worldNameExtension = [architectWorldFilePath pathExtension];
-            
-            NSString *architectWorldDirectoryPath = [architectWorldFilePath stringByDeletingLastPathComponent];
-            
-            architectWorldURL = [[NSBundle mainBundle] URLForResource:worldName withExtension:worldNameExtension subdirectory:architectWorldDirectoryPath];
-        }
+        NSString *worldName = [architectWorldFilePath lastPathComponent];
+        worldName = [worldName stringByDeletingPathExtension];
+        NSString *worldNameExtension = [architectWorldFilePath pathExtension];
+
+        NSString *architectWorldDirectoryPath = [architectWorldFilePath stringByDeletingLastPathComponent];
+
+        architectWorldURL = [[NSBundle mainBundle] URLForResource:worldName withExtension:worldNameExtension subdirectory:architectWorldDirectoryPath];
     }
-    
+
     return architectWorldURL;
 }
 
++ (NSString *)readOptionalPathPrefixFromApplicationPlist
+{
+    NSString *optionalPathPrefix = nil;
 
+    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    if ( infoDictionary )
+    {
+        if ( [infoDictionary objectForKey:kWTWikitudePlugin_localPathPrefix] )
+        {
+            optionalPathPrefix = [infoDictionary objectForKey:kWTWikitudePlugin_localPathPrefix];
+        }
+    }
+
+    return optionalPathPrefix;
+}
+
++ (NSURL *)addPathPrefix:(NSString *)pathPrefix toArchitectWorldURL:(NSURL *)architectWorldURL
+{
+    if ( pathPrefix && architectWorldURL )
+    {
+        NSString *architectWorldString = [architectWorldURL absoluteString];
+        NSRange wwwRange = [architectWorldString rangeOfString:@"www"];
+        if ( NSNotFound != wwwRange.location )
+        {
+            NSString *leadingPart = [architectWorldString substringToIndex:wwwRange.location];
+            NSString *trailingPart = [architectWorldString substringFromIndex:wwwRange.location];
+            NSString *modifiedArchitectWorldString = [leadingPart stringByAppendingPathComponent:pathPrefix];
+            modifiedArchitectWorldString = [modifiedArchitectWorldString stringByAppendingPathComponent:trailingPart];
+
+            NSURL *modifiedArchitectWorldURL = [NSURL URLWithString:modifiedArchitectWorldString];
+            return modifiedArchitectWorldURL;
+        }
+        else
+        {
+            return architectWorldURL;
+        }
+    }
+    else
+    {
+        return architectWorldURL;
+    }
+}
 
 #pragma mark - Plugin Methods
 #pragma mark Device Support
@@ -195,9 +248,9 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 - (void)isDeviceSupported:(CDVInvokedUrlCommand *)command
 {
     CDVPluginResult* pluginResult = nil;
-    
+
     self.isDeviceSupported = NO;
-    
+
     if ( [command.arguments count] >= 1 )
     {
         if ( [[command.arguments objectAtIndex:0] isKindOfClass:[NSArray class]] )
@@ -218,7 +271,7 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
             }
         }
     }
-    
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -227,44 +280,50 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 
 - (void)open:(CDVInvokedUrlCommand *)command
 {
-    
     CDVPluginResult* pluginResult = nil;
-    
 
     if ( self.isDeviceSupported && command.arguments.count )
     {
         id argumentDictionary = [command.arguments firstObject];
-        
+
         if ( [argumentDictionary isKindOfClass:[NSDictionary class]] )
         {
             NSDictionary *arguments = (NSDictionary *)argumentDictionary;
-            
+
             NSString *sdkKey = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeyLicenseKey];
             NSString *architectWorldURLString = [arguments objectForKey:kWTWikitudePlugin_ArgumentKeyARchitectWorldURL];
-            
-            
+
+
             WTFeatures requiredFeatures = [WTWikitudePlugin requiredFeaturesFromArray:[arguments objectForKey:kWTWikitudePlugin_ArgumentRequiredFeatures]];
-            
+
             if (!_arViewController)
             {
                 self.arViewController = [[WTArchitectViewController alloc] initWithNibName:nil bundle:nil motionManager:nil];
-                
+
                 [self.arViewController.architectView setLicenseKey:sdkKey];
-                
+
                 self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 self.arViewController.architectDelegate = self;
             }
-            
+
             [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
-            
+
             [self addNotificationObserver];
-            
-            
-            NSURL *architectWorldURL = [WTWikitudePlugin architectWorldURLFromString:architectWorldURLString];
+
+
+            NSURL *architectWorldURL = [NSURL URLWithString:architectWorldURLString];
+            if ( !architectWorldURL || ![architectWorldURL scheme] )
+            {
+                architectWorldURL = [WTWikitudePlugin architectWorldURLFromString:architectWorldURLString];
+            }
             if ( architectWorldURL )
             {
-                [self.arViewController.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:requiredFeatures];
-                
+                NSString *optionalPathPrefix = [WTWikitudePlugin readOptionalPathPrefixFromApplicationPlist];
+                if ( optionalPathPrefix ) {
+                    architectWorldURL = [WTWikitudePlugin addPathPrefix:optionalPathPrefix toArchitectWorldURL:architectWorldURL];
+                }
+                self.arViewController.currentArchitectWorldNavigation = [self.arViewController.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:requiredFeatures];
+
                 self.loadArchitectWorldCallbackId = command.callbackId;
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
                 [pluginResult setKeepCallbackAsBool:YES];
@@ -275,7 +334,7 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[NSString stringWithFormat:@"Unable to determine the url to load: %@", architectWorldURLString]];
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
             }
-            
+
             __weak WTWikitudePlugin *weakSelf = self;
             [self.arViewController.architectView start:^(WTStartupConfiguration *configuration) {
                 [WTWikitudePlugin readStartupConfigurationFrom:arguments andApplyTo:configuration];
@@ -287,31 +346,31 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 
 - (void)close:(CDVInvokedUrlCommand *)command
 {
-    
+
     CDVPluginResult* pluginResult = nil;
 
-    
+
     if (self.arViewController)
     {
         [self.arViewController.architectView stop];
-        
+
         [self removeNotificationObserver];
-        
+
         __weak WTWikitudePlugin *weakSelf = self;
         [self.viewController dismissViewControllerAnimated:YES completion:^
          {
              /* nil out the strong reference because it’s not longer needed. ‘show’ and ‘hide’ can handle nil controller and are supposed to be only used during an active presentation of our plugin */
              weakSelf.arViewController = nil;
          }];
-        
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
     else
     {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
-    
-    
+
+
     if (command) {
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
@@ -319,14 +378,14 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 
 - (void)show:(CDVInvokedUrlCommand *)command
 {
-    
+
     CDVPluginResult* pluginResult = nil;
-    
+
 
     if (self.arViewController)
     {
         [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
-        
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
     else
@@ -334,55 +393,55 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_INVALID_ACTION messageAsString:@"Wikitude Plugin not loaded. You first have to call load and then show."];
         NSLog(@"Wikitude Plugin not loaded. You first have to call load and then show.");
     }
-    
-    
+
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)hide:(CDVInvokedUrlCommand *)command
 {
-    
+
     CDVPluginResult* pluginResult = nil;
-    
-    
+
+
     if (self.arViewController)
     {
         [self.viewController dismissViewControllerAnimated:YES completion:nil];
-        
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
     else
     {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
-    
-    
+
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)onResume:(CDVInvokedUrlCommand *)command
 {
-    
+
     CDVPluginResult* pluginResult = nil;
-    
+
 
     /* Intentionally left blank */
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
-    
-    
+
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)onPause:(CDVInvokedUrlCommand *)command
 {
-    
+
     CDVPluginResult* pluginResult = nil;
-    
+
 
     /* Intentionally left blank */
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
-    
-    
+
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -393,17 +452,17 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 {
     CDVPluginResult *pluginResult = nil;
 
-    
+
     if (self.arViewController && [self.arViewController.architectView isRunning])
     {
         if ( 2 == command.arguments.count ) // only proceed if the two required parameters are given
         {
             self.screenshotCallbackId = command.callbackId;
-            
-            
+
+
             WTScreenshotCaptureMode captureMode = [[command.arguments objectAtIndex:0] boolValue] ? WTScreenshotCaptureMode_CamAndWebView : WTScreenshotCaptureMode_Cam;
-            
-            
+
+
             WTScreenshotSaveMode saveMode;
             NSString *screenshotBundlePath = nil;
             if ( [[command.arguments objectAtIndex:1] isKindOfClass:[NSString class]] )
@@ -415,14 +474,14 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
             {
                 saveMode = WTScreenshotSaveMode_PhotoLibrary;
             }
-            
+
             WTScreenshotSaveOptions options = WTScreenshotSaveOption_SavingWithoutOverwriting | WTScreenshotSaveOption_CallDelegateOnSuccess;
-            
+
             [self.arViewController.architectView captureScreenWithMode:captureMode usingSaveMode:saveMode saveOptions:options context: screenshotBundlePath ? @{kWTScreenshotBundleDirectoryKey: screenshotBundlePath} : nil];
         }
     }
-    
-    
+
+
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
     [pluginResult setKeepCallbackAsBool:YES];
 
@@ -434,26 +493,26 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 
 - (void)setLocation:(CDVInvokedUrlCommand *)command
 {
-    
+
     CDVPluginResult* pluginResult = nil;
-    
-    
+
+
     if ( self.arViewController && 4 == command.arguments.count )
     {
         float latitude = [[command.arguments objectAtIndex:0] floatValue];
         float longitude = [[command.arguments objectAtIndex:1] floatValue];
         float altitude = [[command.arguments objectAtIndex:2] floatValue];
         float accuracy = [[command.arguments objectAtIndex:3] floatValue];
-        
-        
+
+
         if (!self.isUsingInjectedLocation)
         {
             [self.arViewController.architectView setUseInjectedLocation:YES];
             self.isUsingInjectedLocation = YES;
         }
-        
+
         [self.arViewController.architectView injectLocationWithLatitude:latitude longitude:longitude altitude:altitude accuracy:accuracy];
-        
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
     else
@@ -461,7 +520,7 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
 
-    
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -470,18 +529,18 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 
 - (void)callJavascript:(CDVInvokedUrlCommand *)command
 {
-    
+
     CDVPluginResult* pluginResult = nil;
-    
-    
+
+
     if ( 1 == command.arguments.count )
     {
         NSMutableString *javascriptToCall = [[command.arguments objectAtIndex:0] mutableCopy];
-        
+
         if (self.arViewController) {
             [self.arViewController.architectView callJavaScript:javascriptToCall];
         }
-        
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
     else
@@ -489,33 +548,45 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_INVALID_ACTION messageAsString:@"No JavaScript given to evaluate"];
     }
 
-    
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 
 - (void)onUrlInvoke:(CDVInvokedUrlCommand *)command
 {
-    
+
     CDVPluginResult* pluginResult = nil;
-    
-    
+
+
     self.urlInvokedCallbackId = command.callbackId;
-    
-    
+
+
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
     [pluginResult setKeepCallbackAsBool:YES];
-    
-    
+
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-#pragma mark Heading calibration
-- (void)setHeadingCalibrationHandler:(CDVInvokedUrlCommand *)command
+#pragma mark Device sensor calibration
+- (void)setDeviceSensorsNeedCalibrationHandler:(CDVInvokedUrlCommand *)command
 {
     CDVPluginResult *pluginResult = nil;
 
-    self.headingCalibrationCallbackId = command.callbackId;
+    self.deviceSensorsNeedCalibrationCallbackId = command.callbackId;
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+    [pluginResult setKeepCallbackAsBool:YES];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)setDeviceSensorsFinishedCalibrationHandler:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult *pluginResult = nil;
+
+    self.deviceSensorsFinishedCalibrationCallbackId = command.callbackId;
 
     pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
     [pluginResult setKeepCallbackAsBool:YES];
@@ -542,7 +613,7 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 - (void)didReceivedWorldDidLoadNotification:(NSNotification *)aNotification
 {
     NSURL *worldURL = [[aNotification userInfo] objectForKey:WTArchitectNotificationURLKey];
-    
+
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[worldURL absoluteString]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.loadArchitectWorldCallbackId];
 }
@@ -558,8 +629,8 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 - (void)didReceivedInvokedURLNotification:(NSNotification *)aNotification
 {
     CDVPluginResult *pluginResult = nil;
-    
-    
+
+
     NSURL *url = [[aNotification userInfo] objectForKey:WTArchitectNotificationURLKey];
     if (url && self.urlInvokedCallbackId)
     {
@@ -570,22 +641,22 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
     {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
-    
-    
+
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.urlInvokedCallbackId];
 }
 
 - (void)didReceivedDidCatpuredScreenNotification:(NSNotification *)aNotification
 {
     CDVPluginResult *pluginResult = nil;
-    
-    
+
+
     if (self.screenshotCallbackId)
     {
         NSDictionary *context = [[aNotification userInfo] objectForKey:WTArchitectNotificationContextKey];
         WTScreenshotSaveMode mode = [[context objectForKey:kWTScreenshotSaveModeKey] integerValue];
-        
-        
+
+
         NSString *resultMessage = nil;
         if (WTScreenshotSaveMode_BundleDirectory == mode)
         {
@@ -595,41 +666,53 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
         {
             resultMessage = @"Screenshot was added to the device Photo Library";
         }
-        
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:resultMessage];
         [pluginResult setKeepCallbackAsBool:YES];
     }
-    
-    
+
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.screenshotCallbackId];
 }
 
 - (void)didReceivedCaptureScreenDidFailNotification:(NSNotification *)aNotification
 {
     CDVPluginResult *pluginResult = nil;
-    
-    
+
+
     if (self.screenshotCallbackId)
     {
         NSError *error = [[aNotification userInfo] objectForKey:WTArchitectNotificationErrorKey];
-        
+
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
         [pluginResult setKeepCallbackAsBool:YES];
     }
-    
-    
+
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.screenshotCallbackId];
 }
 
-- (void)didReceivedArchitectNeedsHeadingCalibrationNotification:(NSNotification *)aNotification
+- (void)didReceivedArchitectNeedsDeviceSensorCalibrationNotification:(NSNotification *)aNotification
 {
-    if ( self.headingCalibrationCallbackId )
+    if ( self.deviceSensorsNeedCalibrationCallbackId )
     {
         CDVPluginResult *pluginResult = nil;
 
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
 
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.headingCalibrationCallbackId];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.deviceSensorsNeedCalibrationCallbackId];
+    }
+}
+
+- (void)didReceivedArchitectFinishedDeviceSensorCalibrationNotification:(NSNotification *)aNotification
+{
+    if ( self.deviceSensorsFinishedCalibrationCallbackId )
+    {
+        CDVPluginResult *pluginResult = nil;
+
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.deviceSensorsFinishedCalibrationCallbackId];
     }
 }
 
@@ -638,10 +721,10 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
     if ( self.errorHandlerCallbackId )
     {
         CDVPluginResult *pluginResult = nil;
-        
+
         NSError *error = [[aNotification userInfo] objectForKey:WTArchitectDebugDelegateMessageKey];
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:@{@"code": @(error.code), @"message": [error localizedDescription]}];
-        
+
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.errorHandlerCallbackId];
     }
 }
@@ -661,18 +744,19 @@ NSString * const kWTWikitudePlugin_RemoteURLPrefix                  = @"http";
 - (void)addNotificationObserver
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedWorldDidLoadNotification:) name:WTArchitectDidLoadWorldNotification object:self.arViewController];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedWorldDidFailToLoadNotification:) name:WTArchitectDidFailToLoadWorldNotification object:self.arViewController];
-    
-    
+
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedInvokedURLNotification:) name:WTArchitectInvokedURLNotification object:self.arViewController];
-    
-    
+
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDidCatpuredScreenNotification:) name:WTArchitectDidCaptureScreenNotification object:self.arViewController];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedCaptureScreenDidFailNotification:) name:WTArchitectDidFailToCaptureScreenNotification object:self.arViewController];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedArchitectNeedsHeadingCalibrationNotification:) name:WTArchitectNeedsHeadingCalibrationNotification object:self.arViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedArchitectNeedsDeviceSensorCalibrationNotification:) name:WTArchitectNeedsDeviceSensorCalibration object:self.arViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedArchitectFinishedDeviceSensorCalibrationNotification:) name:WTArchitectFinishedDeviceSensorCalibration object:self.arViewController];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedArchitectDebugMessageNotification:) name:WTArchitectDebugDelegateNotification object:self.arViewController];
 }

@@ -18,7 +18,9 @@ extern NSString * const WTArchitectInvokedURLNotification;
 extern NSString * const WTArchitectDidCaptureScreenNotification;
 extern NSString * const WTArchitectDidFailToCaptureScreenNotification;
 
-extern NSString * const WTArchitectNeedsHeadingCalibrationNotification;
+extern NSString * const WTArchitectNeedsDeviceSensorCalibration;
+extern NSString * const WTArchitectFinishedDeviceSensorCalibration;
+
 
 extern NSString * const WTArchitectDebugDelegateNotification;
 
@@ -46,6 +48,7 @@ extern NSString * const WTArchitectDebugDelegateMessageKey;
 @property (nonatomic, readonly) WTArchitectView                         *architectView;
 
 @property (nonatomic, strong) WTStartupConfiguration                    *startupConfiguration;
+@property (nonatomic, strong) WTNavigation                              *currentArchitectWorldNavigation;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil motionManager:(CMMotionManager *)motionManagerOrNil;
 

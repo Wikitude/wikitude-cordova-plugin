@@ -16,7 +16,8 @@ NSString * const WTArchitectInvokedURLNotification = @"WTArchitectInvokedURLNoti
 NSString * const WTArchitectDidCaptureScreenNotification = @"WTArchitectDidCaptureScreenNotification";
 NSString * const WTArchitectDidFailToCaptureScreenNotification = @"WTArchitectDidFailToCaptureScreenNotification";
 
-NSString * const WTArchitectNeedsHeadingCalibrationNotification = @"WTArchitectNeedsHeadingCalibrationNotification";
+NSString * const WTArchitectNeedsDeviceSensorCalibration = @"WTArchitectNeedsDeviceSensorCalibration";
+NSString * const WTArchitectFinishedDeviceSensorCalibration = @"WTArchitectFinishedDeviceSensorCalibration";
 
 NSString * const WTArchitectDebugDelegateNotification = @"WTArchitectDebugDelegateNotification";
 
@@ -170,10 +171,17 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     /* Intentionally left blank */
 }
 
-- (void)architectViewNeedsHeadingCalibration:(WTArchitectView *)architectView
+- (void)architectViewNeedsDeviceSensorCalibration:(WTArchitectView *)architectView
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectNeedsHeadingCalibrationNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectNeedsDeviceSensorCalibration object:self];
+    });
+}
+
+- (void)architectViewFinishedDeviceSensorsCalibration:(WTArchitectView *)architectView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectFinishedDeviceSensorCalibration object:self];
     });
 }
 
@@ -207,6 +215,9 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
         [self.architectView start:^(WTStartupConfiguration *configuration) {
             configuration = self.startupConfiguration;
         } completion:nil];
+    }
+    if ( self.currentArchitectWorldNavigation.wasInterrupted ) {
+        [self.architectView reloadArchitectWorld];
     }
 }
 
