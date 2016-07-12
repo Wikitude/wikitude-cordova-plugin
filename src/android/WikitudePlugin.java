@@ -136,6 +136,12 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
      */
     private static final String ACTION_SET_BACK_BUTTON_CALLBACK = "setBackButtonCallback";
 
+    /**
+     * Used as key to see if a local path prefix is given in the strings.xml file or not.
+     * If the key is given, it's value will be appended before the `www` substring in the Architect world url.
+     */
+    private static final String LOCAL_PATH_PREFIX_KEY = "WikitudeCordovaPluginLocalPathPrefix";
+
 	private static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
 
 	private static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
@@ -484,7 +490,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 			int stringPrefixIndex = -1;
 			for (Field field: fields) {
-				if (field.getName() == "WikitudeCordovaPluginLocalPathPrefix") {
+				if (field.getName().equals(LOCAL_PATH_PREFIX_KEY)) {
 					stringPrefixIndex = field.getInt(null);
 				}
 			}
