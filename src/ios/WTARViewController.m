@@ -75,9 +75,6 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-    if ([self.architectView respondsToSelector:@selector(setSDKOrigin:)]) {
-        [self.architectView performSelector:@selector(setSDKOrigin:) withObject:@"phonegap"];
-    }
     if ([self.architectView respondsToSelector:@selector(setPresentingViewController:)]) {
         [self.architectView performSelector:@selector(setPresentingViewController:) withObject:self];
     }

@@ -1,8 +1,24 @@
 # Cordova Plugin Release Notes
 
-## Plugin 3 
+## Cordova Plugin 5.3.0-3.3.1
+Release Date: 13.09.2016
 
-### Cordova Plugin 5.2.0-3.3.0
+#### New
+- Includes Wikitude SDK 5.3.0: detailed changelog for <a href="http://www.wikitude.com/external/doc/documentation/latest/android/changelog.html" target="_top">Android</a> and <a href="http://www.wikitude.com/external/doc/documentation/latest/ios/changelog.html" target="_top">iOS</a>
+
+#### Fixed
+- Missing Android permission check in demo sample app
+
+
+## Cordova Plugin 5.2.0-3.3.1
+Release Date: 22.07.2016
+
+#### Fixed
+- Corrected version number in `plugin.xml` file
+- Updated way how to handle files for Cordova Dev app
+
+
+## Cordova Plugin 5.2.0-3.3.0
 Release Date: 08.07.2016
 
 #### New
@@ -10,19 +26,20 @@ Release Date: 08.07.2016
 - Android only: New `backButtonCallback` that is called when the Wikitude Plugin is closed because of a press on the back button
 - Includes Wikitude SDK 5.2.0: detailed changelog for <a href="http://www.wikitude.com/external/doc/documentation/latest/android/changelog.html" target="_top">Android</a> and <a href="http://www.wikitude.com/external/doc/documentation/latest/ios/changelog.html" target="_top">iOS</a>
 
-### Cordova Plugin 5.1.4-3.2.1
+
+## Cordova Plugin 5.1.4-3.2.1
 Release Date: 15.03.2016
 
 - Includes Wikitude SDK 5.1.4: detailed changelog for <a href="http://www.wikitude.com/developer/documentation/android" target="_top">Android</a> and <a href="http://www.wikitude.com/developer/documentation/ios" target="_top">iOS</a>
 
 
-### Cordova Plugin 5.1.3-3.2.1
+## Cordova Plugin 5.1.3-3.2.1
 Release Date: 08.03.2016
 
 - Includes Wikitude SDK 5.1.3: detailed changelog for <a href="http://www.wikitude.com/developer/documentation/android" target="_top">Android</a> and <a href="http://www.wikitude.com/developer/documentation/ios" target="_top">iOS</a>
 
 
-### Cordova Plugin 5.1.1-3.2.0
+## Cordova Plugin 5.1.1-3.2.0
 Release Date: 15.01.2016
 
 Fixed:
@@ -48,15 +65,14 @@ Fixed
 - Accept 3d models with more than one mesh skins per node
 
 
-
-### Cordova Plugin 5.0.0-3.1.0
+## Cordova Plugin 5.0.0-3.1.0
 Release Date: 06.05.15
 
 New:
 - This release includes the Wikitude SDK 5.0.0.
 
 
-### Cordova Plugin 4.1.0-3.1.0
+## Cordova Plugin 4.1.0-3.1.0
 Release Date: 06.05.15
 
 New:
@@ -64,34 +80,34 @@ New:
 - Compatibility for Cordova 5.0.0 and especially Android 4.0.0
 - Updates Setup Guide to reflect new StartupConfiguration
 
-### Cordova Plugin 4.1.0-3.0.1
+## Cordova Plugin 4.1.0-3.0.1
 Release Date: 01.04.15
 #### Fixes
 - Fixes a potential problem when camera access is denied and no error handler is set in the JS host application.
 - Fixes a problem with device supported check where 2dtracking - only experiences still would require compass to be supported
 
-### Cordova Plugin 4.1.0-3.0.0
+## Cordova Plugin 4.1.0-3.0.0
 Release Date: 09.03.15
 #### New
 - Integrates Wikitude SDK 4.1.0 for Android and iOS (see detailed release notes for <a href="http://www.wikitude.com/developer/documentation/android" target="_top">Android</a> and <a href="http://www.wikitude.com/developer/documentation/ios" target="_top">iOS</a>)
 - Updated API (see <a href="http://www.wikitude.com/external/doc/documentation/latest/phonegap/migration.html" target="_top">Migration Guide for details</a>)
 
-## Plugin 2.0 (SDK 4.0.0)
-### PhoneGap Plugin 4.0.0-2.1.0 
+
+## PhoneGap Plugin 4.0.0-2.1.0 
 Release Date: 29.07.14
 
 #### New
 - Integrates Wikitude SDK 4.0.0 for Android and iOS (see detailed release notes for <a href="http://www.wikitude.com/developer/documentation/android" target="_top">Android</a> and <a href="http://www.wikitude.com/developer/documentation/ios" target="_top">iOS</a>)
 - Compatible with PhoneGap 3.5
 
-### PhoneGap Plugin 3.3.1-2.0.1 
+## PhoneGap Plugin 3.3.1-2.0.1 
 Release Date 24.04.2014
 
 #### New
 - Wikitude SDK 3.3.1 for Android and iOS
 - `IRandGeo` mode available instead of `Both` in plugin
 
-### PhoneGap Plugin 3.3.0-2.0.0 
+## PhoneGap Plugin 3.3.0-2.0.0 
 Release Date 01.04.2014
 
 #### New

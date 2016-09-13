@@ -338,7 +338,7 @@ extern NSString * const kWTScreenshotImageKey;
 /**
  * Use this method to clear all cached data and requests.
  *
- * This method clears the cache used by the webView.
+ * This method clears the cache used by the webView, as well as the internal caches used by the SDK.
  */
 - (void)clearCache;
 

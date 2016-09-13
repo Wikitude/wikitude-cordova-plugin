@@ -47,6 +47,7 @@ import com.wikitude.architect.StartupConfiguration;
 import com.wikitude.architect.StartupConfiguration.CameraPosition;
 import com.wikitude.architect.plugin.Plugin;
 import com.wikitude.phonegap.WikitudePlugin.ArchitectViewPhoneGap.OnKeyUpDownListener;
+import com.wikitude.tools.device.features.MissingDeviceFeatures;
 
 
 
@@ -142,6 +143,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
      */
     private static final String LOCAL_PATH_PREFIX_KEY = "WikitudeCordovaPluginLocalPathPrefix";
 
+
 	private static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
 
 	private static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
@@ -236,10 +238,13 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			} catch (JSONException e) {
 			}
 			int featuresBitMap = convertArFeatures(jsonArray);
-			if ( (ArchitectView.getSupportedFeaturesForDevice( this.cordova.getActivity() ) & featuresBitMap) == featuresBitMap ) {
-				callContext.success("This device is supported" );
+
+			MissingDeviceFeatures missingDeviceFeatues = ArchitectView.isDeviceSupported( this.cordova.getActivity(), featuresBitMap );
+
+			if (missingDeviceFeatues.areFeaturesMissing()) {
+				callContext.error(missingDeviceFeatues.getMissingFeatureMessage());
 			} else {
-				callContext.error("This device is NOT supported" );
+				callContext.success("This device is supported" );
 			}
 			return true;
 		}
@@ -455,7 +460,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 			boolean cameraPermissionRequestRequired = !cordova.hasPermission(Manifest.permission.CAMERA);
 			_locationPermissionRequestRequired = !cordova.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION) && !cordova.hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
-			_locationPermissionRequired = (StartupConfiguration.Features.Geo & features) == features;
+			_locationPermissionRequired = (StartupConfiguration.Features.Geo & features) == StartupConfiguration.Features.Geo;
 
 			if(cameraPermissionRequestRequired && (_locationPermissionRequestRequired && _locationPermissionRequired)) {
 				_cameraPermissionGranted = false;

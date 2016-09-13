@@ -299,7 +299,15 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
             if (!_arViewController)
             {
                 self.arViewController = [[WTArchitectViewController alloc] initWithNibName:nil bundle:nil motionManager:nil];
-
+                
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+                if ([self.arViewController.architectView respondsToSelector:@selector(setSDKOrigin:)]) {
+                    [self.arViewController.architectView performSelector:@selector(setSDKOrigin:) withObject:@"ORIGIN_PHONEGAP"];
+                }
+#pragma clang diagnostic pop
+                
                 [self.arViewController.architectView setLicenseKey:sdkKey];
 
                 self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
