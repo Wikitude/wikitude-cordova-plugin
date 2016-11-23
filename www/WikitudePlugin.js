@@ -76,6 +76,8 @@
 	 *                               	}
 	 */
 	WikitudePlugin.prototype.loadARchitectWorld = function(successCallback, errorCallback, architectWorldPath, requiredFeatures, startupConfiguration) {
+		document.documentElement.style.background = "rgba(0, 0, 0, 0)";
+		document.documentElement.style.display = "none";
 
 		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "open", [{
 			"SDKKey": this._sdkKey,
@@ -95,6 +97,8 @@
 	 *	Use this function to stop the Wikitude SDK and to remove it from the screen.
 	 */
 	WikitudePlugin.prototype.close = function() {
+		document.documentElement.style.background = "";
+        document.documentElement.style.display = "";
 
 		document.removeEventListener("pause", this.onPause, false);
 		document.removeEventListener("resume", this.onResume, false);
@@ -107,6 +111,9 @@
 	 *	Use this function to only hide the Wikitude SDK. All location and rendering updates are still active.
 	 */
 	WikitudePlugin.prototype.hide = function() {
+		document.documentElement.style.background = "";
+        document.documentElement.style.display = "";
+		
 		cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "hide", [""]);
 	};
 
@@ -114,6 +121,9 @@
 	 *	Use this function to show the Wikitude SDK again if it was hidden before.
 	 */
 	WikitudePlugin.prototype.show = function() {
+		document.documentElement.style.background = "rgba(0, 0, 0, 0)";
+		document.documentElement.style.display = "none";
+		
 		cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "show", [""]);
 	};
 
