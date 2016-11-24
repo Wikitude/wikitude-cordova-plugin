@@ -11,6 +11,7 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.PluginResult;
+import org.apache.cordova.engine.SystemWebView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -622,6 +623,8 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			this.architectView = null;
 
 			WikitudePlugin.handleResumeInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
+			WikitudePlugin.releaseFocusInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
+
 			return true;
 		}
 		return false;
@@ -812,8 +815,8 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 
 	private static void releaseFocusInCordovaWebView(View rootView) {
-		if (rootView instanceof CordovaWebView) {
-        ((CordovaWebView)rootView).getView().clearFocus();
+		if (rootView instanceof SystemWebView) {
+			((SystemWebView) rootView).getCordovaWebView().getView().clearFocus();
 		} else if (rootView instanceof ViewGroup) {
 			final int childCount = ((ViewGroup)rootView).getChildCount();
 			for (int i=0; i< childCount; i++) {
@@ -827,8 +830,8 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 * @param rootView the root view to search recursively for a CordovaWebView
 	 */
 	private static void handleResumeInCordovaWebView(final View rootView) {
-		if (rootView instanceof CordovaWebView) {
-			((CordovaWebView)rootView).handleResume(true);
+		if (rootView instanceof SystemWebView) {
+			((SystemWebView) rootView).getCordovaWebView().handleResume(true);
 		}
 		else if (rootView instanceof ViewGroup) {
 			final int childCount = ((ViewGroup)rootView).getChildCount();

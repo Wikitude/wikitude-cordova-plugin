@@ -1,5 +1,15 @@
 # Cordova Plugin Release Notes
 
+## Cordova Plugin 5.3.1-3.3.1
+Release Date: 24.11.2016
+
+#### New
+- Includes Wikitude SDK 5.3.1: detailed changelog for <a href="http://www.wikitude.com/external/doc/documentation/latest/android/changelog.html" target="_top">Android</a> and <a href="http://www.wikitude.com/external/doc/documentation/latest/ios/changelog.html" target="_top">iOS</a>
+
+#### Fixed
+- Fixes an issue for Android where the keyboard was not showing up again after entering and returning from an ARView
+
+
 ## Cordova Plugin 5.3.0-3.3.1
 Release Date: 13.09.2016
 

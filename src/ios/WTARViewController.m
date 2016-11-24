@@ -64,6 +64,11 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
 #pragma mark - UIViewController Overriding
 
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -90,11 +95,28 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     [self.view addGestureRecognizer:swipeBackRecognizer];
 }
 
-- (BOOL)prefersStatusBarHidden
+- (void)viewWillAppear:(BOOL)animated
 {
-    return YES;
+    [super viewWillAppear:animated];
+
+    if ( self.presentingViewController && ![self.architectView isRunning] ) {
+        [self.architectView start:^(WTStartupConfiguration *configuration) {
+            configuration = self.startupConfiguration;
+        } completion:nil];
+    }
+    if ( self.currentArchitectWorldNavigation.wasInterrupted ) {
+        [self.architectView reloadArchitectWorld];
+    }
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+
+    if ( self.presentingViewController && [self.architectView isRunning] ) {
+        [self.architectView stop];
+    }
+}
 
 #pragma mark - Public Methods
 
