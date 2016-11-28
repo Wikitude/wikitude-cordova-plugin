@@ -711,6 +711,31 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 	 */
 	private void addArchitectView( final String apiKey, String filePath, int features, JSONObject startupConfiguration) throws IOException {
 		if ( this.architectView == null ) {
+			
+			final View view = webView.getView();
+
+			if (Build.VERSION.SDK_INT >= 21 || "org.xwalk.core.XWalkView".equals(view.getClass().getName())){
+				view.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+			}
+
+			if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+				view.setBackgroundColor(0);
+				try {
+					Method method = webView.getClass().getMethod("reload");
+					method.invoke(webView);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			view.setBackgroundColor(Color.TRANSPARENT);
+			if("org.xwalk.core.XWalkView".equals(view.getClass().getName())
+					|| "org.crosswalk.engine.XWalkCordovaView".equals(view.getClass().getName())) {
+				try {
+                    view.getClass().getMethod("setZOrderOnTop", boolean.class)
+							.invoke(view, true);
+				} catch(Exception e) {}
+			}
 
 			WikitudePlugin.releaseFocusInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
 
