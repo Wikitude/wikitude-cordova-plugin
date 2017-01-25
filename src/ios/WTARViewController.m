@@ -29,7 +29,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
 
 
-@interface WTArchitectViewController ()
+@interface WTArchitectViewController () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) WTArchitectView                               *architectView;
 @property (nonatomic, assign) UIInterfaceOrientationMask                    supportedInterfaceOrientationsMask;
@@ -44,6 +44,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        _startupConfiguration = [[WTArchitectStartupConfiguration alloc] init];
         
         self.architectView = [[WTArchitectView alloc] initWithFrame:[[UIScreen mainScreen] bounds] motionManager:motionManagerOrNil];
         self.architectView.delegate = self;
@@ -84,13 +85,13 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
         [self.architectView performSelector:@selector(setPresentingViewController:) withObject:self];
     }
 #pragma clang diagnostic pop
-    
-    [self.architectView setShouldRotate:YES
-                 toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-    
-    
+
+    [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+
+
     UISwipeGestureRecognizer *swipeBackRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeBack:)];
     swipeBackRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    swipeBackRecognizer.delegate = self;
     
     [self.view addGestureRecognizer:swipeBackRecognizer];
 }
@@ -101,12 +102,11 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
     if ( self.presentingViewController && ![self.architectView isRunning] ) {
         [self.architectView start:^(WTStartupConfiguration *configuration) {
-            configuration = self.startupConfiguration;
+            [WTArchitectStartupConfiguration transferArchitectStartupConfiguration:self.startupConfiguration toArchitectStartupConfiguration:configuration];
         } completion:nil];
     }
-    if ( self.currentArchitectWorldNavigation.wasInterrupted ) {
-        [self.architectView reloadArchitectWorld];
-    }
+
+    [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -152,6 +152,12 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
 
 #pragma mark - Delegation
+#pragma mark UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
 #pragma mark WTArchitectView
 
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation
@@ -232,11 +238,8 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 {
     if ( self.presentingViewController && ![self.architectView isRunning] ) {
         [self.architectView start:^(WTStartupConfiguration *configuration) {
-            configuration = self.startupConfiguration;
+            [WTArchitectStartupConfiguration transferArchitectStartupConfiguration:self.startupConfiguration toArchitectStartupConfiguration:configuration];
         } completion:nil];
-    }
-    if ( self.currentArchitectWorldNavigation.wasInterrupted ) {
-        [self.architectView reloadArchitectWorld];
     }
 }
 

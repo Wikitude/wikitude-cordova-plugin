@@ -1,5 +1,12 @@
 # Cordova Plugin Release Notes
 
+## Wikitude SDK JavaScript API 6.0.0-3.4.0
+Release Date: 25.01.2017
+
+#### New
+
+- Includes Wikitude SDK 6.0.0: detailed changelog for <a href="http://www.wikitude.com/external/doc/documentation/latest/android/changelog.html" target="_top">Android</a> and <a href="http://www.wikitude.com/external/doc/documentation/latest/ios/changelog.html" target="_top">iOS</a>
+
 ## Cordova Plugin 5.3.1-3.3.1
 Release Date: 24.11.2016
 

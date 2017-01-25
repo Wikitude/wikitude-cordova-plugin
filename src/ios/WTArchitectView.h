@@ -6,17 +6,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVCaptureDevice.h>
 #import <CoreLocation/CoreLocation.h>
 
 #import "WTWikitudeTypes.h"
 
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class CMMotionManager;
 @class WTNavigation;
 @class WTArchitectView;
-@class WTStartupConfiguration;
+@class WTArchitectStartupConfiguration;
 
 @protocol WTArchitectViewDebugDelegate;
+@class WTSDKBuildInformation;
+
+@class SFSafariViewController;
 
 
 extern NSString * const kWTScreenshotBundleDirectoryKey;
@@ -35,8 +41,17 @@ extern NSString * const kWTScreenshotImageKey;
 
 @optional
 
-/** @name ARchitect World */
+/** @name Authorization Requests */
+/**
+ * This method is called when the SDK detects an not authorized iOS SDK API usage. Based on the error message, the user can be asked to allow access to certain restricted APIs.
+ * See WTAuthorizationRequestManager for more information.
+ *
+ * @param architectView The architect view that tried to access a restriced API and failed
+ * @param error An error object containing more information which APIs are not accessible.
+ */
+- (void)architectView:(WTArchitectView *)architectView didFailToAuthorizeRestrictedAppleiOSSDKAPIs:(NSError *)error;
 
+/** @name ARchitect World */
 /**
  * This method is called when the provided architect world url finished loading. The resulting navigation object contains the original load url as well as the final resolved url.
  *
@@ -88,6 +103,19 @@ extern NSString * const kWTScreenshotImageKey;
 
 /** @name View controller presentation */
 /**
+ * This method is called every time the architect view want's to present a view controller.
+ *
+ * @param viewController The view controller that is about to be presented
+ * @param architectView The architect view that initiates this view controller presentation
+ *
+ * @return YES if the architect view is allowed to present the view controller, NO otherwise.
+ *
+ * @discussion Return NO if the ArchitectView is currently forbidden to present a view controller. The view controller presentation is not resumed at any other time.
+ */
+- (BOOL)presentViewController:(UIViewController *)viewController forArchitectView:(WTArchitectView *)architectView;
+
+
+/**
  * This method is called every time the architect view want’s to present a view controller.
  *
  * @param architectView The architect view which want's to present a view controller.
@@ -110,19 +138,83 @@ extern NSString * const kWTScreenshotImageKey;
  */
 - (void)architectView:(WTArchitectView *)architectView willPresentViewController:(UIViewController *)presentedViewController onViewController:(UIViewController *)presentingViewController;
 
+
+/**
+ * This method is called to determine if the given view controller should be presented animated or not.
+ *
+ * @param architectView The architect view which is about to present a view controller.
+ * @param viewController The view controller that is about to be presented.
+ *
+ * @return YES if the view controller should be presented animated, NO otherwise.
+ *
+ */
+- (BOOL)shouldArchitectView:(WTArchitectView *)architectView presentViewControllerAnimated:(UIViewController *)viewController;
+
+
+/**
+ * This method is called every time the architect view finished presenting a view controller.
+ *
+ * @param architectView The architect view that finished presenting a view controller.
+ * @param presentedViewController The view controller that was presented.
+ * @param presentingViewController The view controller that presented the view controller.
+ */
+- (void)architectView:(WTArchitectView *)architectView didPresentViewController:(UIViewController *)presentedViewController onViewController:(UIViewController *)presentingViewController;
+
+
+/** @name Safari view controller presentation */
+/**
+ * This method is called to determine if SFSafariViewController should be presented with enabled reader mode if available.
+ *
+ * @param architectView The architect view that is about to present the SFSafariViewController.
+ *
+ * @return YES if Safari view controller should be presented with enabled reader mode if available, NO otherwise.
+ *
+ * @discussion If this method is not implemented, SFSafariViewController will be presented with reader mode enabled = YES if available.
+ */
+- (BOOL)shouldArchitectViewPresentSafariViewControllerInReaderModeIfAvailable:(WTArchitectView *)architectView;
+
+
+/**
+ * This method is called every time SFSafariViewController is about to show UIActivityViewController after the user taps the action button.
+ *
+ * @param URL the URL of the web page.
+ * @param title the title of the web page.
+ * @param safariViewController the Safari view controller that is about to show the UIActivityViewController.
+ * 
+ * @return An array of UIActivity instances that will be appended to UIActivityViewController.
+ *
+ * @discussion The return value of this method is directly forwarded to the internal SFSafariViewControllerDelegate implementation.
+ */
+- (NSArray<UIActivity *> *)activityItemsForURL:(NSURL *)URL title:(nullable NSString *)title usedBySafariViewController:(SFSafariViewController *)safariViewController;
+
+
+/** @name Sensor calibration */
 /**
  * This method is called when the iOS SDK needs to calibrate device sensors.
  *
  * Use this method to either show a custom UI that indicates that the user should calibrate it's device or, if WTStartupConfiguration shouldUseSystemDeviceSensorCalibrationDisplay is set to YES, to prepare your application properly for the system calibration screen.
  *
+ * @param architectView The architect view that needs sensor calibration.
  */
 - (void)architectViewNeedsDeviceSensorCalibration:(WTArchitectView *)architectView;
 
 
 /**
  * This method is called once the sensor calibration is accurate enough to deliver proper device sensor values.
+ *
+ * @param architectView The architect view that finished sensor calibration.
  */
 - (void)architectViewFinishedDeviceSensorsCalibration:(WTArchitectView *)architectView;
+
+/**
+ * This method is called whenever the WTArchitectView switched to a different capture device position.
+ *
+ * @discussion This method can be helpful in case the capture device position was changed at runtime through the AR.hardware.camera.position property and the native code needs to adopt to these changes.
+ *
+ * @param architectView The architect view that changed capture device position
+ * @param activeCaptureDevicePosition the capture device position that is now active.
+ */
+- (void)architectView:(WTArchitectView *)architectView didSwitchToActiveCaptureDevicePosition:(AVCaptureDevicePosition)activeCaptureDevicePosition;
 
 @end
 
@@ -145,9 +237,15 @@ extern NSString * const kWTScreenshotImageKey;
 @property (nonatomic, weak) id<WTArchitectViewDebugDelegate>                            debugDelegate;
 
 @property (nonatomic, readonly) BOOL                                                    isRunning;
-@property (nonatomic, assign) CLLocationAccuracy                                        desiredLocationAccuracy;
-@property (nonatomic, assign) CLLocationDistance                                        desiredDistanceFilter;
 @property (nonatomic, assign) BOOL                                                      shouldWebViewRotate;
+
+@property (nonatomic, assign) BOOL                                                      shouldAuthorizeRestrictedAPIs;
+
+/**
+ * Architect Worlds can be loaded with different required features. 
+ * Features specifies which SDK functionalities are required by the World. For example the WTFeature_2DTracking does not start any GPS location related APIs and the user is not interrupted with a location access alert. As a result any geo related SDK functionalities do not work but the target image recognition is faster and the SDK does not cosume as much CPU performance than with an enabled GPS module. Choose the most suitable mode for your ARchitect World to experience the full functionality and the best performance.
+ */
+@property (nonatomic, assign) WTFeatures                                                requiredFeatures;
 
 
 /** @name Accessing Device Compatibility */
@@ -169,6 +267,13 @@ extern NSString * const kWTScreenshotImageKey;
  */
 + (NSString *)sdkVersion;
 
+/**
+ * Use this method to get information about the sdk build.
+ *
+ * @return The current available SDKBuildInformation within the SKD.
+ */
++ (WTSDKBuildInformation *)SDKBuildInformation;
+
 
 /** @name Initializing a WTArchitectView Object */
 /**
@@ -181,7 +286,7 @@ extern NSString * const kWTScreenshotImageKey;
  *
  * @discussion This is the designated initializer for this class.
  */
-- (instancetype)initWithFrame:(CGRect)frame motionManager:(CMMotionManager *)motionManagerOrNil;//NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithFrame:(CGRect)frame motionManager:(nullable CMMotionManager *)motionManagerOrNil;//NS_DESIGNATED_INITIALIZER;
 
 /**
  * Enables SDK features based on the given license key.
@@ -192,23 +297,24 @@ extern NSString * const kWTScreenshotImageKey;
  */
 - (void)setLicenseKey:(NSString *)licenseKey;
 
-/** @name Loading Architect Worlds */
 
+/** @name Loading Architect Worlds */
 /**
  * Loads the ARchitect World specified by the given URL. If an ARchitect World is already loaded all it's created objects are destroyed before the new one will be loaded.
  *
  * Architect Worlds can be either loaded from the application bundle or a remote server.
- *
- * Architect Worlds can be loaded with different required features. Features specifies which SDK functionalities are required by the World. For example the WTFeature_2DTracking does not start any GPS location related APIs and the user is not interrupted with a location access alert. As a result any geo related SDK functionalities do not work but the target image recognition is faster and the SDK does not cosume as much CPU performance than with an enabled GPS module. Choose the most suitable mode for your ARchitect World to experience the full functionality and the best performance.
- *
  * It is possible to load a different Architect World with a different augmented reality mode using the same architect view instance.
  *
  * @param architectWorldURL The URL that points to the ARchitect world.
- * @param requiredFeatures Required features who specifies in more detail which functionality is used by the ARchitect World.
  *
  * @return WTNavigation a navigation object representing the requested URL load and the finally loaded URL (They may differ because of some redirects)
  */
-- (WTNavigation *)loadArchitectWorldFromURL:(NSURL *)architectWorldURL withRequiredFeatures:(WTFeatures)requiredFeatures;
+- (WTNavigation *)loadArchitectWorldFromURL:(NSURL *)architectWorldURL;
+
+/**
+ * Deprecated. Please use -loadArchitectWorldFromURL instead and the requiredFeatures property
+ */
+- (WTNavigation *)loadArchitectWorldFromURL:(NSURL *)architectWorldURL withRequiredFeatures:(WTFeatures)requiredFeatures WT_DEPRECATED_SINCE(6.0.0, "requiredFeatures are now a property of WTArchitectView. Use -loadArchitectWorldFromURL: instead.");
 
 /**
  * Reloads the Architect World URL that was passed at last to the `-loadArchitectWorldFromURL:withRequiredFeatures` method.
@@ -217,9 +323,8 @@ extern NSString * const kWTScreenshotImageKey;
  */
 - (void)reloadArchitectWorld;
 
+
 /** @name Managing the WTArchitectView updates */
-
-
 /**
  * Starts activity of the ARchitect view (starts UI updates of background camera, AR objects etc).
  *
@@ -230,7 +335,7 @@ extern NSString * const kWTScreenshotImageKey;
  * @param startupHandler A block which contains a configuration object as parameter. The WTStartupConfiguration parameter can be used to specify the startup behaviour in more detail.
  * @param completionHandler A block which provices information if the SDK could be started or not.
  */
-- (void)start:(void (^)(WTStartupConfiguration *configuration))startupHandler completion:(void (^)(BOOL isRunning, NSError *error))completionHandler;
+- (void)start:(void (^)(WTArchitectStartupConfiguration *configuration))startupHandler completion:(nullable void (^)(BOOL isRunning, NSError *error))completionHandler;
 
 /**
  * Stops all activity of the ARchitect view (suspends UI updates of background camera, AR objects etc).
@@ -259,7 +364,6 @@ extern NSString * const kWTScreenshotImageKey;
  */
 - (void)setShouldRotate:(BOOL)shouldAutoRotate toInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
 
-
 /**
  * Retrieves the current auto rotate behavior.
  *
@@ -277,7 +381,7 @@ extern NSString * const kWTScreenshotImageKey;
  * @param options Defines more option for a specific SaveMode.
  * @param context A NSDictionary containing information about the CaptureMode, SaveMode and SaveMode specific objects. See Protocol reference for more information.
  */
-- (void)captureScreenWithMode:(WTScreenshotCaptureMode)captureMode usingSaveMode:(WTScreenshotSaveMode)saveMode saveOptions:(WTScreenshotSaveOptions)options context:(NSDictionary *)context;
+- (void)captureScreenWithMode:(WTScreenshotCaptureMode)captureMode usingSaveMode:(WTScreenshotSaveMode)saveMode saveOptions:(WTScreenshotSaveOptions)options context:(nullable NSDictionary *)context;
 
 
 /** @name Injecting Locations */
@@ -291,7 +395,6 @@ extern NSString * const kWTScreenshotImageKey;
  */
 - (void)injectLocationWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude altitude:(CLLocationDistance)altitude accuracy:(CLLocationAccuracy)accuracy;
 
-
 /**
  * Injects the supplied location information. To use the injected location -setUseInjectedLocation:YES has to be called.
  *
@@ -301,14 +404,12 @@ extern NSString * const kWTScreenshotImageKey;
  */
 - (void)injectLocationWithLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude accuracy:(CLLocationAccuracy)accuracy;
 
-
 /**
  * If true is supplied the injected location will be used. If false is supplied the default location provider will be used.
  *
  * @param useInjectedLocation The location simulation status
  */
 - (void)setUseInjectedLocation:(BOOL)useInjectedLocation;
-
 
 /**
  * True if an injected location is currently used. false if default location provider is used.
@@ -326,14 +427,12 @@ extern NSString * const kWTScreenshotImageKey;
  */
 - (void)setCullingDistance:(float)cullingDistance;
 
-
 /**
  * Retrieves the current culling distance in meters.
  *
  * @return The current culling distance, used by the SDK.
  */
 - (float)cullingDistance;
-
 
 /**
  * Use this method to clear all cached data and requests.
@@ -349,6 +448,8 @@ extern NSString * const kWTScreenshotImageKey;
  *
  * @return  The CMMotionManager instance, provided in the method "InitializeWithKey:motionManager", otherwise nil;
  */
-- (CMMotionManager*)motionManager;
+- (CMMotionManager *)motionManager;
 
 @end
+
+NS_ASSUME_NONNULL_END

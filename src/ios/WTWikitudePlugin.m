@@ -8,7 +8,8 @@
 #import "WTWikitudePlugin.h"
 
 #import "WTARViewController.h"
-#import "WTArchitectView.h"
+#import "WikitudeSDK.h"
+#import "WTSDKBuildInformation.h"
 
 //------------ Start-up Configuration - begin -------
 //
@@ -24,20 +25,28 @@ NSString * const kWTWikitudePlugin_ArgumentIOSConfiguration         = @"iOS";
 
 NSString * const kWTWikitudePlugin_ArgumentRequiredFeatures         = @"RequiredFeatures";
 NSString * const kWTWikitudePlugin_requiredFeature_Geo              = @"geo";
-NSString * const kWTWikitudePlugin_requiredFeature_2DTracking       = @"2d_tracking";
+NSString * const kWTWikitudePlugin_requiredFeature_ImageTracking    = @"image_tracking";
+NSString * const kWTWikitudePlugin_requiredFeature_InstantTracking  = @"instant_tracking";
+NSString * const kWTWikitudePlugin_requiredFeature_PhotoLibraryScreenshotImport  = @"photo_library_screenshot_import";
+NSString * const kWTWikitudePlugin_requiredFeature_2DTracking       = @"2d_tracking"; /* deprecated in Wikitude SDK version 6.0.0 */
+
+NSString * const kWTWikitudePlugin_ArgumentCaptureDeviceResolution  = @"camera_resolution";
+NSString * const kWTWikitudePlugin_captureDeviceResolution_SD_640x480 = @"sd_640x480";
+NSString * const kWTWikitudePlugin_captureDeviceResolution_HD_1280x720 = @"hd_1280x720";
+NSString * const kWTWikitudePlugin_captureDeviceResolution_FULL_HD_1920x1080 = @"full_hd_1920x1080";
+NSString * const kWTWikitudePlugin_captureDeviceResolution_AUTO     = @"auto";
 
 NSString * const kWTWikitudePlugin_ArgumentCameraPosition           = @"camera_position";
 NSString * const kWTWikitudePlugin_cameraPosition_Undefined         = @"undefined";
 NSString * const kWTWikitudePlugin_cameraPosition_Front             = @"front";
 NSString * const kWTWikitudePlugin_cameraPosition_Back              = @"back";
 
-NSString * const kWTWikitudePlugin_ArgumentCaptureSessionPreset     = @"captureSessionPreset";
-NSString * const kWTWikitudePlugin_captureSessionPreset_Prefix      = @"AVCaptureSessionPreset";
-
 NSString * const kWTWikitudePlugin_ArgumentCameraFocusMode          = @"cameraFocusMode";
 NSString * const kWTWikitudePlugin_cameraFocusMode_Locked           = @"locked";
 NSString * const kWTWikitudePlugin_cameraFocusMode_AutoFocus        = @"autoFocus";
 NSString * const kWTWikitudePlugin_cameraFocusMode_ContinuousAutoFocus = @"continuousAutoFocus";
+
+NSString * const kWTWikitudePlugin_ArgumentCaptureDeviceFocusDistance = @"camera_manual_focus_distance";
 
 NSString * const kWTWikitudePlugin_ArgumentCaptureDeviceFocusRangeRestriction = @"cameraFocusRangeRestriction";
 NSString * const kWTWikitudePlugin_cameraFocusRange_None            = @"none";
@@ -59,12 +68,14 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 
 @interface WTWikitudePlugin () <WTArchitectViewDelegate, WTArchitectViewControllerDelegate>
 
+@property (nonatomic, strong) WTAuthorizationRequestManager         *authorizationRequestManager;
 @property (nonatomic, strong) WTArchitectViewController             *arViewController;
 
 @property (nonatomic, strong) NSString                              *loadArchitectWorldCallbackId;
 @property (nonatomic, strong) NSString                              *urlInvokedCallbackId;
 @property (nonatomic, strong) NSString                              *screenshotCallbackId;
 @property (nonatomic, strong) NSString                              *errorHandlerCallbackId;
+@property (nonatomic, strong) NSString                              *accessRequestCallbackId;
 @property (nonatomic, strong) NSString                              *deviceSensorsNeedCalibrationCallbackId;
 @property (nonatomic, strong) NSString                              *deviceSensorsFinishedCalibrationCallbackId;
 
@@ -83,6 +94,27 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
         NSDictionary *featureConfiguration = [arguments objectForKey:kWTWikitudePlugin_ArgumentFeatureConfiguration];
         if(featureConfiguration)
         {
+            NSString* captureDeviceResolution = [featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentCaptureDeviceResolution];
+            if (captureDeviceResolution)
+            {
+                if ( [kWTWikitudePlugin_captureDeviceResolution_SD_640x480 isEqualToString:captureDeviceResolution] )
+                {
+                    configuration.captureDeviceResolution = WTCaptureDeviceResolution_SD_640x480;
+                }
+                else if ( [kWTWikitudePlugin_captureDeviceResolution_HD_1280x720 isEqualToString:captureDeviceResolution] )
+                {
+                    configuration.captureDeviceResolution = WTCaptureDeviceResolution_HD_1280x720;
+                }
+                else if ( [kWTWikitudePlugin_captureDeviceResolution_FULL_HD_1920x1080 isEqualToString:captureDeviceResolution] )
+                {
+                    configuration.captureDeviceResolution = WTCaptureDeviceResolution_FULL_HD_1920x1080;
+                }
+                else if ( [kWTWikitudePlugin_captureDeviceResolution_AUTO isEqualToString:captureDeviceResolution] )
+                {
+                    configuration.captureDeviceResolution = WTCaptureDeviceResolution_AUTO;
+                }
+            }
+
             NSString *cameraPosition = [featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentCameraPosition];
             if(cameraPosition)
             {
@@ -100,7 +132,6 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
                 }
             }
 
-            /** Disabled
             NSString *cameraFocusMode = [[featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentCameraFocusMode] stringValue];
             if(cameraFocusMode)
             {
@@ -117,8 +148,13 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
                     configuration.captureDeviceFocusMode = AVCaptureFocusModeContinuousAutoFocus;
                 }
             }
-            */
-            
+
+            NSNumber *captureDeviceFocusDistance = [featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentCaptureDeviceFocusDistance];
+            if (captureDeviceFocusDistance)
+            {
+                configuration.captureDeviceFocusDistance = captureDeviceFocusDistance.floatValue;
+            }
+
             NSDictionary* iOSConfiguration = [featureConfiguration objectForKey:kWTWikitudePlugin_ArgumentIOSConfiguration];
             if(iOSConfiguration)
             {
@@ -171,9 +207,17 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
             {
                 requiredFeatures |= WTFeature_Geo;
             }
-            else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_2DTracking] )
+            else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_ImageTracking] || [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_2DTracking] )
             {
-                requiredFeatures |= WTFeature_2DTracking;
+                requiredFeatures |= WTFeature_ImageTracking;
+            }
+            else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_InstantTracking] )
+            {
+                requiredFeatures |= WTFeature_InstantTracking;
+            }
+            else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_PhotoLibraryScreenshotImport] )
+            {
+                requiredFeatures |= WTFeature_PhotoLibraryScreenshotImport;
             }
         }
     }
@@ -271,10 +315,85 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
             }
         }
     }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)requestAccess:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult *pluginResult = nil;
+
+    if ( [command.arguments count] >= 1 )
+    {
+        id componentsArray = [command.arguments objectAtIndex:0];
+        if ( [componentsArray isKindOfClass:[NSArray class]] )
+        {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+            [pluginResult setKeepCallbackAsBool:YES];
+            self.accessRequestCallbackId = command.callbackId;
+
+            if ( !_authorizationRequestManager )
+            {
+                _authorizationRequestManager = [[WTAuthorizationRequestManager alloc] init];
+            }
+
+            WTFeatures requiredFeatures = [WTWikitudePlugin requiredFeaturesFromArray:(NSArray *)componentsArray];
+            NSOrderedSet<NSNumber *> *restrictedAppleiOSSDKAPIs = [WTAuthorizationRequestManager restrictedAppleiOSSDKAPIAuthorizationsForRequiredFeatures:requiredFeatures];
+            [_authorizationRequestManager requestRestrictedAppleiOSSDKAPIAuthorization:restrictedAppleiOSSDKAPIs completion:^(BOOL success, NSError * _Nonnull error) {
+                if ( success )
+                {
+                    CDVPluginResult *delayedResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+                    [self.commandDelegate sendPluginResult:delayedResult callbackId:self.accessRequestCallbackId];
+                }
+                else
+                {
+                    /* Collect information to show an alert and log a message to the console that explains what is missing and how it can be fixed */
+                    NSDictionary *unauthorizedAPIInfo = [[error userInfo] objectForKey:kWTUnauthorizedAppleiOSSDKAPIsKey];
+
+                    NSMutableString *detailedAuthorizationErrorLogMessage = [[NSMutableString alloc] initWithFormat:@"The following authorization states do not meet the requirements:"];
+                    NSMutableString *missingAuthorizations = [[NSMutableString alloc] initWithFormat:@"In order to use the Wikitude SDK, please grant access to the following:"];
+                    for (NSString *unauthorizedAPIKey in [unauthorizedAPIInfo allKeys])
+                    {
+                        [missingAuthorizations appendFormat:@"\n* %@", [WTAuthorizationRequestManager humanReadableDescriptionForUnauthorizedAppleiOSSDKAPI:unauthorizedAPIKey]];
+
+                        [detailedAuthorizationErrorLogMessage appendFormat:@"\n%@ = %@", unauthorizedAPIKey, [WTAuthorizationRequestManager stringFromAuthorizationStatus:[[unauthorizedAPIInfo objectForKey:unauthorizedAPIKey] integerValue] forUnauthorizedAppleiOSSDKAPI:unauthorizedAPIKey]];
+                    }
+
+                    NSDictionary *cordovaAPIErrorInfo = @{@"userDescription": missingAuthorizations, @"developerDescription": detailedAuthorizationErrorLogMessage};
+
+                    CDVPluginResult *delayedResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:cordovaAPIErrorInfo];
+                    [self.commandDelegate sendPluginResult:delayedResult callbackId:self.accessRequestCallbackId];
+                }
+            }];
+        }
+    }
 
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)openAppSettings:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    
+    NSURL *appSettingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+    [[UIApplication sharedApplication] openURL:appSettingsURL];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+#pragma mark - SDK Informations
+
+- (void)getSDKBuildInformation:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[[WTArchitectView SDKBuildInformation] toJSONString]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)getSDKVersion:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[WTArchitectView sdkVersion]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
 
 #pragma mark Plugin Lifecycle
 
@@ -313,7 +432,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
                 self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 self.arViewController.architectDelegate = self;
             }
-
+            self.arViewController.architectView.requiredFeatures = requiredFeatures;
             [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
 
             [self addNotificationObserver];
@@ -330,7 +449,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
                 if ( optionalPathPrefix ) {
                     architectWorldURL = [WTWikitudePlugin addPathPrefix:optionalPathPrefix toArchitectWorldURL:architectWorldURL];
                 }
-                self.arViewController.currentArchitectWorldNavigation = [self.arViewController.architectView loadArchitectWorldFromURL:architectWorldURL withRequiredFeatures:requiredFeatures];
+                self.arViewController.currentArchitectWorldNavigation = [self.arViewController.architectView loadArchitectWorldFromURL:architectWorldURL];
 
                 self.loadArchitectWorldCallbackId = command.callbackId;
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
@@ -344,9 +463,9 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
             }
 
             __weak WTWikitudePlugin *weakSelf = self;
-            [self.arViewController.architectView start:^(WTStartupConfiguration *configuration) {
+            [self.arViewController.architectView start:^(WTArchitectStartupConfiguration *configuration) {
                 [WTWikitudePlugin readStartupConfigurationFrom:arguments andApplyTo:configuration];
-                weakSelf.arViewController.startupConfiguration = configuration;
+                [WTArchitectStartupConfiguration transferArchitectStartupConfiguration:configuration toArchitectStartupConfiguration:weakSelf.arViewController.startupConfiguration];
             } completion:nil];
         }
     }

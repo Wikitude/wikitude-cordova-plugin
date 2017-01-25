@@ -1,6 +1,6 @@
 
 	/**
-	 * Release date: 11.03.16
+	 * Release date: January 25, 2017
 	 */
 
 	var WikitudePlugin = function() {
@@ -9,16 +9,17 @@
 		 *  This is the SDK Key, provided to you after you purchased the Wikitude SDK from http =//www.wikitude.com/store/.
 		 *  You can obtain a free trial key at http =//www.wikitude.com/developer/licenses .
 		 */
-		this._sdkKey = "ENTER-YOUR-KEY-HERE";
 
+		this._sdkKey = "ENTER-YOUR-KEY-HERE";
 		/**
 		 *  The Wikitude SDK can run in different modes.
 		 *      * Geo means, that objects are placed at latitude/longitude positions.
 		 *      * 2DTracking means that only image recognition is used in the ARchitect World.
 		 *  When your ARchitect World uses both, geo and ir, than set this value to "IrAndGeo". Otherwise, if the ARchitectWorld only needs image recognition, placing "IR" will require less features from the device and therefore, support a wider range of devices. Keep in mind that image recognition requires a dual core cpu to work satisfyingly.
 		 */
-        this.FeatureGeo         = "geo";
-        this.Feature2DTracking  = "2d_tracking";
+        this.FeatureGeo             = "geo";
+        this.FeatureImageTracking   = "image_tracking";
+        this.Feature2DTracking      = "2d_tracking";
 
         /**
          *  Start-up configuration: camera position (front or back).
@@ -57,6 +58,17 @@
 		// Check if the current device is capable of running Architect Worlds
 		cordova.exec(successCallback, errorCallback, "WikitudePlugin", "isDeviceSupported", [requiredFeatures]);
 	};
+
+    /**
+     * Use this function to request access to restricted APIs like the camera, gps or photo library.
+     *
+     * @param {function} successCallback A callback which is called if all required permissions are granted.
+     * @param {function} errorCallback A callback which is called if one or more permissions are not granted.
+     * @param {function} requiredFeatures An array of strings describing which features of the Wikitude SDK are used so that the plugin can request access to those restricted APIs.
+     */
+    WikitudePlugin.prototype.requestAccess = function(successCallback, errorCallback, requiredFeatures) {
+        cordova.exec(successCallback, errorCallback, "WikitudePlugin", "requestAccess", [requiredFeatures]);
+    };
 
 	/**
 	 *	Use this function to load an ARchitect World.
@@ -215,6 +227,31 @@
 	    } else {
 	        alert('setBackButtonCallback is only available on Android and not on' + cordova.platformId);
 	    }
+	}
+
+	/**
+	 *  Use this function to get information about the sdk build.
+	 *
+	 * @param {function} successCallback A callback which is called when the build information could be laoded.
+	 */
+	WikitudePlugin.prototype.getSDKBuildInformation = function(successCallback) {
+	    cordova.exec(successCallback, this.onWikitudeError, "WikitudePlugin", "getSDKBuildInformation", [""])
+	}
+
+	/**
+	 *  Use this function to get the version of the sdk.
+	 *
+	 * @param {function} successCallback A callback which is called when the sdk version could be loaded.
+	 */
+	WikitudePlugin.prototype.getSDKVersion = function(successCallback) {
+	    cordova.exec(successCallback, this.onWikitudeError, "WikitudePlugin", "getSDKVersion", [""])
+	}
+
+    /**
+     * Use this function to open the application specific system setting view.
+     */
+	WikitudePlugin.prototype.openAppSettings = function() {
+    	cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "openAppSettings", []);
 	}
 
 	/*

@@ -18,24 +18,34 @@
  * By specifying the required features when loading an ARchitect World, the best performance can be achieved.
  */
 typedef NS_OPTIONS(NSUInteger, WTFeatures) {
-    
+
     /**
-     * Specifies that 2d tracking is used in an ARchitect World
-     * This feature requires access to the camera. When using the 'NSCameraUsageDescription' key in the *-Info.plist, a custom text can be displayed when the camera access alert is shown.
+     * Specifies that image recognition and tracking is used in an ARchitect World
+     * This feature requires access to the camera.
      */
-    WTFeature_2DTracking = 1 << 0,
-    
+    WTFeature_ImageTracking = 1 << 0,
+
     /**
-     * Specifies that 3d tracking is used in an ARchitect World
-     * This feature requires access to the camera and the gyroscope. When using the 'NSCameraUsageDescription' key in the *-Info.plist, a custom text can be displayed when the camera access alert is shown.
+     * Specifies that instant tracking is used in an ARchitect World
+     * This feature requires access to the camera.
      */
-    WTFeature_3DTracking = 1 << 1,
+    WTFeature_InstantTracking = 1 << 2,
+
+    /** Deprecated, please use WTFeature_ImageTracking instead. */
+    WTFeature_2DTracking WT_DEPRECATED_SINCE(6.0.0, "Use WTFeature_ImageTracking instead.") = WTFeature_ImageTracking,
     
+    WTFeature_3DTracking = 1 << 5,
+
     /**
      * Specifies that geo based augmented reality is used where objects are placed on certain locations by providing latitude/longitude values.
-     * This feature requires access to the camera and the user location so please make sure to specify a value for the 'NSLocationWhenInUseUsageDescription' key in your *-Info.plist when using the SDK on iOS 8 or later.
+     * This feature requires access to the camera and the user location.
      */
-    WTFeature_Geo = 1 << 2
+    WTFeature_Geo = 1 << 6,
+
+    /**
+     * Specifies that screenshots taken from the WTArchitectView are imported into the Photos.app Camera Roll album.
+     */
+    WTFeature_PhotoLibraryScreenshotImport = 1 << 7
 };
 
 
@@ -91,5 +101,49 @@ typedef NS_OPTIONS(NSUInteger, WTScreenshotSaveOptions){
     WTScreenshotSaveOption_None                         = 0
 };
 
+
+/**
+ *
+ * WTCaptureDeviceResolution can be used to define the desired capture device resolution.
+ *
+ */
+typedef NS_ENUM(NSUInteger, WTCaptureDeviceResolution){
+    
+    /** The captureSessionPreset will be set to AVCaptureSessionPreset640x480. */
+    WTCaptureDeviceResolution_SD_640x480            = 1,
+    
+    /** The captureSessionPreset will be set to AVCaptureSessionPreset1280x720. */
+    WTCaptureDeviceResolution_HD_1280x720           = 2,
+    
+    /** The captureSessionPreset will be set to AVCaptureSessionPreset1920x1080. */
+    WTCaptureDeviceResolution_FULL_HD_1920x1080     = 3,
+    
+    /** The captureSessionPreset will be set to AVCaptureSessionPreset640x480 on 32-bit devices and to AVCaptureSessionPreset1920x1080 on 64-bit devices. */
+    WTCaptureDeviceResolution_AUTO                  = 4
+};
+
+/**
+ * 
+ * WTRestrictedAppleiOSSDKAPI represents Apple APIs that need to be authorized by the end user in order to access them.
+ *
+ * These constants represent APIs that are potentially used by the Wikitude SDK, depending on the features that are used.
+ *
+ */
+typedef NS_ENUM(NSUInteger, WTRestrictedAppleiOSSDKAPI) {
+    /** 
+     * Represents access to the device camera.
+     * Please note that the 'NSCameraUsageDescription' key needs to be defined in the applications *-Info.plist.
+     */
+    WTRestrictedAppleiOSSDKAPI_Camera = 0,
+
+    /** 
+     * Represents access to the current GPS position of the device 
+     * Please note that the 'NSLocationWhenInUseUsageDescription' key needs to be defined in the applications *-Info.plist.
+     */
+    WTRestrictedAppleiOSSDKAPI_Location,
+
+    /** Represents access to the Camera Roll album in Photos.app */
+    WTRestrictedAppleiOSSDKAPI_PhotoLibrary
+};
 
 #endif

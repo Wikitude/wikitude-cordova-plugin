@@ -47,7 +47,7 @@ extern NSString * const WTArchitectDebugDelegateMessageKey;
 @property (nonatomic, weak) id<WTArchitectViewControllerDelegate>       architectDelegate;
 @property (nonatomic, readonly) WTArchitectView                         *architectView;
 
-@property (nonatomic, strong) WTStartupConfiguration                    *startupConfiguration;
+@property (nonatomic, strong) WTArchitectStartupConfiguration           *startupConfiguration;
 @property (nonatomic, strong) WTNavigation                              *currentArchitectWorldNavigation;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil motionManager:(CMMotionManager *)motionManagerOrNil;
