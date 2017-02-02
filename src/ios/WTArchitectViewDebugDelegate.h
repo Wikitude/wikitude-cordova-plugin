@@ -37,11 +37,3 @@
 - (void)architectView:(WTArchitectView *)architectView didEncounterInternalError:(NSError *)error;
 
 @end
-
-
-/**
- * Internal SDK warnings are represented by this class.
- */
-@interface WTWarning : NSObject
-
-@end

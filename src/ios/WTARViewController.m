@@ -16,6 +16,9 @@ NSString * const WTArchitectInvokedURLNotification = @"WTArchitectInvokedURLNoti
 NSString * const WTArchitectDidCaptureScreenNotification = @"WTArchitectDidCaptureScreenNotification";
 NSString * const WTArchitectDidFailToCaptureScreenNotification = @"WTArchitectDidFailToCaptureScreenNotification";
 
+NSString * const WTArchitectNeedsDeviceSensorCalibration = @"WTArchitectNeedsDeviceSensorCalibration";
+NSString * const WTArchitectFinishedDeviceSensorCalibration = @"WTArchitectFinishedDeviceSensorCalibration";
+
 NSString * const WTArchitectDebugDelegateNotification = @"WTArchitectDebugDelegateNotification";
 
 NSString * const WTArchitectNotificationURLKey = @"URL";
@@ -26,7 +29,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
 
 
-@interface WTArchitectViewController ()
+@interface WTArchitectViewController () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) WTArchitectView                               *architectView;
 @property (nonatomic, assign) UIInterfaceOrientationMask                    supportedInterfaceOrientationsMask;
@@ -41,6 +44,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        _startupConfiguration = [[WTArchitectStartupConfiguration alloc] init];
         
         self.architectView = [[WTArchitectView alloc] initWithFrame:[[UIScreen mainScreen] bounds] motionManager:motionManagerOrNil];
         self.architectView.delegate = self;
@@ -61,6 +65,11 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
 #pragma mark - UIViewController Overriding
 
+- (BOOL)prefersStatusBarHidden
+{
+    return YES;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -72,29 +81,42 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-    if ([self.architectView respondsToSelector:@selector(setSDKOrigin:)]) {
-        [self.architectView performSelector:@selector(setSDKOrigin:) withObject:@"phonegap"];
-    }
     if ([self.architectView respondsToSelector:@selector(setPresentingViewController:)]) {
         [self.architectView performSelector:@selector(setPresentingViewController:) withObject:self];
     }
 #pragma clang diagnostic pop
-    
-    [self.architectView setShouldRotate:YES
-                 toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-    
-    
+
+    [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+
+
     UISwipeGestureRecognizer *swipeBackRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeBack:)];
     swipeBackRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    swipeBackRecognizer.delegate = self;
     
     [self.view addGestureRecognizer:swipeBackRecognizer];
 }
 
-- (BOOL)prefersStatusBarHidden
+- (void)viewWillAppear:(BOOL)animated
 {
-    return YES;
+    [super viewWillAppear:animated];
+
+    if ( self.presentingViewController && ![self.architectView isRunning] ) {
+        [self.architectView start:^(WTStartupConfiguration *configuration) {
+            [WTArchitectStartupConfiguration transferArchitectStartupConfiguration:self.startupConfiguration toArchitectStartupConfiguration:configuration];
+        } completion:nil];
+    }
+
+    [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+
+    if ( self.presentingViewController && [self.architectView isRunning] ) {
+        [self.architectView stop];
+    }
+}
 
 #pragma mark - Public Methods
 
@@ -109,7 +131,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     return [self.presentingViewController shouldAutorotate];
 }
 
-- (NSUInteger)supportedInterfaceOrientations
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
     return [self.presentingViewController supportedInterfaceOrientations];
 }
@@ -130,14 +152,20 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
 
 #pragma mark - Delegation
-#pragma mark WTArchitectView
-
-- (void)architectView:(WTArchitectView *)architectView didFinishLoad:(NSURL *)url
+#pragma mark UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDidLoadWorldNotification object:self userInfo:@{WTArchitectNotificationURLKey: url}];
+    return YES;
 }
 
-- (void)architectView:(WTArchitectView *)architectView didFailLoadWithError:(NSError *)error
+#pragma mark WTArchitectView
+
+- (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDidLoadWorldNotification object:self userInfo:@{WTArchitectNotificationURLKey: navigation.finalURL}];
+}
+
+- (void)architectView:(WTArchitectView *)architectView didFailToLoadArchitectWorldNavigation:(WTNavigation *)navigation withError:(NSError *)error
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDidFailToLoadWorldNotification object:self userInfo:@{WTArchitectNotificationErrorKey: error}];
 }
@@ -168,6 +196,20 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     /* Intentionally left blank */
 }
 
+- (void)architectViewNeedsDeviceSensorCalibration:(WTArchitectView *)architectView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectNeedsDeviceSensorCalibration object:self];
+    });
+}
+
+- (void)architectViewFinishedDeviceSensorsCalibration:(WTArchitectView *)architectView
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectFinishedDeviceSensorCalibration object:self];
+    });
+}
+
 #pragma mark WTArchitectViewDebugDelegate
 - (void)architectView:(WTArchitectView *)architectView didEncounterInternalWarning:(WTWarning *)warning
 {
@@ -196,7 +238,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 {
     if ( self.presentingViewController && ![self.architectView isRunning] ) {
         [self.architectView start:^(WTStartupConfiguration *configuration) {
-            configuration = self.startupConfiguration;
+            [WTArchitectStartupConfiguration transferArchitectStartupConfiguration:self.startupConfiguration toArchitectStartupConfiguration:configuration];
         } completion:nil];
     }
 }

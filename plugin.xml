@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.wikitude.phonegap.WikitudePlugin"
-    version="4.1.0">
+    version="6.0.0">
 
     <name>Augmented Reality - Wikitude SDK Plugin</name>
     
@@ -15,7 +15,7 @@
 
     <repo>https://github.com/Wikitude/wikitude-phonegap.git</repo>
 
-    <license>(c) 2015 Wikitude GmbH - see License.md for details of the license</license>
+    <license>(c) 2016 Wikitude GmbH - see License.md for details of the license</license>
     
     
     <engines>
@@ -30,10 +30,11 @@
     <!-- android -->
     <platform name="android">
 
-
         <!-- declare implementation of WikitudePlugin -->
         <source-file src="src/android/WikitudePlugin.java" target-dir="src/com/wikitude/phonegap" />
 
+        <!-- copy build extras, necessary for wikitude.aar -->
+        <source-file src="src/android/libs/build-extras.gradle" target-dir="." />
 
         <!-- add permissions and requirements -->
         <config-file target="AndroidManifest.xml" parent="/manifest">
@@ -52,8 +53,7 @@
             <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
             <uses-feature android:name="android.hardware.sensor.compass" android:required="true" />
         </config-file>
-
-
+        
         <!-- adds MediaPlayerActivity, required for startVideo feature-->
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity android:name="com.wikitude.tools.activities.MediaPlayerActivity" android:screenOrientation="landscape">
@@ -66,7 +66,7 @@
 
 
         <!-- copy wikitude sdk -->
-        <source-file src="src/android/libs/wikitudesdk.jar" target-dir="libs/" />
+        <source-file src="src/android/libs/wikitudesdk.aar" target-dir="libs/" />
 
 
         <!-- adds WikitudePlugin in project's config.xml -->
@@ -105,10 +105,14 @@
         <header-file src="src/ios/WTArchitectView.h" />
         <header-file src="src/ios/WTNavigation.h" />
         <header-file src="src/ios/WTStartupConfiguration.h" />
+        <header-file src="src/ios/WTArchitectStartupConfiguration.h" />
+        <header-file src="src/ios/WTSDKBuildInformation.h" />
         <header-file src="src/ios/WTArchitectViewDebugDelegate.h" />
-
+        <header-file src="src/ios/WTAuthorizationRequestManager.h" />
+        <header-file src="src/ios/WTWikitudeTypes.h" />
 
         <source-file src="src/ios/libWikitudeSDK.a" framework="true" />
+        <source-file src="src/ios/libWikitudeSDK-simulator.a" framework="true" />
 
 
         <!-- Additional WikitudePlugin libraries and frameworks -->
@@ -125,7 +129,9 @@
         <framework src="Foundation.framework" />
         <framework src="MediaPlayer.framework" />
         <framework src="OpenGLES.framework" />
+        <framework src="Photos.framework" />
         <framework src="QuartzCore.framework" />
+        <framework src="SafariServices.framework" />
         <framework src="Security.framework" />
         <framework src="SystemConfiguration.framework" />
         <framework src="UIKit.framework" />  
@@ -138,7 +144,6 @@
             <feature name="WikitudePlugin">
                 <param name="ios-package" value="WTWikitudePlugin"/>
             </feature>
-            <access origin="*" />
         </config-file>
         
 
