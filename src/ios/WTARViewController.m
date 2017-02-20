@@ -101,7 +101,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     [super viewWillAppear:animated];
 
     if ( self.presentingViewController && ![self.architectView isRunning] ) {
-        [self.architectView start:^(WTStartupConfiguration *configuration) {
+        [self.architectView start:^(WTArchitectStartupConfiguration *configuration) {
             [WTArchitectStartupConfiguration transferArchitectStartupConfiguration:self.startupConfiguration toArchitectStartupConfiguration:configuration];
         } completion:nil];
     }
@@ -237,7 +237,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 - (void)didReceivedDeviceDidBecomeActiveNotification:(NSNotification *)aNotification
 {
     if ( self.presentingViewController && ![self.architectView isRunning] ) {
-        [self.architectView start:^(WTStartupConfiguration *configuration) {
+        [self.architectView start:^(WTArchitectStartupConfiguration *configuration) {
             [WTArchitectStartupConfiguration transferArchitectStartupConfiguration:self.startupConfiguration toArchitectStartupConfiguration:configuration];
         } completion:nil];
     }
