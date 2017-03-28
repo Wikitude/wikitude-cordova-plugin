@@ -1,5 +1,16 @@
 # Cordova Plugin Release Notes
 
+## Wikitude SDK JavaScript API 6.1.0-3.4.2
+Release Date: 28.03.2017
+
+#### New
+- Includes Wikitude SDK 6.1.0: detailed changelog for <a href="http://www.wikitude.com/external/doc/documentation/latest/android/changelog.html" target="_top">Android</a> and <a href="http://www.wikitude.com/external/doc/documentation/latest/ios/changelog.html" target="_top">iOS</a>
+- New parameter in the Wikitude Cordova example app creation script to choose between the `cordova` or `phonegap` command set
+
+#### Fixed
+- Fixes an iOS plugin lifecycle issue that prevented the SDK to resume when the `hide()` function was used
+
+
 ## Wikitude SDK JavaScript API 6.0.1-3.4.1
 Release Date: 15.02.2017
 

@@ -73,6 +73,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 
 @property (nonatomic, strong) NSString                              *loadArchitectWorldCallbackId;
 @property (nonatomic, strong) NSString                              *urlInvokedCallbackId;
+@property (nonatomic, strong) NSString                              *receivedJSONObjectCallbackId;
 @property (nonatomic, strong) NSString                              *screenshotCallbackId;
 @property (nonatomic, strong) NSString                              *errorHandlerCallbackId;
 @property (nonatomic, strong) NSString                              *accessRequestCallbackId;
@@ -432,6 +433,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
                 self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 self.arViewController.architectDelegate = self;
             }
+            self.arViewController.startSDKAfterAppResume = YES;
             self.arViewController.architectView.requiredFeatures = requiredFeatures;
             [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
 
@@ -511,6 +513,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 
     if (self.arViewController)
     {
+        [self.arViewController setStartSDKAfterAppResume:YES];
         [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
 
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -533,6 +536,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 
     if (self.arViewController)
     {
+        [self.arViewController setStartSDKAfterAppResume:NO];
         [self.viewController dismissViewControllerAnimated:YES completion:nil];
 
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
@@ -696,6 +700,18 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)onJSONObjectReceived:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult *pluginResult = nil;
+    
+    self.receivedJSONObjectCallbackId = command.callbackId;
+    
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+    [pluginResult setKeepCallbackAsBool:YES];
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 #pragma mark Device sensor calibration
 - (void)setDeviceSensorsNeedCalibrationHandler:(CDVInvokedUrlCommand *)command
 {
@@ -737,7 +753,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 #pragma mark - Notifications
 #pragma mark WTArchitectViewController
 
-- (void)didReceivedWorldDidLoadNotification:(NSNotification *)aNotification
+- (void)didReceiveWorldDidLoadNotification:(NSNotification *)aNotification
 {
     NSURL *worldURL = [[aNotification userInfo] objectForKey:WTArchitectNotificationURLKey];
 
@@ -745,7 +761,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.loadArchitectWorldCallbackId];
 }
 
-- (void)didReceivedWorldDidFailToLoadNotification:(NSNotification *)aNotification
+- (void)didReceiveWorldDidFailToLoadNotification:(NSNotification *)aNotification
 {
     NSError *error = [[aNotification userInfo] objectForKey:WTArchitectNotificationErrorKey];
 
@@ -753,7 +769,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.loadArchitectWorldCallbackId];
 }
 
-- (void)didReceivedInvokedURLNotification:(NSNotification *)aNotification
+- (void)didReceiveInvokedURLNotification:(NSNotification *)aNotification
 {
     CDVPluginResult *pluginResult = nil;
 
@@ -773,7 +789,26 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.urlInvokedCallbackId];
 }
 
-- (void)didReceivedDidCatpuredScreenNotification:(NSNotification *)aNotification
+- (void)didReceiveReceivedJSONObjectNotification:(NSNotification *)aNotification
+{
+    CDVPluginResult *pluginResult = nil;
+    
+    if (self.receivedJSONObjectCallbackId)
+    {
+        NSDictionary *jsonObject = [[aNotification userInfo] objectForKey:WTArchitectNotificationJSONObjectKey];
+        
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObject];
+        [pluginResult setKeepCallbackAsBool:YES];
+    }
+    else
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.receivedJSONObjectCallbackId];
+}
+
+- (void)didReceiveDidCapturedScreenNotification:(NSNotification *)aNotification
 {
     CDVPluginResult *pluginResult = nil;
 
@@ -802,7 +837,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.screenshotCallbackId];
 }
 
-- (void)didReceivedCaptureScreenDidFailNotification:(NSNotification *)aNotification
+- (void)didReceiveCaptureScreenDidFailNotification:(NSNotification *)aNotification
 {
     CDVPluginResult *pluginResult = nil;
 
@@ -819,7 +854,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.screenshotCallbackId];
 }
 
-- (void)didReceivedArchitectNeedsDeviceSensorCalibrationNotification:(NSNotification *)aNotification
+- (void)didReceiveArchitectNeedsDeviceSensorCalibrationNotification:(NSNotification *)aNotification
 {
     if ( self.deviceSensorsNeedCalibrationCallbackId )
     {
@@ -831,7 +866,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     }
 }
 
-- (void)didReceivedArchitectFinishedDeviceSensorCalibrationNotification:(NSNotification *)aNotification
+- (void)didReceiveArchitectFinishedDeviceSensorCalibrationNotification:(NSNotification *)aNotification
 {
     if ( self.deviceSensorsFinishedCalibrationCallbackId )
     {
@@ -843,7 +878,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     }
 }
 
-- (void)didReceivedArchitectDebugMessageNotification:(NSNotification *)aNotification
+- (void)didReceiveArchitectDebugMessageNotification:(NSNotification *)aNotification
 {
     if ( self.errorHandlerCallbackId )
     {
@@ -870,22 +905,22 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 
 - (void)addNotificationObserver
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedWorldDidLoadNotification:) name:WTArchitectDidLoadWorldNotification object:self.arViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveWorldDidLoadNotification:) name:WTArchitectDidLoadWorldNotification object:self.arViewController];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedWorldDidFailToLoadNotification:) name:WTArchitectDidFailToLoadWorldNotification object:self.arViewController];
-
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedInvokedURLNotification:) name:WTArchitectInvokedURLNotification object:self.arViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveWorldDidFailToLoadNotification:) name:WTArchitectDidFailToLoadWorldNotification object:self.arViewController];
 
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDidCatpuredScreenNotification:) name:WTArchitectDidCaptureScreenNotification object:self.arViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveInvokedURLNotification:) name:WTArchitectInvokedURLNotification object:self.arViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveReceivedJSONObjectNotification:) name:WTArchitectReceivedJSONObjectNotification object: self.arViewController];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedCaptureScreenDidFailNotification:) name:WTArchitectDidFailToCaptureScreenNotification object:self.arViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveDidCapturedScreenNotification:) name:WTArchitectDidCaptureScreenNotification object:self.arViewController];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedArchitectNeedsDeviceSensorCalibrationNotification:) name:WTArchitectNeedsDeviceSensorCalibration object:self.arViewController];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedArchitectFinishedDeviceSensorCalibrationNotification:) name:WTArchitectFinishedDeviceSensorCalibration object:self.arViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveCaptureScreenDidFailNotification:) name:WTArchitectDidFailToCaptureScreenNotification object:self.arViewController];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedArchitectDebugMessageNotification:) name:WTArchitectDebugDelegateNotification object:self.arViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveArchitectNeedsDeviceSensorCalibrationNotification:) name:WTArchitectNeedsDeviceSensorCalibration object:self.arViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveArchitectFinishedDeviceSensorCalibrationNotification:) name:WTArchitectFinishedDeviceSensorCalibration object:self.arViewController];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveArchitectDebugMessageNotification:) name:WTArchitectDebugDelegateNotification object:self.arViewController];
 }
 
 - (void)removeNotificationObserver

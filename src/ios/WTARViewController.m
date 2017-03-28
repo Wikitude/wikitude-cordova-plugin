@@ -13,6 +13,7 @@
 NSString * const WTArchitectDidLoadWorldNotification = @"WTArchitectDidLoadWorldNotification";
 NSString * const WTArchitectDidFailToLoadWorldNotification = @"WTArchitectDidFailToLoadWorldNotification";
 NSString * const WTArchitectInvokedURLNotification = @"WTArchitectInvokedURLNotification";
+NSString * const WTArchitectReceivedJSONObjectNotification = @"WTArchitectReceivedJSONObjectNotification";
 NSString * const WTArchitectDidCaptureScreenNotification = @"WTArchitectDidCaptureScreenNotification";
 NSString * const WTArchitectDidFailToCaptureScreenNotification = @"WTArchitectDidFailToCaptureScreenNotification";
 
@@ -23,6 +24,7 @@ NSString * const WTArchitectDebugDelegateNotification = @"WTArchitectDebugDelega
 
 NSString * const WTArchitectNotificationURLKey = @"URL";
 NSString * const WTArchitectNotificationContextKey = @"Context";
+NSString * const WTArchitectNotificationJSONObjectKey = @"JSONObject";
 NSString * const WTArchitectNotificationErrorKey = @"Error";
 
 NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegateMessageKey";
@@ -49,9 +51,10 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
         self.architectView = [[WTArchitectView alloc] initWithFrame:[[UIScreen mainScreen] bounds] motionManager:motionManagerOrNil];
         self.architectView.delegate = self;
         self.architectView.debugDelegate = self;
+        _startSDKAfterAppResume = YES;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceivedDeviceDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveDeviceWillResignActiveNotification:) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveDeviceDidBecomeActiveNotification:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     
     return self;
@@ -175,6 +178,11 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectInvokedURLNotification object:self userInfo:@{WTArchitectNotificationURLKey: url}];
 }
 
+- (void)architectView:(WTArchitectView *)architectView receivedJSONObject:(NSDictionary *)jsonObject
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectReceivedJSONObjectNotification object:self userInfo:@{WTArchitectNotificationJSONObjectKey: jsonObject}];
+}
+
 - (void)architectView:(WTArchitectView *)architectView didCaptureScreenWithContext:(NSDictionary *)context
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDidCaptureScreenNotification object:self userInfo:@{WTArchitectNotificationContextKey: context}];
@@ -226,17 +234,17 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
 
 #pragma mark - Notifications
 
-- (void)didReceivedDeviceWillResignActiveNotification:(NSNotification *)aNotification
+- (void)didReceiveDeviceWillResignActiveNotification:(NSNotification *)aNotification
 {
     /* If we’re presented then we need to stop the sdk view */
-    if ( self.presentingViewController && [self.architectView isRunning] ) {
+    if ( [self.architectView isRunning] ) {
         [self.architectView stop];
     }
 }
 
-- (void)didReceivedDeviceDidBecomeActiveNotification:(NSNotification *)aNotification
+- (void)didReceiveDeviceDidBecomeActiveNotification:(NSNotification *)aNotification
 {
-    if ( self.presentingViewController && ![self.architectView isRunning] ) {
+    if ( _startSDKAfterAppResume && ![self.architectView isRunning] ) {
         [self.architectView start:^(WTArchitectStartupConfiguration *configuration) {
             [WTArchitectStartupConfiguration transferArchitectStartupConfiguration:self.startupConfiguration toArchitectStartupConfiguration:configuration];
         } completion:nil];

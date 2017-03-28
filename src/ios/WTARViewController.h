@@ -15,6 +15,7 @@
 extern NSString * const WTArchitectDidLoadWorldNotification;
 extern NSString * const WTArchitectDidFailToLoadWorldNotification;
 extern NSString * const WTArchitectInvokedURLNotification;
+extern NSString * const WTArchitectReceivedJSONObjectNotification;
 extern NSString * const WTArchitectDidCaptureScreenNotification;
 extern NSString * const WTArchitectDidFailToCaptureScreenNotification;
 
@@ -26,6 +27,7 @@ extern NSString * const WTArchitectDebugDelegateNotification;
 
 extern NSString * const WTArchitectNotificationURLKey;
 extern NSString * const WTArchitectNotificationContextKey;
+extern NSString * const WTArchitectNotificationJSONObjectKey;
 extern NSString * const WTArchitectNotificationErrorKey;
 
 extern NSString * const WTArchitectDebugDelegateMessageKey;
@@ -49,6 +51,7 @@ extern NSString * const WTArchitectDebugDelegateMessageKey;
 
 @property (nonatomic, strong) WTArchitectStartupConfiguration           *startupConfiguration;
 @property (nonatomic, strong) WTNavigation                              *currentArchitectWorldNavigation;
+@property (nonatomic, assign) BOOL                                      startSDKAfterAppResume;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil motionManager:(CMMotionManager *)motionManagerOrNil;
 

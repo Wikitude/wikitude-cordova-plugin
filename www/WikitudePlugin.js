@@ -1,6 +1,6 @@
 
 	/**
-	 * Release date: January 25, 2017
+	 * Release date: January 2, 2017
 	 */
 
 	var WikitudePlugin = function() {
@@ -140,14 +140,29 @@
 		cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "callJavascript", [js]);
 	};
 
-	/**
-	 *	Use this function to set a callback which will be invoked when the ARchitect World opens an architectsdk =// url.
-	 *	document.location = "architectsdk =//opendetailpage?id=9";
-	 *
-	 *	@param onUrlInvokeCallback A function which will be called when the ARchitect World invokes a call to "document.location = architectsdk =//"
-	 */
+    /**
+     *	Use this function to set a callback which will be invoked when the ARchitect World opens an architectsdk =// url.
+     *	document.location = "architectsdk =//opendetailpage?id=9";#
+     *	@param onUrlInvokeCallback A function which will be called when the ARchitect World invokes a call to "document.location = architectsdk =//"
+     *  @deprecated use setJSONObjectReceivedCallback instead
+     */
 	WikitudePlugin.prototype.setOnUrlInvokeCallback = function(onUrlInvokeCallback) {
 		cordova.exec(onUrlInvokeCallback, this.onWikitudeError, "WikitudePlugin", "onUrlInvoke", [""]);
+    };
+
+
+	/**
+	 *	Use this function to set a callback which will be invoked when AR.platform.sendJSONObject is called.
+	 *	e.g.:
+	 *  AR.platform.sendJSONObject({
+	 *      action: "opendetailpage",
+	 *      id: 9
+	 *  });
+	 *
+	 *	@param onJSONObjectReceived A function which will be called when AR.platform.sendJSONObject is called.
+	 */
+	WikitudePlugin.prototype.setJSONObjectReceivedCallback = function(onJSONObjectReceived) {
+		cordova.exec(onJSONObjectReceived, this.onWikitudeError, "WikitudePlugin", "onJSONObjectReceived", [""]);
 	};
 
 	/**
@@ -246,7 +261,7 @@
 	WikitudePlugin.prototype.getSDKVersion = function(successCallback) {
 	    cordova.exec(successCallback, this.onWikitudeError, "WikitudePlugin", "getSDKVersion", [""])
 	}
-
+	
     /**
      * Use this function to open the application specific system setting view.
      */

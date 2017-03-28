@@ -72,12 +72,23 @@ extern NSString * const kWTScreenshotImageKey;
 
 
 /**
+ * This method is called whenever the WTArchitectView received a JSON object. JSON objects can be send in Architect Worlds using the function `AR.platform.sendJSONObject()`.
+ * The object that is passed to this JS function is a JS object.
+ * A simple usage would be: AR.platform.sendJSONObject({action: "present_details", details: {title: "_some_text_", description: "_some_text_"}});
+ *
+ * @param architectView The architect view that received the JSON object
+ * @param jsonObject The JSON object that was sent in JS
+ */
+- (void)architectView:(WTArchitectView *)architectView receivedJSONObject:(NSDictionary *)jsonObject;
+
+
+/**
  * This method offers the possibility to react on events that are triggered inside the ARchitect World. To initiate such an event, the ARchitect World simply has to make an request for an url with the "architectsdk://" scheme. E.g.: architectsdk://opendetails?id=123.
  *
  * @param architectView The WTArchitectView object which invoked the url.
  * @param URL The url which was called in javascript.
  */
-- (void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL;
+- (void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL WT_DEPRECATED_SINCE(6.1.0, "Use AR.platform.sendJSONObject() in your Architect World and implement the WTArchitectViewDelegate method -architectView:receivedJSONObject: instead.");
 
 
 /** @name Screen capturing */

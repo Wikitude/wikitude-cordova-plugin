@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.wikitude.phonegap.WikitudePlugin"
-    version="6.0.1">
+    version="6.1.0">
 
     <name>Augmented Reality - Wikitude SDK Plugin</name>
     
@@ -119,6 +119,7 @@
         <framework src="Accelerate.framework" />
         <framework src="AssetsLibrary.framework" />
         <framework src="AVFoundation.framework" />
+        <framework src="AVKit.framework" />
         <framework src="CFNetwork.framework" />
         <framework src="CoreGraphics.framework" />
         <framework src="CoreLocation.framework" />
