@@ -19,6 +19,8 @@
 		 */
         this.FeatureGeo             = "geo";
         this.FeatureImageTracking   = "image_tracking";
+        this.FeatureInstantTracking = "instant_tracking";
+        this.FeatureObjectTracking  = "object_tracking";
         this.Feature2DTracking      = "2d_tracking";
 
         /**

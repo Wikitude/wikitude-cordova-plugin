@@ -6,8 +6,6 @@
 //
 
 #import "WTARViewController.h"
-#import "WTArchitectView.h"
-
 
 
 NSString * const WTArchitectDidLoadWorldNotification = @"WTArchitectDidLoadWorldNotification";

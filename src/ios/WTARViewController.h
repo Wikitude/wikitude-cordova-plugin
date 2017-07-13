@@ -7,8 +7,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "WikitudeSDK.h"
-#import "WTArchitectViewDebugDelegate.h"
+#import <WikitudeSDK/WikitudeSDK.h>
+#import <WikitudeSDK/WTArchitectViewDebugDelegate.h>
 
 
 

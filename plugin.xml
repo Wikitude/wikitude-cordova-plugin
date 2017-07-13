@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.wikitude.phonegap.WikitudePlugin"
-    version="6.1.0">
+    version="7.0.0">
 
     <name>Augmented Reality - Wikitude SDK Plugin</name>
     
@@ -101,18 +101,7 @@
         <header-file src="src/ios/WTARViewController.h" />
         <source-file src="src/ios/WTARViewController.m" />
 
-        <header-file src="src/ios/WikitudeSDK.h" />
-        <header-file src="src/ios/WTArchitectView.h" />
-        <header-file src="src/ios/WTNavigation.h" />
-        <header-file src="src/ios/WTStartupConfiguration.h" />
-        <header-file src="src/ios/WTArchitectStartupConfiguration.h" />
-        <header-file src="src/ios/WTSDKBuildInformation.h" />
-        <header-file src="src/ios/WTArchitectViewDebugDelegate.h" />
-        <header-file src="src/ios/WTAuthorizationRequestManager.h" />
-        <header-file src="src/ios/WTWikitudeTypes.h" />
-
-        <source-file src="src/ios/libWikitudeSDK.a" framework="true" />
-        <source-file src="src/ios/libWikitudeSDK-simulator.a" framework="true" />
+        <framework src="src/ios/WikitudeSDK.framework" custom="true" embed="true" />
 
 
         <!-- Additional WikitudePlugin libraries and frameworks -->

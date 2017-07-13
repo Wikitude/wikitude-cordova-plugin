@@ -7,9 +7,9 @@
 
 #import "WTWikitudePlugin.h"
 
+#import <WikitudeSDK/WikitudeSDK.h>
+
 #import "WTARViewController.h"
-#import "WikitudeSDK.h"
-#import "WTSDKBuildInformation.h"
 
 //------------ Start-up Configuration - begin -------
 //
@@ -27,6 +27,7 @@ NSString * const kWTWikitudePlugin_ArgumentRequiredFeatures         = @"Required
 NSString * const kWTWikitudePlugin_requiredFeature_Geo              = @"geo";
 NSString * const kWTWikitudePlugin_requiredFeature_ImageTracking    = @"image_tracking";
 NSString * const kWTWikitudePlugin_requiredFeature_InstantTracking  = @"instant_tracking";
+NSString * const kWTWikitudePlugin_requiredFeature_ObjectTracking   = @"object_tracking";
 NSString * const kWTWikitudePlugin_requiredFeature_PhotoLibraryScreenshotImport  = @"photo_library_screenshot_import";
 NSString * const kWTWikitudePlugin_requiredFeature_2DTracking       = @"2d_tracking"; /* deprecated in Wikitude SDK version 6.0.0 */
 
@@ -215,6 +216,10 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
             else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_InstantTracking] )
             {
                 requiredFeatures |= WTFeature_InstantTracking;
+            }
+            else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_ObjectTracking] )
+            {
+                requiredFeatures |= WTFeature_ObjectTracking;
             }
             else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_PhotoLibraryScreenshotImport] )
             {

@@ -764,10 +764,12 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
                 featuresBitMap = featuresBitMap | ArchitectStartupConfiguration.Features.Geo;
             } else if (feature.equalsIgnoreCase("instant_tracking")) {
                 featuresBitMap = featuresBitMap | ArchitectStartupConfiguration.Features.InstantTracking;
+            } else if (feature.equalsIgnoreCase("object_tracking")) {
+                featuresBitMap = featuresBitMap | ArchitectStartupConfiguration.Features.ObjectTracking;
             }
         }
         if (featuresBitMap == 0) {
-            featuresBitMap = ArchitectStartupConfiguration.Features.ImageTracking | ArchitectStartupConfiguration.Features.Geo | ArchitectStartupConfiguration.Features.InstantTracking;
+            featuresBitMap = ArchitectStartupConfiguration.Features.ImageTracking | ArchitectStartupConfiguration.Features.Geo | ArchitectStartupConfiguration.Features.InstantTracking | ArchitectStartupConfiguration.Features.ObjectTracking;
         }
         return featuresBitMap;
     }
