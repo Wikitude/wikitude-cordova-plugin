@@ -135,7 +135,8 @@
                 <param name="ios-package" value="WTWikitudePlugin"/>
             </feature>
         </config-file>
-        
+
+        <hook type="after_plugin_install" src="scripts/configure_wikitude_sdk_framework.sh" />
 
         <!-- visible after installation -->
         <info>
