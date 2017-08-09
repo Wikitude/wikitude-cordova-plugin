@@ -23,6 +23,8 @@ find . -type d -name "WikitudeSDK.framework" | while read dir; do
 
   # ... this is done using `lipo`
   LIPO_COMMAND="$(xcrun --sdk iphoneos --find lipo) -create $SINGLE_ARCHITECTURE_SLICES_PATHS -output \"$dir\"/WikitudeSDK"
+  echo "final lipo command:"
+  echo $LIPO_COMMAND
   eval $LIPO_COMMAND
 
   # After lipo is done, all WikitudeSDK-* files can be deleted
