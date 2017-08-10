@@ -15,8 +15,11 @@ set -e
 echo 'Reconstructing WikitudeSDK.framework content. In case this script fails, please contact Wikitude support.'
 
 # Find all occurences of the WikitudeSDK.framework in the Cordova application directory structure (The current working directory is the project root directory)
+pwd
+echo "Start searching for the WikitudeSDK.framework in the project structure"
 find . -type d -name "WikitudeSDK.framework" | while read dir; do
-
+  echo "   Found a WikitudeSDK.framework in the following directory"
+  echo $dir
   # Inside the WikitudeSDK.framework, all WikitudeSDK-* files need to be combined into a single one again
   SINGLE_ARCHITECTURE_SLICES_PATHS="$(find "${dir}" -name "WikitudeSDK-*" -print)"
   SINGLE_ARCHITECTURE_SLICES_PATHS=$(echo "$SINGLE_ARCHITECTURE_SLICES_PATHS" | sed 's|/Plugin |/Plugin\\ |g') # The project path might contain blanks. This should prepare the paths to be usable by `lipo`
