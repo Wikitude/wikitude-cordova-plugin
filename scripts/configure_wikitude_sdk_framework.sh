@@ -15,22 +15,31 @@ set -e
 echo 'Reconstructing WikitudeSDK.framework content. In case this script fails, please contact Wikitude support.'
 
 # Find all occurences of the WikitudeSDK.framework in the Cordova application directory structure (The current working directory is the project root directory)
-pwd
-echo "Start searching for the WikitudeSDK.framework in the project structure"
 find . -type d -name "WikitudeSDK.framework" | while read dir; do
-  echo "   Found a WikitudeSDK.framework in the following directory"
-  echo $dir
-  # Inside the WikitudeSDK.framework, all WikitudeSDK-* files need to be combined into a single one again
-  SINGLE_ARCHITECTURE_SLICES_PATHS="$(find "${dir}" -name "WikitudeSDK-*" -print)"
-  SINGLE_ARCHITECTURE_SLICES_PATHS=$(echo "$SINGLE_ARCHITECTURE_SLICES_PATHS" | sed 's|/Plugin |/Plugin\\ |g') # The project path might contain blanks. This should prepare the paths to be usable by `lipo`
 
-  # ... this is done using `lipo`
-  LIPO_COMMAND="$(xcrun --sdk iphoneos --find lipo) -create $SINGLE_ARCHITECTURE_SLICES_PATHS -output \"$dir\"/WikitudeSDK"
-  echo "final lipo command:"
-  echo $LIPO_COMMAND
-  eval $LIPO_COMMAND
+  # Verify the content of the .framework. If there are multiple files named 'WikitudeSDK-*, we need to merge them together.
+  NUMBER_OF_ARCHITECTURE_FILES="$(find "${dir}" -name "WikitudeSDK-*" | wc -l)"
+  if [ $NUMBER_OF_ARCHITECTURE_FILES -gt 1 ]; then
+    # Inside the WikitudeSDK.framework, all WikitudeSDK-* files need to be combined into a single one
+    SINGLE_ARCHITECTURE_SLICES_PATHS="$(find "${dir}" -name "WikitudeSDK-*" -print)"
+    SINGLE_ARCHITECTURE_SLICES_PATHS=$(echo "$SINGLE_ARCHITECTURE_SLICES_PATHS" | sed 's|/Plugin |/Plugin\\ |g') # The project path might contain blanks. This should prepare the paths to be usable by `lipo`
 
-  # After lipo is done, all WikitudeSDK-* files can be deleted
-  RM_COMMAND="rm $SINGLE_ARCHITECTURE_SLICES_PATHS"
-  eval $RM_COMMAND
+    # ... this is done using `lipo`
+    LIPO_COMMAND="$(xcrun --sdk iphoneos --find lipo) -create $SINGLE_ARCHITECTURE_SLICES_PATHS -output \"$dir\"/WikitudeSDK"
+    eval $LIPO_COMMAND
+
+    # After lipo is done, all WikitudeSDK-* files can be deleted
+    RM_COMMAND="rm $SINGLE_ARCHITECTURE_SLICES_PATHS"
+    eval $RM_COMMAND
+  fi
+
+  # At the end there is only one file, so we verify it's content. It's expected to have 5 architecture slices (armv7, armv7s, arm64, i386, x86_64)
+  ARCHITECTURES_IN_COMBINED_LIBRARY=$($(xcrun --sdk iphoneos --find lipo) -info "${dir}"/WikitudeSDK | sed -En -e 's/^(Non-|Architectures in the )fat file: .+( is architecture| are): (.*)$/\3/p' | wc -w)
+  if [ $ARCHITECTURES_IN_COMBINED_LIBRARY -ne 5 ]; then
+    echo "Unexpected number of architectures found in WikitudeSDK. lipo output following"
+    $(xcrun --sdk iphoneos --find lipo) -info "$dir"/WikitudeSDK
+    exit -1
+  else
+    echo "'"${dir}"' is a valid Wikitude SDK."
+  fi
 done
