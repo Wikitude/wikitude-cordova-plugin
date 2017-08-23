@@ -21,7 +21,7 @@ find . -type d -name "WikitudeSDK.framework" | while read dir; do
   NUMBER_OF_ARCHITECTURE_FILES="$(find "${dir}" -name "WikitudeSDK-*" | wc -l)"
   if [ $NUMBER_OF_ARCHITECTURE_FILES -gt 1 ]; then
     # Inside the WikitudeSDK.framework, all WikitudeSDK-* files need to be combined into a single one
-    SINGLE_ARCHITECTURE_SLICES_PATHS="$(find "${dir}" -name "WikitudeSDK-*" -print)"
+    SINGLE_ARCHITECTURE_SLICES_PATHS="$(find "${dir}" -name "WikitudeSDK-*" -exec echo -n '"{}" ' \;)"
     SINGLE_ARCHITECTURE_SLICES_PATHS=$(echo "$SINGLE_ARCHITECTURE_SLICES_PATHS" | sed 's|/Plugin |/Plugin\\ |g') # The project path might contain blanks. This should prepare the paths to be usable by `lipo`
 
     # ... this is done using `lipo`
