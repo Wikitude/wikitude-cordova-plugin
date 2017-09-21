@@ -253,7 +253,7 @@ extern NSString * const kWTScreenshotImageKey;
 
 /**
  * Architect Worlds can be loaded with different required features. 
- * Features specifies which SDK functionalities are required by the World. For example the WTFeature_2DTracking does not start any GPS location related APIs and the user is not interrupted with a location access alert. As a result any geo related SDK functionalities do not work but the target image recognition is faster and the SDK does not cosume as much CPU performance than with an enabled GPS module. Choose the most suitable mode for your ARchitect World to experience the full functionality and the best performance.
+ * Features specifies which SDK functionalities are required by the World. For example the WTFeature_ImageTracking does not start any GPS location related APIs and the user is not interrupted with a location access alert. As a result any geo related SDK functionalities do not work but the target image recognition is faster and the SDK does not cosume as much CPU performance than with an enabled GPS module. Choose the most suitable mode for your ARchitect World to experience the full functionality and the best performance.
  */
 @property (nonatomic, assign) WTFeatures                                                requiredFeatures;
 
@@ -302,8 +302,6 @@ extern NSString * const kWTScreenshotImageKey;
  * Enables SDK features based on the given license key.
  *
  * @param licenseKey Your developer key, provided with your licence information.
- *
- * @return YES if the license key was valid for this app bundle name, NO otherwise.
  */
 - (void)setLicenseKey:(NSString *)licenseKey;
 
@@ -358,7 +356,7 @@ extern NSString * const kWTScreenshotImageKey;
  * @param startupHandler A block which contains a configuration object as parameter. The WTStartupConfiguration parameter can be used to specify the startup behaviour in more detail.
  * @param completionHandler A block which provices information if the SDK could be started or not.
  */
-- (void)start:(void (^)(WTArchitectStartupConfiguration *configuration))startupHandler completion:(nullable void (^)(BOOL isRunning, NSError *error))completionHandler;
+- (void)start:(nullable void (^)(WTArchitectStartupConfiguration *configuration))startupHandler completion:(nullable void (^)(BOOL isRunning, NSError *error))completionHandler;
 
 /**
  * Stops all activity of the ARchitect view (suspends UI updates of background camera, AR objects etc).

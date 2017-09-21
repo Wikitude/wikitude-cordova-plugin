@@ -183,7 +183,7 @@ namespace wikitude {
              *
              * The default implementation is empty.
              *
-             * @param errorMessage describes the internal error in more detail
+             * @param errorMessage_ describes the internal error in more detail
              */
             virtual void internalError(const std::string& errorMessage_);
             

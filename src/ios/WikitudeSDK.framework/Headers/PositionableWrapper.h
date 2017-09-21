@@ -6,10 +6,13 @@
 //  Copyright (c) 2015 Wikitude. All rights reserved.
 //
 
-#include <functional>
-
 #ifndef __SDKCore__PositionableWrapper__
 #define __SDKCore__PositionableWrapper__
+
+#ifdef __cplusplus
+
+#include <functional>
+
 
 namespace wikitude { namespace sdk_core {
 
@@ -47,7 +50,7 @@ namespace wikitude { namespace sdk_core {
             /**
              * Ctor
              *
-             * @param positionable_ A pointer to a Positionable object. Ownership of the memory remains with the caller.
+             * @param positionableFunctionCollection_ A pointer to a Positionable object. Ownership of the memory remains with the caller.
              *
              */
             PositionableWrapper(const PositionableFunctionCollection& positionableFunctionCollection_);
@@ -81,7 +84,7 @@ namespace wikitude { namespace sdk_core {
             /**
              * Sets the 4 by 4 view-matrix.
              *
-             * @param viewdMatrix_ A float pointer referencing 16 float values in a block of consecutive memory.
+             * @param viewMatrix_ A float pointer referencing 16 float values in a block of consecutive memory.
              *
              * @discussion For 2D drawables (ImageDrawable, AnimatedImageDrawable, VideoDrawable, Circle, Label, HtmlDrawable) the view-matrix is ignored and recommended to be set to the identity-matrix. For 3D drawables (Model) the view-matrix is to be set to the model-view-matrix, while the world matrix is ignored and recommended to be so to the identity-matrix.
              */
@@ -119,4 +122,5 @@ namespace wikitude { namespace sdk_core {
     using impl::PositionableWrapper;
 }}
 
+#endif /* __cplusplus */
 #endif /* defined(__SDKCore__PositionableWrapper__) */

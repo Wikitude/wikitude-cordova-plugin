@@ -52,14 +52,14 @@ namespace wikitude { namespace sdk {
             /**
              * Defines a function that is used to connect the InputRenderSettings of the InputPlugin with the Wikitude SDK.
              *
-             * @param inputRenderSettings is used to store all rendering related settings(e.g. should the camera frame be mirrored) of the InputPlugin.
+             * @param inputRenderSettings_ is used to store all rendering related settings(e.g. should the camera frame be mirrored) of the InputPlugin.
              */
             using InputRenderSettingsChangedNotifier = std::function<void(InputRenderSettings inputRenderSettings_)>;
 
             /**
              * Defines a function that is used to connect the InputFrameSettings of the InputPlugin with the Wikitude SDK.
              *
-             * @param inputFrameSettings is used to store all frame related settings(e.g. color space) of the InputPlugin.
+             * @param inputFrameSettings_ is used to store all frame related settings(e.g. color space) of the InputPlugin.
              */
             using InputFrameSettingsChangedNotifier = std::function<void(InputFrameSettings inputFrameSettings_)>;
 
