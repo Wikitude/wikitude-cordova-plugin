@@ -11,6 +11,8 @@ SHOW_BITCODE_INFORMATION=false
 STRIP_BITCODE_INFORMATION=false
 WIKITUDE_FRAMEWORK_PATH=""
 
+FRAMEWORK_LIBRARY_NAME=Wikitude*SDK
+
 usage() {
 cat <<EOF
 Usage: $0 [options] [--]
@@ -64,7 +66,7 @@ if [ $SHOW_BITCODE_INFORMATION == true ] && [ $STRIP_BITCODE_INFORMATION == true
 else
     if [ $SHOW_BITCODE_INFORMATION == true ]; then
         echo 'Reading bitcode information'
-        WIKITUDE_SDK_ARCHS=$($(xcrun --sdk iphoneos --find lipo) -info "${WIKITUDE_FRAMEWORK_PATH}"/WikitudeSDK | sed -En -e 's/^(Non-|Architectures in the )fat file: .+( is architecture| are): (.*)$/\3/p')
+        WIKITUDE_SDK_ARCHS=$($(xcrun --sdk iphoneos --find lipo) -info "${WIKITUDE_FRAMEWORK_PATH}"/$FRAMEWORK_LIBRARY_NAME | sed -En -e 's/^(Non-|Architectures in the )fat file: .+( is architecture| are): (.*)$/\3/p')
 
         DEFAULT_DEVICE_ARCHS=( "armv7" "armv7s" "arm64" )
         IFS=', ' read -r -a WIKITUDE_SDK_ARCHS_ARRAY <<< "$WIKITUDE_SDK_ARCHS"
@@ -73,7 +75,7 @@ else
         for WIKITUDE_SDK_ARCH in "${WIKITUDE_SDK_ARCHS_ARRAY[@]}"
         do
           if [[ " ${DEFAULT_DEVICE_ARCHS[@]} " =~ " ${WIKITUDE_SDK_ARCH} " ]]; then
-              ARCHITECTURE_BITCODE_INFORMATION=$(otool -arch ${WIKITUDE_SDK_ARCH} -l "${WIKITUDE_FRAMEWORK_PATH}"/WikitudeSDK | grep LLVM)
+              ARCHITECTURE_BITCODE_INFORMATION=$(otool -arch ${WIKITUDE_SDK_ARCH} -l "${WIKITUDE_FRAMEWORK_PATH}"/$FRAMEWORK_LIBRARY_NAME | grep LLVM)
               if [ ${#ARCHITECTURE_BITCODE_INFORMATION} -gt 0 ]; then
                   BITCODE_ENABLED_ARCHS+=(${WIKITUDE_SDK_ARCH})
               fi
@@ -89,7 +91,7 @@ else
         fi
     elif [ $STRIP_BITCODE_INFORMATION ]; then
         echo 'Stripping bitcode information'
-        $(xcrun --sdk iphoneos --find bitcode_strip) -r "${WIKITUDE_FRAMEWORK_PATH}"/WikitudeSDK -o "${WIKITUDE_FRAMEWORK_PATH}"/WikitudeSDK
+        $(xcrun --sdk iphoneos --find bitcode_strip) -r "${WIKITUDE_FRAMEWORK_PATH}"/$FRAMEWORK_LIBRARY_NAME -o "${WIKITUDE_FRAMEWORK_PATH}"/$FRAMEWORK_LIBRARY_NAME
     else
         echo 'unknown option'
     fi

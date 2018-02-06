@@ -46,7 +46,7 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
         // Custom initialization
         _startupConfiguration = [[WTArchitectStartupConfiguration alloc] init];
         
-        self.architectView = [[WTArchitectView alloc] initWithFrame:[[UIScreen mainScreen] bounds] motionManager:motionManagerOrNil];
+        self.architectView = [[WTArchitectView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         self.architectView.delegate = self;
         self.architectView.debugDelegate = self;
         _startSDKAfterAppResume = YES;
@@ -90,8 +90,8 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 
 
-    UISwipeGestureRecognizer *swipeBackRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeBack:)];
-    swipeBackRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    UIScreenEdgePanGestureRecognizer *swipeBackRecognizer = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(didSwipeBack:)];
+    swipeBackRecognizer.edges = UIRectEdgeLeft;
     swipeBackRecognizer.delegate = self;
     
     [self.view addGestureRecognizer:swipeBackRecognizer];

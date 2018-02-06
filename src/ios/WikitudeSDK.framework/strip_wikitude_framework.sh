@@ -12,6 +12,7 @@ STRIP_SIMULATOR_ARCHITECTURES=false
 WIKITUDE_FRAMEWORK_PATH=""
 
 FRAMEWORK_MANIPULATION_SCRIPTS=( "strip_wikitude_framework.sh" "wikitude_bitcode.sh" )
+FRAMEWORK_LIBRARY_NAME=Wikitude*SDK
 
 usage() {
 cat <<EOF
@@ -66,11 +67,11 @@ if [ $SHOW_ARCHITECTURE_INFORMATION == true ] && [ $STRIP_SIMULATOR_ARCHITECTURE
 else
   if [ $SHOW_ARCHITECTURE_INFORMATION == true ]; then
     echo 'reading architecture information'
-    $(xcrun --sdk iphoneos --find lipo) -info "${WIKITUDE_FRAMEWORK_PATH}"/WikitudeSDK
+    $(xcrun --sdk iphoneos --find lipo) -info "${WIKITUDE_FRAMEWORK_PATH}"/$FRAMEWORK_LIBRARY_NAME
   elif [ $STRIP_SIMULATOR_ARCHITECTURES == true ]; then
     echo 'removing architectures'
 
-    WIKITUDE_SDK_ARCHS=$($(xcrun --sdk iphoneos --find lipo) -info "${WIKITUDE_FRAMEWORK_PATH}"/WikitudeSDK | sed -En -e 's/^(Non-|Architectures in the )fat file: .+( is architecture| are): (.*)$/\3/p')
+    WIKITUDE_SDK_ARCHS=$($(xcrun --sdk iphoneos --find lipo) -info "${WIKITUDE_FRAMEWORK_PATH}"/$FRAMEWORK_LIBRARY_NAME | sed -En -e 's/^(Non-|Architectures in the )fat file: .+( is architecture| are): (.*)$/\3/p')
     IFS=', ' read -r -a WIKITUDE_SDK_ARCHS_ARRAY <<< "$WIKITUDE_SDK_ARCHS"
 
     # check if $ARCHS is empty: if so, set it to the three default architectures
@@ -82,7 +83,7 @@ else
     do
       if [[ ! "${ARCHS}" == *"$WIKITUDE_SDK_ARCH"* ]]; then
         echo 'removing ' $WIKITUDE_SDK_ARCH ' architecture'
-        $(xcrun --sdk iphoneos --find lipo) -remove ${WIKITUDE_SDK_ARCH} -o "${WIKITUDE_FRAMEWORK_PATH}"/WikitudeSDK "${WIKITUDE_FRAMEWORK_PATH}"/WikitudeSDK
+        $(xcrun --sdk iphoneos --find lipo) -remove ${WIKITUDE_SDK_ARCH} -o "${WIKITUDE_FRAMEWORK_PATH}"/$FRAMEWORK_LIBRARY_NAME "${WIKITUDE_FRAMEWORK_PATH}"/$FRAMEWORK_LIBRARY_NAME
       fi
     done
 
@@ -90,13 +91,13 @@ else
         for FRAMEWORK_MANIPULATION_SCRIPT in ${FRAMEWORK_MANIPULATION_SCRIPTS[@]}
         do
             FULL_FRAMEWORK_MANIPULATION_SCRIPT_PATH="${WIKITUDE_FRAMEWORK_PATH}"/$FRAMEWORK_MANIPULATION_SCRIPT
-            if [ -e $FULL_FRAMEWORK_MANIPULATION_SCRIPT_PATH ]; then
-                rm -f $FULL_FRAMEWORK_MANIPULATION_SCRIPT_PATH
+            if [ -e "${FULL_FRAMEWORK_MANIPULATION_SCRIPT_PATH}" ]; then
+                rm -f "${FULL_FRAMEWORK_MANIPULATION_SCRIPT_PATH}"
             fi
         done
     fi
 
-    $(xcrun --sdk iphoneos --find codesign) --force --sign ${EXPANDED_CODE_SIGN_IDENTITY} --preserve-metadata=identifier,entitlements "${WIKITUDE_FRAMEWORK_PATH}"/WikitudeSDK
+    $(xcrun --sdk iphoneos --find codesign) --force --sign ${EXPANDED_CODE_SIGN_IDENTITY} --preserve-metadata=identifier,entitlements "${WIKITUDE_FRAMEWORK_PATH}"/$FRAMEWORK_LIBRARY_NAME
   else
     echo 'unknown option'
   fi
