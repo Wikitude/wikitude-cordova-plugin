@@ -43,6 +43,7 @@ import android.view.ViewManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.wikitude.architect.ArchitectJavaScriptInterfaceListener;
 import com.wikitude.architect.ArchitectView;
 import com.wikitude.architect.ArchitectView.ArchitectUrlListener;
 import com.wikitude.architect.ArchitectView.ArchitectWorldLoadedListener;
@@ -66,7 +67,7 @@ import com.wikitude.tools.device.features.MissingDeviceFeatures;
  * This plug-in is written under Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0.html
  */
-public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListener, ArchitectWorldLoadedListener {
+public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListener,ArchitectJavaScriptInterfaceListener, ArchitectWorldLoadedListener {
 
     /** PhoneGap-root to Android-app-assets folder ; e.g. use "assets/foo.html" as source if you want to load foo.html from your android-project's assets-folder */
     private static final String	LOCAL_ASSETS_PATH_ROOT		= "assets/";
@@ -106,7 +107,12 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
     /**
      * callback for uri-invocations
      */
-    private static final String	ACTION_ON_URLINVOKE			= "onUrlInvoke";
+    private static final String ACTION_ON_URLINVOKE         = "onUrlInvoke";
+
+    /**
+     * callback for AR.platform.sendJSONObject
+     */
+    private static final String ACTION_ON_JSON_RECEIVED     = "onJSONObjectReceived";
 
     /**
      * life-cycle notification for resume
@@ -164,9 +170,14 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
     private ArchitectViewPhoneGap		architectView;
 
     /**
-     * callback-Id of url-invocation method
+     * callback-Id of sendJSONObject method
      */
-    private CallbackContext		urlInvokeCallback			= null;
+    private CallbackContext     urlInvokeCallback           = null;
+
+    /**
+     * callback-Id of sendJSONObject method
+     */
+    private CallbackContext jsonObjectReceivedCallback = null;
 
     /**
      * callback-id of "open"-action method
@@ -365,9 +376,18 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
             return true;
         }
 
-		/* define call-back for url-invocations */
+        /* define call-back for url-invocations */
         if ( WikitudePlugin.ACTION_ON_URLINVOKE.equals( action ) ) {
             this.urlInvokeCallback = callContext;
+            final PluginResult result = new PluginResult( PluginResult.Status.NO_RESULT, action + ": registered callback" );
+            result.setKeepCallback( true );
+            callContext.sendPluginResult( result );
+            return true;
+        }
+
+        /* define call-back for AR.platform.sendJSONObject */
+        if ( WikitudePlugin.ACTION_ON_JSON_RECEIVED.equals( action ) ) {
+            this.jsonObjectReceivedCallback = callContext;
             final PluginResult result = new PluginResult( PluginResult.Status.NO_RESULT, action + ": registered callback" );
             result.setKeepCallback( true );
             callContext.sendPluginResult( result );
@@ -617,22 +637,36 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
      * @param url the invoked url (e.g. "architectsdk://foo")
      * @return true if call was handled properly
      */
-    @Override
     public boolean urlWasInvoked( final String url ) {
 
-		/* call callback-method if set*/
-        if ( this.urlInvokeCallback != null ) {
+        /* call callback-method if set*/
+        if (this.urlInvokeCallback != null) {
             try {
-				/* pass called url as String to callback-method */
-                final PluginResult res = new PluginResult( PluginResult.Status.OK, url );
-                res.setKeepCallback( true );
-                this.urlInvokeCallback.sendPluginResult( res );
-            } catch ( Exception e ) {
-                this.urlInvokeCallback.error( "invalid url invoked: " + url );
+                /* pass called url as String to callback-method */
+                final PluginResult res = new PluginResult(PluginResult.Status.OK, url);
+                res.setKeepCallback(true);
+                this.urlInvokeCallback.sendPluginResult(res);
+            } catch (Exception e) {
+                this.urlInvokeCallback.error("invalid url invoked: " + url);
             }
             return true;
         }
         return false;
+    }
+
+    /**
+     * Triggered when AR.platform.sendJSONObject is called. (e.g. AR.platform.sendJSONObject({foo:"bar"}))
+     * @param jsonObject the sent jsonObject
+     */
+    @Override
+    public void onJSONObjectReceived(JSONObject jsonObject) {
+        /* call callback-method if set*/
+        if ( this.jsonObjectReceivedCallback != null ) {
+            /* pass called url as String to callback-method */
+            final PluginResult res = new PluginResult( PluginResult.Status.OK, jsonObject );
+            res.setKeepCallback( true );
+            this.jsonObjectReceivedCallback.sendPluginResult( res );
+        }
     }
 
     @Override
@@ -730,10 +764,12 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
                 featuresBitMap = featuresBitMap | ArchitectStartupConfiguration.Features.Geo;
             } else if (feature.equalsIgnoreCase("instant_tracking")) {
                 featuresBitMap = featuresBitMap | ArchitectStartupConfiguration.Features.InstantTracking;
+            } else if (feature.equalsIgnoreCase("object_tracking")) {
+                featuresBitMap = featuresBitMap | ArchitectStartupConfiguration.Features.ObjectTracking;
             }
         }
         if (featuresBitMap == 0) {
-            featuresBitMap = ArchitectStartupConfiguration.Features.ImageTracking | ArchitectStartupConfiguration.Features.Geo | ArchitectStartupConfiguration.Features.InstantTracking;
+            featuresBitMap = ArchitectStartupConfiguration.Features.ImageTracking | ArchitectStartupConfiguration.Features.Geo | ArchitectStartupConfiguration.Features.InstantTracking | ArchitectStartupConfiguration.Features.ObjectTracking;
         }
         return featuresBitMap;
     }
@@ -892,8 +928,12 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
             this.architectView.onCreate( getStartupConfiguration( apiKey, features, startupConfiguration ) );
             this.architectView.onPostCreate();
 
-			/* register self as url listener to fwd these native calls to PhoneGap */
+            /* register self as url listener to fwd these native calls to PhoneGap */
             this.architectView.registerUrlListener( WikitudePlugin.this );
+
+            /* add self as js interface listener to forward AR.platform to Cordova. */
+            this.architectView.addArchitectJavaScriptInterfaceListener( WikitudePlugin.this );
+
             this.architectView.registerWorldLoadedListener( WikitudePlugin.this );
 
 			/* load asset from local directory if prefix is used */
