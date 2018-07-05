@@ -45,7 +45,6 @@ import android.widget.Toast;
 
 import com.wikitude.architect.ArchitectJavaScriptInterfaceListener;
 import com.wikitude.architect.ArchitectView;
-import com.wikitude.architect.ArchitectView.ArchitectUrlListener;
 import com.wikitude.architect.ArchitectView.ArchitectWorldLoadedListener;
 import com.wikitude.architect.ArchitectView.CaptureScreenCallback;
 import com.wikitude.architect.ArchitectStartupConfiguration;
@@ -67,7 +66,7 @@ import com.wikitude.tools.device.features.MissingDeviceFeatures;
  * This plug-in is written under Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0.html
  */
-public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListener,ArchitectJavaScriptInterfaceListener, ArchitectWorldLoadedListener {
+public class WikitudePlugin extends CordovaPlugin implements ArchitectJavaScriptInterfaceListener, ArchitectWorldLoadedListener {
 
     /** PhoneGap-root to Android-app-assets folder ; e.g. use "assets/foo.html" as source if you want to load foo.html from your android-project's assets-folder */
     private static final String	LOCAL_ASSETS_PATH_ROOT		= "assets/";
@@ -396,50 +395,49 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 
 		/* location update */
         if ( WikitudePlugin.ACTION_SET_LOCATION.equals( action ) ) {
-            if ( this.architectView != null ) {
+            try {
+                final double lat = args.getDouble( 0 );
+                final double lon = args.getDouble( 1 );
+                float alt = Float.MIN_VALUE;
                 try {
-                    final double lat = args.getDouble( 0 );
-                    final double lon = args.getDouble( 1 );
-                    float alt = Float.MIN_VALUE;
-                    try {
-                        alt = (float)args.getDouble( 2 );
-                    } catch ( Exception e ) {
-                        // invalid altitude -> ignore it
-                    }
-                    final float altitude = alt;
-                    Double acc = null;
-                    try {
-                        acc = args.getDouble( 3 );
-                    } catch ( Exception e ) {
-                        // invalid accuracy -> ignore it
-                    }
-                    final Double accuracy = acc;
-                    if ( this.cordova != null && this.cordova.getActivity() != null ) {
-                        this.useCustomLocation = true;
-                        cordova.getActivity().runOnUiThread(
+                    alt = (float)args.getDouble( 2 );
+                } catch ( Exception e ) {
+                    // invalid altitude -> ignore it
+                }
+                final float altitude = alt;
+                Double acc = null;
+                try {
+                    acc = args.getDouble( 3 );
+                } catch ( Exception e ) {
+                    // invalid accuracy -> ignore it
+                }
+                final Double accuracy = acc;
+                if ( this.cordova != null && this.cordova.getActivity() != null ) {
+                    this.useCustomLocation = true;
+                    cordova.getActivity().runOnUiThread(
 //						this.cordova.getThreadPool().execute(
-                                new Runnable() {
+                            new Runnable() {
 
-                                    @Override
-                                    public void run() {
+                                @Override
+                                public void run() {
+                                    if ( WikitudePlugin.this.architectView != null ) {
                                         if ( accuracy != null ) {
                                             WikitudePlugin.this.architectView.setLocation( lat, lon, altitude, accuracy.floatValue() );
                                         } else {
                                             WikitudePlugin.this.architectView.setLocation( lat, lon, altitude );
                                         }
+                                        callContext.success( action + ": updated location" );
+                                    } else {
+                                        /* return error if there is no architect-view active*/
+                                        callContext.error( action + ": architectView is not present" );
                                     }
-                                } );
-                    }
-
-                } catch ( Exception e ) {
-                    callContext.error( action + ": exception thrown, " + e != null ? e.getMessage() : "(exception is NULL)" );
-                    return true;
+                                }
+                            } );
                 }
-                callContext.success( action + ": updated location" );
+
+            } catch ( Exception e ) {
+                callContext.error( action + ": exception thrown, " + e != null ? e.getMessage() : "(exception is NULL)" );
                 return true;
-            } else {
-				/* return error if there is no architect-view active*/
-                callContext.error( action + ": architectView is not present" );
             }
             return true;
         }
@@ -630,28 +628,6 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
         result = new PluginResult( PluginResult.Status.NO_RESULT, action + ": no result required, just registered callback-method" );
         result.setKeepCallback( true );
         this.openCallback.sendPluginResult(result);
-    }
-
-    /**
-     * called when url was invoked in architectView (by e.g. calling document.location = "myprotocoll://foo";
-     * @param url the invoked url (e.g. "architectsdk://foo")
-     * @return true if call was handled properly
-     */
-    public boolean urlWasInvoked( final String url ) {
-
-        /* call callback-method if set*/
-        if (this.urlInvokeCallback != null) {
-            try {
-                /* pass called url as String to callback-method */
-                final PluginResult res = new PluginResult(PluginResult.Status.OK, url);
-                res.setKeepCallback(true);
-                this.urlInvokeCallback.sendPluginResult(res);
-            } catch (Exception e) {
-                this.urlInvokeCallback.error("invalid url invoked: " + url);
-            }
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -927,9 +903,6 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectUrlListene
 			/* fake life-cycle calls, because activity is already up and running */
             this.architectView.onCreate( getStartupConfiguration( apiKey, features, startupConfiguration ) );
             this.architectView.onPostCreate();
-
-            /* register self as url listener to fwd these native calls to PhoneGap */
-            this.architectView.registerUrlListener( WikitudePlugin.this );
 
             /* add self as js interface listener to forward AR.platform to Cordova. */
             this.architectView.addArchitectJavaScriptInterfaceListener( WikitudePlugin.this );

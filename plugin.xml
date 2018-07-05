@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.wikitude.phonegap.WikitudePlugin"
-    version="7.2.1">
+    version="8.0.0">
 
     <name>Augmented Reality - Wikitude SDK Plugin</name>
     
@@ -61,11 +61,12 @@
         <!-- adds MediaPlayerActivity, required for startVideo feature-->
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity android:name="com.wikitude.tools.activities.MediaPlayerActivity" android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+                <intent-filter>
+                    <action android:name="android.intent.action.VIEW" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                </intent-filter>
             </activity>
+            <meta-data android:name="com.google.ar.core" android:value="optional" />
         </config-file>
 
         <!-- adds WikitudePlugin in project's config.xml -->
