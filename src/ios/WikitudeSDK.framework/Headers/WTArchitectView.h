@@ -227,6 +227,32 @@ extern NSString * const kWTScreenshotImageKey;
  */
 - (void)architectView:(WTArchitectView *)architectView didSwitchToActiveCaptureDevicePosition:(AVCaptureDevicePosition)activeCaptureDevicePosition;
 
+/**
+ * This method is called when code in the JavaScript file calls 'prompt()'
+ *
+ * @param architectView The architect view that tried to access a restriced API and failed
+ * @param prompt Prompt text requested
+ */
+- (NSString *)architectView:(WTArchitectView *)architectView didRequestPrompt:(NSString *)prompt;
+
+/**
+ * This method is called when code in the JavaScript file calls 'confirm()'
+ *
+ * @param architectView The architect view that tried to access a restriced API and failed
+ * @param message Message to display on panel
+ */
+- (BOOL)architectView:(WTArchitectView *)architectView didRequestConfirmPanelWithMessage:(NSString *)message;
+
+/**
+ * This method is called when code in the JavaScript file calls 'alert()'
+ *
+ * @param architectView The architect view that tried to access a restriced API and failed
+ * @param message Message to display on alert
+ */
+- (void)architectView:(WTArchitectView *)architectView didRequestAlertWithMessage:(NSString *)message;
+
+
+
 @end
 
 
@@ -250,6 +276,8 @@ extern NSString * const kWTScreenshotImageKey;
 @property (nonatomic, assign) BOOL                                                      shouldWebViewRotate;
 
 @property (nonatomic, assign) BOOL                                                      shouldAuthorizeRestrictedAPIs;
+
+@property (nonatomic, assign, class) BOOL                                               shouldUseWebKit;
 
 /**
  * Architect Worlds can be loaded with different required features. 
@@ -461,6 +489,7 @@ extern NSString * const kWTScreenshotImageKey;
  * This method clears the cache used by the webView, as well as the internal caches used by the SDK.
  */
 - (void)clearCache;
+
 
 @end
 

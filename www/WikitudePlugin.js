@@ -98,6 +98,10 @@
 		    "StartupConfiguration" : startupConfiguration
 		}]);
 
+		if (cordova.platformId == "android" && this.customBackButtonCallback == null) {
+            cordova.exec(this.onBackButton, this.onWikitudeError, "WikitudePlugin", "setBackButtonCallback", []);
+		}
+
 		// We add an event listener on the resume and pause event of the application life-cycle
 		document.addEventListener("resume", this.onResume, false);
 		document.addEventListener("pause", this.onPause, false);
@@ -240,7 +244,12 @@
 	WikitudePlugin.prototype.setBackButtonCallback = function(onBackButtonCallback)
 	{
 	    if ( cordova.platformId == "android" ) {
-	        cordova.exec(onBackButtonCallback, this.onWikitudeError, "WikitudePlugin", "setBackButtonCallback", []);
+	        var backButton = function(){
+	            this.customBackButtonCallback = onBackButtonCallback();
+	            this.onBackButton();
+	            onBackButtonCallback();
+	        }
+	        cordova.exec(backButton, this.onWikitudeError, "WikitudePlugin", "setBackButtonCallback", []);
 	    } else {
 	        alert('setBackButtonCallback is only available on Android and not on' + cordova.platformId);
 	    }

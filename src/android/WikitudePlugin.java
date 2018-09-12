@@ -228,6 +228,9 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectJavaScript
 
                     @Override
                     public void run() {
+                        if (WikitudePlugin.this.locationProvider != null) {
+                            WikitudePlugin.this.locationProvider.onPause();
+                        }
                         removeArchitectView();
                     }
                 } );
@@ -836,11 +839,6 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectJavaScript
                 @Override
                 public boolean onKeyUp(int keyCode, KeyEvent event) {
                     if (architectView!=null && keyCode == KeyEvent.KEYCODE_BACK) {
-                        if (WikitudePlugin.this.locationProvider != null) {
-                            WikitudePlugin.this.locationProvider.onPause();
-                        }
-                        removeArchitectView();
-
                         if ( WikitudePlugin.this.onBackButtonCallback != null ) {
                             try {
                                 /* pass called url as String to callback-method */
