@@ -89,6 +89,23 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 
 @implementation WTWikitudePlugin
 
++ (NSString *)composeFailingAPIAuthorizationMessageFromError:(NSError *)error
+{
+    NSDictionary *unauthorizedAPIInfo = [[error userInfo] objectForKey:kWTUnauthorizedAppleiOSSDKAPIsKey];
+
+    NSMutableString *detailedAuthorizationErrorLogMessage = [[NSMutableString alloc] initWithFormat:@"The following authorization states do not meet the requirements:"];
+    NSMutableString *missingAuthorizations = [[NSMutableString alloc] initWithFormat:@"In order to use the Wikitude SDK, please grant access to the following:"];
+    for (NSString *unauthorizedAPIKey in [unauthorizedAPIInfo allKeys])
+    {
+        [missingAuthorizations appendFormat:@"\n* %@", [WTAuthorizationRequestManager humanReadableDescriptionForUnauthorizedAppleiOSSDKAPI:unauthorizedAPIKey]];
+
+        [detailedAuthorizationErrorLogMessage appendFormat:@"\n%@ = %@", unauthorizedAPIKey, [WTAuthorizationRequestManager stringFromAuthorizationStatus:[[unauthorizedAPIInfo objectForKey:unauthorizedAPIKey] integerValue] forUnauthorizedAppleiOSSDKAPI:unauthorizedAPIKey]];
+    }
+    NSLog(@"%@", detailedAuthorizationErrorLogMessage);
+
+    return missingAuthorizations;
+}
+
 + (void)readStartupConfigurationFrom:(NSDictionary *)arguments andApplyTo:(WTStartupConfiguration *)configuration
 {
     if (arguments && configuration)
@@ -473,7 +490,29 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
             [self.arViewController.architectView start:^(WTArchitectStartupConfiguration *configuration) {
                 [WTWikitudePlugin readStartupConfigurationFrom:arguments andApplyTo:configuration];
                 [WTArchitectStartupConfiguration transferArchitectStartupConfiguration:configuration toArchitectStartupConfiguration:weakSelf.arViewController.startupConfiguration];
-            } completion:nil];
+            } completion:^(BOOL success, NSError *error) {
+                if ( !success && self.errorHandlerCallbackId )
+                {
+                    CDVPluginResult *pluginResult = nil;
+
+                    if ( [@"com.wikitude.architect.AuthorizationStates" isEqualToString:[error domain]] )
+                    {
+                        if ( 960 == [error code] )
+                        {
+                            NSString *missingAuthorizations = [WTWikitudePlugin composeFailingAPIAuthorizationMessageFromError:error];
+                            NSError *detailedError = [NSError errorWithDomain:[error domain] code:[error code] userInfo:@{NSLocalizedDescriptionKey: missingAuthorizations}];
+
+                            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:@{@"code": @(detailedError.code), @"message": [detailedError localizedDescription]}];
+                        }
+                    }
+                    else
+                    {
+                        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:@{@"code": @(error.code), @"message": [error localizedDescription]}];
+                    }
+
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.errorHandlerCallbackId];
+                }
+            }];
         }
     }
 }

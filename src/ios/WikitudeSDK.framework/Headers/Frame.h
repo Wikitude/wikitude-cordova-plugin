@@ -9,7 +9,7 @@
 
 #ifdef __cplusplus
 
-#include "Geometry.h"
+#include "Geometry.hpp"
 #include "FrameColorSpace.h"
 
 #include <cstdint>

@@ -9,4 +9,6 @@
 
 @interface WTWikitudePlugin : CDVPlugin
 
++ (NSString *)composeFailingAPIAuthorizationMessageFromError:(NSError *)error;
+
 @end

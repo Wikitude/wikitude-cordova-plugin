@@ -7,6 +7,8 @@
 
 #import "WTARViewController.h"
 
+#import "WTWikitudePlugin.h"
+
 
 NSString * const WTArchitectDidLoadWorldNotification = @"WTArchitectDidLoadWorldNotification";
 NSString * const WTArchitectDidFailToLoadWorldNotification = @"WTArchitectDidFailToLoadWorldNotification";
@@ -104,7 +106,20 @@ NSString * const WTArchitectDebugDelegateMessageKey = @"WTArchitectDebugDelegate
     if ( self.presentingViewController && ![self.architectView isRunning] ) {
         [self.architectView start:^(WTArchitectStartupConfiguration *configuration) {
             [WTArchitectStartupConfiguration transferArchitectStartupConfiguration:self.startupConfiguration toArchitectStartupConfiguration:configuration];
-        } completion:nil];
+        } completion:^(BOOL success, NSError *error) {
+            if ( [@"com.wikitude.architect.AuthorizationStates" isEqualToString:[error domain]] )
+            {
+                if ( 960 == [error code] )
+                {
+                    NSString *missingAuthorizations = [WTWikitudePlugin composeFailingAPIAuthorizationMessageFromError:error];
+                    NSError *detailedError = [NSError errorWithDomain:[error domain] code:[error code] userInfo:@{NSLocalizedDescriptionKey: missingAuthorizations}];
+
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[NSNotificationCenter defaultCenter] postNotificationName:WTArchitectDebugDelegateNotification object:self userInfo:@{WTArchitectDebugDelegateMessageKey:detailedError}];
+                    });
+                }
+            }
+        }];
     }
 
     [self.architectView setShouldRotate:YES toInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];

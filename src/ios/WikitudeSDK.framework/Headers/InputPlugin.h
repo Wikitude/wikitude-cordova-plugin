@@ -14,7 +14,7 @@
 #include <memory>
 #include <functional>
 
-#include "Geometry.h"
+#include "Geometry.hpp"
 
 #include "Plugin.h"
 #include "InputRenderSettings.h"

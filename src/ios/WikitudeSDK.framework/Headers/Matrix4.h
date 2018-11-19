@@ -19,7 +19,7 @@ namespace wikitude { namespace sdk {
         class Matrix4
         {
         public:
-            static constexpr float EPSILON = 0.00001f;
+            static constexpr float EPSILON = 1e-10f;
             static constexpr float DEG2RAD = 3.141593f / 180.0f;
             
             Matrix4();

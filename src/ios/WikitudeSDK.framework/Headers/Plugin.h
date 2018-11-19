@@ -14,7 +14,7 @@
 #include <memory>
 #include <unordered_map>
 
-#include "Geometry.h"
+#include "Geometry.hpp"
 #include "InterfaceOrientation.h"
 #include "RenderingAPI.h"
 #include "RenderingContext.h"

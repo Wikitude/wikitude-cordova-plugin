@@ -28,7 +28,7 @@ FOUNDATION_EXPORT const unsigned char WikitudeSDKVersionString[];
 #import <WikitudeSDK/WTArchitectView+Plugins.h>
 #import <WikitudeSDK/Frame.h>
 #import <WikitudeSDK/Matrix4.h>
-#import <WikitudeSDK/Geometry.h>
+#import <WikitudeSDK/Geometry.hpp>
 #import <WikitudeSDK/FrameColorSpace.h>
 #import <WikitudeSDK/RecognizedTarget.h>
 #import <WikitudeSDK/InterfaceOrientation.h>

@@ -9,7 +9,7 @@
 #define InputFrameSettings_h
 
 #include "FrameColorSpace.h"
-#include "Geometry.h"
+#include "Geometry.hpp"
 
 #ifdef __cplusplus
 

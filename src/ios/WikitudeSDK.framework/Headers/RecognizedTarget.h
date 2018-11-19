@@ -12,7 +12,7 @@
 #include <string>
 
 #include "Matrix4.h"
-#include "Geometry.h"
+#include "Geometry.hpp"
 
 #define DEPRECATED_SINCE(__version__, __msg__) __attribute__((deprecated("Deprecated in Wikitude SDK " #__version__ ". " __msg__)))
 
