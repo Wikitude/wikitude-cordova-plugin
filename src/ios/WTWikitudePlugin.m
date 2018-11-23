@@ -282,31 +282,33 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     return optionalPathPrefix;
 }
 
++ (NSString *)addPathPrefix:(NSString *)pathPrefix toArchitectWorldURLString:(NSString *)architectWorldURLString{
+    if ( pathPrefix && architectWorldURLString ){
+        NSRange wwwRange = [architectWorldURLString rangeOfString:@"www"];
+        if ( NSNotFound != wwwRange.location ){
+            NSString *leadingPart = [architectWorldURLString substringToIndex:wwwRange.location];
+            NSString *trailingPart = [architectWorldURLString substringFromIndex:wwwRange.location];
+            NSString *modifiedArchitectWorldString = [leadingPart stringByAppendingPathComponent:pathPrefix];
+            modifiedArchitectWorldString = [modifiedArchitectWorldString stringByAppendingPathComponent:trailingPart];
+            return modifiedArchitectWorldString;
+        }
+    }
+    return architectWorldURLString;
+}
+
 + (NSURL *)addPathPrefix:(NSString *)pathPrefix toArchitectWorldURL:(NSURL *)architectWorldURL
 {
     if ( pathPrefix && architectWorldURL )
     {
         NSString *architectWorldString = [architectWorldURL absoluteString];
-        NSRange wwwRange = [architectWorldString rangeOfString:@"www"];
-        if ( NSNotFound != wwwRange.location )
-        {
-            NSString *leadingPart = [architectWorldString substringToIndex:wwwRange.location];
-            NSString *trailingPart = [architectWorldString substringFromIndex:wwwRange.location];
-            NSString *modifiedArchitectWorldString = [leadingPart stringByAppendingPathComponent:pathPrefix];
-            modifiedArchitectWorldString = [modifiedArchitectWorldString stringByAppendingPathComponent:trailingPart];
-
+        NSString *modifiedArchitectWorldString = [WTWikitudePlugin addPathPrefix:pathPrefix toArchitectWorldURLString:architectWorldString];
+        if(modifiedArchitectWorldString){
             NSURL *modifiedArchitectWorldURL = [NSURL URLWithString:modifiedArchitectWorldString];
             return modifiedArchitectWorldURL;
         }
-        else
-        {
-            return architectWorldURL;
-        }
     }
-    else
-    {
-        return architectWorldURL;
-    }
+    
+    return architectWorldURL;
 }
 
 #pragma mark - Plugin Methods
@@ -460,7 +462,13 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
             [self.viewController presentViewController:self.arViewController animated:YES completion:nil];
 
             [self addNotificationObserver];
-
+            
+            if(architectWorldURLString){
+                NSString *optionalPathPrefix = [WTWikitudePlugin readOptionalPathPrefixFromApplicationPlist];
+                if ( optionalPathPrefix ) {
+                    architectWorldURLString = [WTWikitudePlugin addPathPrefix:optionalPathPrefix toArchitectWorldURLString:architectWorldURLString];
+                }
+            }
 
             NSURL *architectWorldURL = [NSURL URLWithString:architectWorldURLString];
             if ( !architectWorldURL || ![architectWorldURL scheme] )
@@ -469,10 +477,6 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
             }
             if ( architectWorldURL )
             {
-                NSString *optionalPathPrefix = [WTWikitudePlugin readOptionalPathPrefixFromApplicationPlist];
-                if ( optionalPathPrefix ) {
-                    architectWorldURL = [WTWikitudePlugin addPathPrefix:optionalPathPrefix toArchitectWorldURL:architectWorldURL];
-                }
                 self.arViewController.currentArchitectWorldNavigation = [self.arViewController.architectView loadArchitectWorldFromURL:architectWorldURL];
 
                 self.loadArchitectWorldCallbackId = command.callbackId;
