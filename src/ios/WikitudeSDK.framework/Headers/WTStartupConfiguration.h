@@ -5,9 +5,8 @@
 //  Copyright (c) 2016 Wikitude. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <Foundation/NSObject.h>
 #import <AVFoundation/AVFoundation.h>
-#import <OpenGLES/gltypes.h>
 
 #import "WTWikitudeTypes.h"
 
@@ -44,20 +43,12 @@ static inline CMTime WTMakeTargetFrameRateAuto()
 @property (nonatomic, assign) WTCaptureDeviceResolution            captureDeviceResolution;
 
 /**
- * The capture device preset that should be used when the SDK starts.
- * If the preset is not supported by the current device, then a default preset is used.
- */
-@property (nonatomic, strong) NSString                              *captureDevicePreset WT_DEPRECATED_SINCE(6.0.0, "Use captureDeviceResolution instead.");
-
-
-/**
  * The capture device position that should be used when the SDK starts.
  * If the position is not supported by the current device, then a default position is used.
  *
  * @default AVCaptureDevicePositionBack
  */
 @property (nonatomic, assign) AVCaptureDevicePosition               captureDevicePosition;
-
 
 /**
  * The capture device focus mode that should be used when the SDK starts.
@@ -87,7 +78,10 @@ static inline CMTime WTMakeTargetFrameRateAuto()
  *
  * @default AVCaptureAutoFocusRangeRestrictionNone
  */
-@property (nonatomic, assign) AVCaptureAutoFocusRangeRestriction    captureDeviceFocusRangeRestriction;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+@property (nonatomic, assign) AVCaptureAutoFocusRangeRestriction    captureDeviceFocusRangeRestriction API_UNAVAILABLE(macos);
+#pragma clang diagnostic pop
 
 
 /**

@@ -5,7 +5,8 @@
 // Copyright (c) 2016 Wikitude. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSString.h>
 
 
 /**

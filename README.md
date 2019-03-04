@@ -1,12 +1,10 @@
-# Augmented Reality - Wikitude SDK Plugin for Cordova
-by Wikitude GmbH - [www.wikitude.com](https://www.wikitude.com)
+# Augmented Reality - Wikitude SDK Plugin
+by Wikitude GmbH - [www.wikitude.com](http://www.wikitude.com)
 
-The first Cordova plugn enabling to put augmented reality into an Cordova based application
-The provided sample projects for Android and iOS demo the most common usecases. 
-Details about functionality and features of the most current version can be found on [our website](https://www.wikitude.com/products/extensions/augmented-reality-for-xamarin/)
+The first Cordova Plugin providing image recognition and location based augmented reality.
 
 # Documentation & Samples
-- Please find details about plugin installation, a comprehensive getting started guide and other information in the [Wikitude Developer Documentation for Cordova](https://www.wikitude.com/external/doc/documentation/latest/phonegap/).
+- Please find details about plugin installation, a comprehensive getting started guide and other information in the [Wikitude Developer Documentation for Cordova](http://www.wikitude.com/developer/documentation/phonegap).
 - There is a [separate git repository with a sample application](https://github.com/Wikitude/wikitude-phonegap-samples) , ready to run on your mobile device.
 
 
@@ -16,7 +14,7 @@ The Wikitude Plugin is under Apache 2.0 license (see below), where the Wikitude 
 
 
 ``` 
-   Copyright 2012-2018 Wikitude GmbH, http://www.wikitude.com
+   Copyright 2012-2016 Wikitude GmbH, http://www.wikitude.com
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
