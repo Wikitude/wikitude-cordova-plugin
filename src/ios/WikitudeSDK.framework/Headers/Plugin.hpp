@@ -88,12 +88,12 @@ namespace wikitude {
                 virtual void destroy();
 
                 /**
-                 * Will be called every time the Wikitude Enigine receives a new camera frame from the platform camera.
+                 * Will be called every time the Wikitude Engine receives a new camera frame from the platform camera.
                  *
                  * @param managedCameraFrame_ frame wrapper object which contains the frame data and some metadata about the frame
                  */
                 virtual void cameraFrameAvailable(ManagedCameraFrame& managedCameraFrame_);
-                
+
                 /**
                  * Will be called every time the Wikitude Enigine receives new rotation data from the hardware.
                  *
@@ -102,11 +102,12 @@ namespace wikitude {
                 virtual void deviceRotationEventAvailable(const DeviceRotationEvent& deviceRotationEvent_);
 
                 /**
-                 * Will be called every time the Wikitude Enigine receives new orientation data from the hardware.
+                 * Will be called every time the Wikitude Engine receives new orientation data from the hardware.
                  *
                  * @param deviceOrientationEvent_ sensor event object that contains data and timestamp
                  */
                 virtual void deviceOrientationEventAvailable(const DeviceOrientationEvent& deviceOrientationEvent_);
+
 
                 /**
                  * Will be called after every image recognition cycle.
@@ -139,8 +140,9 @@ namespace wikitude {
                 ImageTrackingPluginModule* getImageTrackingPluginModule() const;
                 InstantTrackingPluginModule* getInstantTrackingPluginModule() const;
                 ObjectTrackingPluginModule* getObjectTrackingPluginModule() const;
-                
+
                 CameraFrameInputPluginModule* getCameraFrameInputPluginModule() const;
+
                 DeviceMotionInputPluginModule* getDeviceIMUInpputPluginModule() const;
 #if defined(__APPLE__) || defined(ANDROID)
                 OpenGLESRenderingPluginModule* getOpenGLESRenderingPluginModule() const;
@@ -182,8 +184,9 @@ namespace wikitude {
                 std::unique_ptr<ImageTrackingPluginModule>      _imageTrackingModule;
                 std::unique_ptr<InstantTrackingPluginModule>    _instantTrackingModule;
                 std::unique_ptr<ObjectTrackingPluginModule>     _objectTrackingModule;
-                
+
                 std::unique_ptr<CameraFrameInputPluginModule>   _cameraFrameInputModule;
+
                 std::unique_ptr<DeviceMotionInputPluginModule>  _deviceMotionInputPluginModule;
 #if defined(__APPLE__) || defined(ANDROID)
                 std::unique_ptr<OpenGLESRenderingPluginModule>  _openGlesRenderingModule;

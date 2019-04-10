@@ -35,10 +35,12 @@ namespace wikitude { namespace universal_sdk {
 
         struct CommonProperties {
         public:
-            CommonProperties(const sdk::Matrix4& viewMatrix_);
+            CommonProperties(const sdk::Matrix4& legacyMatrix_, const sdk::Matrix4& modelMatrix_, const sdk::Matrix4& viewMatrix_);
             CommonProperties(aramis::TargetState& targetState_);
             CommonProperties(aramis::Plane& plane_);
             sdk::Matrix4    _matrix;
+            sdk::Matrix4    _modelMatrix;
+            sdk::Matrix4    _viewMatrix;
         };
 
         struct TargetProperties {

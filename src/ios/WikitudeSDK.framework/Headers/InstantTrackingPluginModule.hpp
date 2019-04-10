@@ -18,14 +18,12 @@
 
 #include "TrackingPluginModule.hpp"
 #include "State.hpp"
-#include "SensorEvent.hpp"
 #include "InstantTrackingState.hpp"
 
 
 namespace wikitude { namespace sdk {
 
     namespace impl {
-
 
         class WT_EXPORT_API InstantTrackingPluginModule : public TrackingPluginModule {
         public:

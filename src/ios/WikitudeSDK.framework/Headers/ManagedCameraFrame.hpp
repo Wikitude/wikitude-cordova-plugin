@@ -32,16 +32,19 @@ namespace wikitude { namespace sdk {
 
             ManagedCameraFrame(ManagedCameraFrame& other_);
 
-            /* dtor impl. not needed as SDK is supposed to call lockForCopy(), copyIfNeede() and unlockAfterCopy() when the lifetyime of the FrameObject ends */
+            /* dtor impl. not needed as SDK is supposed to call lockForCopy(), copyIfNeeded() and unlockAfterCopy() when the lifetime of the FrameObject ends */
             virtual ~ManagedCameraFrame() = default;
 
             ManagedCameraFrame& operator = (ManagedCameraFrame& other_);
 
             long getId() const;
             std::int64_t getColorTimestamp() const;
-            const ColorCameraFrameMetadata& getColorMetadata() const;            
+            const ColorCameraFrameMetadata& getColorMetadata() const;
 
             const std::vector<CameraFramePlane>& get();
+
+            bool hasPose() const;
+            const Matrix4& getPose() const;
 
             void addRequestor();
             const std::vector<CameraFramePlane>& getRequestedData();

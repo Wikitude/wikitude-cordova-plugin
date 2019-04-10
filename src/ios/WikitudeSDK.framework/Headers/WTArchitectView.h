@@ -286,8 +286,18 @@ extern NSString * const kWTScreenshotImageKey;
  */
 @property (nonatomic, assign) WTFeatures                                                requiredFeatures;
 
-
 /** @name Accessing Device Compatibility */
+/**
+ * This method should be used to determine if the current device supports all features that are required.
+ *
+ * @deprecated Use isDeviceSupportingFeatures:error: instead.
+ * @param requiredFeatures Bitmask that describes wich features are used from the Wikitude SDK.
+ * @param error An error object containing more information why the device is not supported if the return value is NO.
+ *
+ * @return true if the device supports all required features, false otherwise.
+ */
++ (BOOL)isDeviceSupportedForRequiredFeatures:(WTFeatures)requiredFeatures error:(NSError **)error WT_DEPRECATED_SINCE(8.3.0, "Use isDeviceSupportingFeatures:error: instead.");
+
 /**
  * This method should be used to determine if the current device supports all features that are required.
  *
@@ -296,7 +306,7 @@ extern NSString * const kWTScreenshotImageKey;
  *
  * @return true if the device supports all required features, false otherwise.
  */
-+ (BOOL)isDeviceSupportedForRequiredFeatures:(WTFeatures)requiredFeatures error:(NSError **)error;
++ (BOOL)isDeviceSupportingFeatures:(WTFeatures)requiredFeatures error:(NSError **)error;
 
 /** @name Accessing ARchitect settings */
 /**

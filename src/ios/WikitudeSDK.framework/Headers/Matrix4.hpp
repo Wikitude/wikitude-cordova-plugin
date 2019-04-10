@@ -24,6 +24,9 @@ namespace wikitude { namespace sdk {
         {
         public:
             static constexpr float EPSILON = 0.00001f;
+#ifdef DEG2RAD
+#undef DEG2RAD
+#endif
             static constexpr float DEG2RAD = 3.141593f / 180.0f;
 
             /**

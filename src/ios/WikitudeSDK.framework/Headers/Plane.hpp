@@ -46,6 +46,26 @@ namespace wikitude { namespace sdk {
              */
             virtual const Matrix4& getMatrix() const = 0;
 
+            /** @brief Gets the transformation from local space to world space. This matrix is valid only if the CameraFrame contains a valid device pose.
+             * This is useful when the application needs to know the movement of the target relative to it's environment. When only the camera moves, this
+             * transformation stays constant from frame to frame.
+             *
+             * When combined with the viewMatrix, this results in the modelViewMatrix that should be applied to the target augmentation when rendering.
+             *
+             * @return The matrix that transforms the target from local space to world space.
+             */
+            virtual const Matrix4& getModelMatrix() const = 0;
+
+            /** @brief Gets the transformation from world space to camera space. This matrix is valid only if the CameraFrame contains a valid device pose.
+             * This is useful when the application needs to know the movement of the camera relative to it's environmet. When only the target moves, this
+             * transformation stays constant from frame to frame.
+             *
+             * When combined with the modelMatrix, this results in the modelViewMatrix that should be applied to the target augmentation when rendering.
+             *
+             * @return The matrix that transform the target from world space to camera space.
+             */
+            virtual const Matrix4& getViewMatrix() const = 0;
+
             /** @brief Gets the unique id of the Plane.
              *
              *  @return The unique id of the plane.

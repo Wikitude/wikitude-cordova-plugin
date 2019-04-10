@@ -32,9 +32,9 @@ find . -type d -name "WikitudeSDK.framework" | while read dir; do
     eval $RM_COMMAND
   fi
 
-  # At the end there is only one file, so we verify it's content. It's expected to have 5 architecture slices (armv7, armv7s, arm64, i386, x86_64)
+  # At the end there is only one file, so we verify it's content. It's expected to have 2 architecture slices (arm64[device], x86_64[simulator])
   ARCHITECTURES_IN_COMBINED_LIBRARY=$($(xcrun --sdk iphoneos --find lipo) -info "${dir}"/WikitudeSDK | sed -En -e 's/^(Non-|Architectures in the )fat file: .+( is architecture| are): (.*)$/\3/p' | wc -w)
-  if [ $ARCHITECTURES_IN_COMBINED_LIBRARY -ne 5 ]; then
+  if [ $ARCHITECTURES_IN_COMBINED_LIBRARY -ne 2 ]; then
     echo "Unexpected number of architectures found in WikitudeSDK. lipo output following"
     $(xcrun --sdk iphoneos --find lipo) -info "$dir"/WikitudeSDK
     exit -1
