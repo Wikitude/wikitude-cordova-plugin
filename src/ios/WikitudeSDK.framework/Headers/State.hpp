@@ -125,8 +125,10 @@ namespace wikitude { namespace universal_sdk {
         struct InstantState {
         public:
             InstantState();
+            InstantState(long processedFrameId_, sdk::Timestamp processedFrameTimestamp_, sdk::Matrix4& targetStateViewMatrix_, bool valid_);
             InstantState(aramis::State& state_);
 
+            void update(long processedFrameId_, sdk::Timestamp processedFrameTimestamp_, sdk::Matrix4& targetStateViewMatrix_, bool valid_);
             void update(aramis::State& state_);
 
             long                        _processedFrameId = -1;

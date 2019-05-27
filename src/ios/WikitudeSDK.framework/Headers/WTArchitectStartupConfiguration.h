@@ -40,6 +40,13 @@
 @property (nonatomic, assign) CLLocationDegrees                                         desiredHeadingFilter;
 
 /**
+ * A Boolean value that determines if audio will be played regardless of the status of the hardware mute switch.
+ *
+ * The default value is YES
+ */
+@property (nonatomic, assign) BOOL                                                      overrideHardwareMuteSwitch;
+
+/**
  * A Boolean value that determines whether pressing on a link displays a preview of the destination for the link.
  *
  * Please refer to the UIWebView documentation for more information
