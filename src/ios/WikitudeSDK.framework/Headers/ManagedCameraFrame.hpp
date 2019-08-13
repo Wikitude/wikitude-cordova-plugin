@@ -40,6 +40,8 @@ namespace wikitude { namespace sdk {
             long getId() const;
             std::int64_t getColorTimestamp() const;
             const ColorCameraFrameMetadata& getColorMetadata() const;
+            
+            const CameraFrame& getCameraFrame(){return _cameraFrame;}
 
             const std::vector<CameraFramePlane>& get();
 

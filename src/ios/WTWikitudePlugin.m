@@ -29,7 +29,6 @@ NSString * const kWTWikitudePlugin_requiredFeature_ImageTracking    = @"image_tr
 NSString * const kWTWikitudePlugin_requiredFeature_InstantTracking  = @"instant_tracking";
 NSString * const kWTWikitudePlugin_requiredFeature_ObjectTracking   = @"object_tracking";
 NSString * const kWTWikitudePlugin_requiredFeature_PhotoLibraryScreenshotImport  = @"photo_library_screenshot_import";
-NSString * const kWTWikitudePlugin_requiredFeature_2DTracking       = @"2d_tracking"; /* deprecated in Wikitude SDK version 6.0.0 */
 
 NSString * const kWTWikitudePlugin_ArgumentCaptureDeviceResolution  = @"camera_resolution";
 NSString * const kWTWikitudePlugin_captureDeviceResolution_SD_640x480 = @"sd_640x480";
@@ -226,7 +225,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
             {
                 requiredFeatures |= WTFeature_Geo;
             }
-            else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_ImageTracking] || [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_2DTracking] )
+            else if ( [featureString isEqualToString:kWTWikitudePlugin_requiredFeature_ImageTracking] )
             {
                 requiredFeatures |= WTFeature_ImageTracking;
             }

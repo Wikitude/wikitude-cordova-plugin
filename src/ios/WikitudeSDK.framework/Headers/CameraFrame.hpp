@@ -69,25 +69,25 @@ namespace wikitude { namespace sdk {
 
         enum class DistortionMode {
             None = 0,
-            Equidistant,
-            RadialTangential,
-            Atan,
+            Equidistant = 1,
+            RadialTangential = 2,
+            Atan = 3,
         };
 
         class IntrinsicsCalibration {
         public:
-            IntrinsicsCalibration(DistortionMode distortionMode_, Point<float> principalPoint_, Point<float> focalLength_, const std::vector<float>& distortion_);
+            IntrinsicsCalibration(DistortionMode distortionMode_, Point<double> principalPoint_, Point<double> focalLength_, const std::vector<double>& distortion_);
 
             DistortionMode getDistortionMode() const;
-            Point<float> getPrincipalPoint() const;
-            Point<float> getFocalLength() const;
-            const std::vector<float> getDistortion() const;
+            Point<double> getPrincipalPoint() const;
+            Point<double> getFocalLength() const;
+            const std::vector<double> getDistortion() const;
 
         protected:
             DistortionMode              _distortionMode;
-            Point<float>                _principalPoint;
-            Point<float>                _focalLength;
-            std::vector<float>          _distortion;
+            Point<double>                _principalPoint;
+            Point<double>                _focalLength;
+            std::vector<double>          _distortion;
         };
 
         /** @class ColorCameraFrameMetadata
