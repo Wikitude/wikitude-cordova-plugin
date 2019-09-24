@@ -35,6 +35,7 @@ namespace wikitude { namespace sdk {
             virtual ~ObjectTrackingPluginModule() = default;
 
             virtual universal_sdk::ObjectState getTrackingState() const = 0;
+            virtual sdk::Matrix4 getViewMatrix() const = 0;
         };
     }
     using impl::ObjectTrackingPluginModule;

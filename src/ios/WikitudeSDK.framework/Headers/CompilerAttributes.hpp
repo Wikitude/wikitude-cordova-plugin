@@ -25,6 +25,8 @@
     #define WT_EXPORT_API __attribute__ ((visibility("default")))
 #endif
 
+#define WKTD_UNUSED_VARIABLE(x) (void)(x)
+
 #endif /* __cplusplus */
 
 #endif /* CompilerAttributes_hpp */

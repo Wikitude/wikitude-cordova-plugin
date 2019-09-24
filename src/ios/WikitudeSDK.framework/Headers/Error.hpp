@@ -21,6 +21,10 @@ namespace wikitude { namespace sdk {
     namespace impl {
 
 
+        /**
+         * A simple data type to represent an error. Domains help to reduce the amount of unique codes by introducing an additional layer of separation.
+         * Underlying erros can be specified to build up a chain of erros that explain the problem from various different layers. This should help explain where the error originates from.
+        */
         class Error {
         public:
             Error(const int code_, const std::string& domain_, const std::string& message_, std::unique_ptr<Error> underlyingError_ = nullptr);
@@ -37,7 +41,32 @@ namespace wikitude { namespace sdk {
 
             const Error* getUnderlyingError() const;
 
+            /**
+             * Returns a string representation of a particular error object. The format is like the following for a error with code 1000, domain "com.example.domain" and message "Description of a fictive error"
+             * `code: 1000, domain: "com.example.domain", message: "Description of a fictive error"`
+             */
             std::string getDescription() const;
+
+            /**
+            * Returns a string representation of a particular error object including all underlying errors.
+            * ```
+            * {
+            *    code: 101,
+            *    domain: "com.wikitude.test",
+            *    message: "simple error message",
+            *    underlyingError: {
+            *        code: 5005,
+            *        domain: "com.wikitude.subtest",
+            *        message: "detailed error message",
+            *        underlyingError: {
+            *            code: 42,
+            *            domain: "com.wikitude.network_layer",
+            *            message: "Callback Aborted"
+            *        }
+            *    }
+            * }
+            * ```
+            */
             std::string getFormattedDescription() const;
 
         private:

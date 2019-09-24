@@ -11,6 +11,8 @@
 
 #ifdef __cplusplus
 
+#include "Matrix4.hpp"
+
 #include "State.hpp"
 #include "CompilerAttributes.hpp"
 
@@ -36,6 +38,7 @@ namespace wikitude { namespace sdk {
             virtual ~ImageTrackingPluginModule() = default;            
 
             virtual universal_sdk::ImageState getTrackingState() const = 0;
+            virtual sdk::Matrix4 getViewMatrix() const = 0;
         };
     }
     using impl::ImageTrackingPluginModule;

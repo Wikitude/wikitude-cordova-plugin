@@ -14,21 +14,21 @@
 
 namespace wikitude { namespace sdk {
 
-	namespace impl {
+    namespace impl {
 
 
-		/** @addtogroup InstantTracking
+        /** @addtogroup InstantTracking
         *  @{
         */
-		/** @class InstantTarget
+        /** @class InstantTarget
          *  @brief A class that represents instant targets that are found by an instant tracker.
          */
         class Matrix4;
-		class InstantTarget {
-		public:
-			virtual ~InstantTarget() = default;
+        class InstantTarget {
+        public:
+            virtual ~InstantTarget() = default;
 
-			/** @brief Gets the combined modelview matrix that should be applied to augmentations when rendering.
+            /** @brief Gets the combined modelview matrix that should be applied to augmentations when rendering.
              * In cases where the orientation of the rendering surface and orientation of the camera do not match, and a correct cameraToRenderSurfaceRotation is passed to the SDK,
              * this matrix will also be rotate to account for the mismatch.
              *
@@ -37,10 +37,26 @@ namespace wikitude { namespace sdk {
              *
              * @return The matrix that should be applied to the target augmentation when rendering.
              */
-			virtual const Matrix4& getMatrix() const = 0;
-		};
-		/** @}*/
-	}
+            virtual const Matrix4& getMatrix() const = 0;
+
+            /** @brief Gets the transformation from local space to world space.
+             * When the CameraFrame doesn't contain a valid device pose, world space and camera space are the same.
+             * When combined with the viewMatrix, this results in the modelViewMatrix that should be applied to the target augmentation when rendering.
+             *
+             * @return The matrix that transforms the target from local space to world space.
+             */
+            virtual const Matrix4& getModelMatrix() const = 0;
+
+            /** @brief Gets the transformation from world space to camera space.
+             * When the CameraFrame doesn't contain a valid device pose, world space and camera space are the same.
+             * When combined with the modelMatrix, this results in the modelViewMatrix that should be applied to the target augmentation when rendering.
+             *
+             * @return The matrix that transform the target from world space to camera space.
+             */
+            virtual const Matrix4& getViewMatrix() const = 0;
+        };
+        /** @}*/
+    }
     using impl::InstantTarget;
 }}
 

@@ -278,8 +278,6 @@ extern NSString * const kWTScreenshotImageKey;
 
 @property (nonatomic, assign) BOOL                                                      shouldAuthorizeRestrictedAPIs;
 
-@property (nonatomic, assign, class) BOOL                                               shouldUseWebKit;
-
 /**
  * Architect Worlds can be loaded with different required features. 
  * Features specifies which SDK functionalities are required by the World. For example the WTFeature_ImageTracking does not start any GPS location related APIs and the user is not interrupted with a location access alert. As a result any geo related SDK functionalities do not work but the target image recognition is faster and the SDK does not cosume as much CPU performance than with an enabled GPS module. Choose the most suitable mode for your ARchitect World to experience the full functionality and the best performance.

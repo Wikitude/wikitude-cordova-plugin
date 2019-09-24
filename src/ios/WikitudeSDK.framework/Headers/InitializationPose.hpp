@@ -37,6 +37,22 @@ namespace wikitude { namespace sdk {
              * @return The matrix that should be applied to the target augmentation when rendering.
              */
             virtual const Matrix4& getMatrix() const = 0;
+
+            /** @brief Gets the transformation from local space to world space.
+             * When the CameraFrame doesn't contain a valid device pose, world space and camera space are the same.
+             * When combined with the viewMatrix, this results in the modelViewMatrix that should be applied to the target augmentation when rendering.
+             *
+             * @return The matrix that transforms the target from local space to world space.
+             */
+            virtual const Matrix4& getModelMatrix() const = 0;
+
+            /** @brief Gets the transformation from world space to camera space.
+             * When the CameraFrame doesn't contain a valid device pose, world space and camera space are the same.
+             * When combined with the modelMatrix, this results in the modelViewMatrix that should be applied to the target augmentation when rendering.
+             *
+             * @return The matrix that transform the target from world space to camera space.
+             */
+            virtual const Matrix4& getViewMatrix() const = 0;
         };
         /** @}*/
     }

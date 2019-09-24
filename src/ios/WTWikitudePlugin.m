@@ -451,6 +451,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
                 
                 [self.arViewController.architectView setLicenseKey:sdkKey];
 
+                self.arViewController.modalPresentationStyle = UIModalPresentationFullScreen;
                 self.arViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                 self.arViewController.architectDelegate = self;
             }

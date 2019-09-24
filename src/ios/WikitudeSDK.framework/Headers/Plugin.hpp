@@ -108,6 +108,8 @@ namespace wikitude {
                  */
                 virtual void deviceOrientationEventAvailable(const DeviceOrientationEvent& deviceOrientationEvent_);
 
+                
+                virtual void prepareUpdate();
 
                 /**
                  * Will be called after every image recognition cycle.

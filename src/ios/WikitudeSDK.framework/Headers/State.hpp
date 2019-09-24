@@ -35,7 +35,7 @@ namespace wikitude { namespace universal_sdk {
 
         struct CommonProperties {
         public:
-            CommonProperties(const sdk::Matrix4& legacyMatrix_, const sdk::Matrix4& modelMatrix_, const sdk::Matrix4& viewMatrix_);
+            CommonProperties(const sdk::Matrix4& modelMatrix_, const sdk::Matrix4& viewMatrix_);
             CommonProperties(aramis::TargetState& targetState_);
             CommonProperties(aramis::Plane& plane_);
             sdk::Matrix4    _matrix;
@@ -73,7 +73,7 @@ namespace wikitude { namespace universal_sdk {
         };
 
         struct InstantTargetState {
-            InstantTargetState(const sdk::Matrix4& viewMatrix_, bool valid_);
+            InstantTargetState(const sdk::Matrix4& modelMatrix_, const sdk::Matrix4& viewMatrix_, bool valid_);
             InstantTargetState(aramis::TargetState& targetState_);
 
             CommonProperties    _commonProperties;
@@ -125,10 +125,10 @@ namespace wikitude { namespace universal_sdk {
         struct InstantState {
         public:
             InstantState();
-            InstantState(long processedFrameId_, sdk::Timestamp processedFrameTimestamp_, sdk::Matrix4& targetStateViewMatrix_, bool valid_);
+            InstantState(long processedFrameId_, sdk::Timestamp processedFrameTimestamp_, const sdk::Matrix4& modelMatrix_, const sdk::Matrix4& viewMatrix_, bool valid_);
             InstantState(aramis::State& state_);
 
-            void update(long processedFrameId_, sdk::Timestamp processedFrameTimestamp_, sdk::Matrix4& targetStateViewMatrix_, bool valid_);
+            void update(long processedFrameId_, sdk::Timestamp processedFrameTimestamp_, const sdk::Matrix4& modelMatrix_, const sdk::Matrix4& viewMatrix_, bool valid_);
             void update(aramis::State& state_);
 
             long                        _processedFrameId = -1;

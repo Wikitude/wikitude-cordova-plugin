@@ -40,9 +40,9 @@ namespace wikitude { namespace sdk {
             virtual ~ObjectTarget() = default;
 
             /** @brief Gets the name of the associated target object in the wikitude object target collection(.wto).
-			 *
-			 *	@return The name of the image target.
-			 */
+             *
+             *	@return The name of the image target.
+             */
             virtual const std::string& getName() const = 0;
             
             /** @brief Gets the depth factor that needs to be applied to the matrix to get real world scaling.
@@ -55,9 +55,9 @@ namespace wikitude { namespace sdk {
             
             /** @brief Gets a scale value that represents the object dimensions proportionally to the uniform scaling
              *  given through the matrix returned from getMatrix();
-			 * 
-			 * @return The normalized scale of the object target.
-			 */
+             *
+             * @return The normalized scale of the object target.
+             */
             virtual const Scale3D<float> getTargetScale() const = 0;
 
             /** @brief Gets the combined modelview matrix that should be applied to augmentations when rendering.
@@ -71,20 +71,16 @@ namespace wikitude { namespace sdk {
              */
             virtual const Matrix4& getMatrix() const = 0;
 
-            /** @brief Gets the transformation from local space to world space. This matrix is valid only if the CameraFrame contains a valid device pose.
-             * This is useful when the application needs to know the movement of the target relative to it's environment. When only the camera moves, this
-             * transformation stays constant from frame to frame.
-             *
+            /** @brief Gets the transformation from local space to world space.
+             * When the CameraFrame doesn't contain a valid device pose, world space and camera space are the same.
              * When combined with the viewMatrix, this results in the modelViewMatrix that should be applied to the target augmentation when rendering.
              *
              * @return The matrix that transforms the target from local space to world space.
              */
             virtual const Matrix4& getModelMatrix() const = 0;
 
-            /** @brief Gets the transformation from world space to camera space. This matrix is valid only if the CameraFrame contains a valid device pose.
-             * This is useful when the application needs to know the movement of the camera relative to it's environmet. When only the target moves, this
-             * transformation stays constant from frame to frame.
-             *
+            /** @brief Gets the transformation from world space to camera space.
+             * When the CameraFrame doesn't contain a valid device pose, world space and camera space are the same.
              * When combined with the modelMatrix, this results in the modelViewMatrix that should be applied to the target augmentation when rendering.
              *
              * @return The matrix that transform the target from world space to camera space.

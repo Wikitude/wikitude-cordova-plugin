@@ -24,7 +24,7 @@ namespace wikitude { namespace sdk {
 
     namespace impl {
 
-
+        class Matrix4;
         class RecognizedTargetsBucket {
         public:
             virtual ~RecognizedTargetsBucket() = default;
@@ -36,6 +36,7 @@ namespace wikitude { namespace sdk {
             virtual const std::vector<InitializationPose*>& getInitializationPoses() const = 0;
             
             virtual const std::vector<Plane*>& getPlanes() const = 0;
+            virtual const Matrix4& getViewMatrix() const = 0;
         };
     }
     using impl::RecognizedTargetsBucket;
