@@ -15,6 +15,8 @@
 #include <memory>
 #include <sstream>
 
+#include "CompilerAttributes.hpp"
+
 
 namespace wikitude { namespace sdk {
 
@@ -25,14 +27,17 @@ namespace wikitude { namespace sdk {
          * A simple data type to represent an error. Domains help to reduce the amount of unique codes by introducing an additional layer of separation.
          * Underlying erros can be specified to build up a chain of erros that explain the problem from various different layers. This should help explain where the error originates from.
         */
-        class Error {
+        class WT_EXPORT_API Error {
         public:
-            Error(const int code_, const std::string& domain_, const std::string& message_, std::unique_ptr<Error> underlyingError_ = nullptr);
+            /* Use this to construct an empty error, if certain APIs require an error object even if no error was actually triggered */
+            static Error NoError();
+            
+            Error(const int code_, const std::string& domain_, const std::string& message_, std::unique_ptr<Error> underlyingError_ = nullptr, bool suppressErrorLogging_ = false);
             Error(const Error& other_);
             virtual ~Error() = default;
 
             Error& operator = (const Error& other_);
-            friend std::ostream& operator << (std::ostream& os_, const Error& error_);
+            friend WT_EXPORT_API std::ostream& operator << (std::ostream& os_, const Error& error_);
 
 
             int getCode() const;
@@ -71,6 +76,9 @@ namespace wikitude { namespace sdk {
 
         private:
             std::string getUnderlyingFormattedDescription() const;
+            
+            /* This is private in order to force the usage of the more explicit NoError static function */
+            Error();
 
         protected:
             int               _code;

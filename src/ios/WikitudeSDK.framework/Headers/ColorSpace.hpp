@@ -11,13 +11,15 @@
 
 #ifdef __cplusplus
 
+#include "CompilerAttributes.hpp"
+
 
 namespace wikitude { namespace sdk {
 
     namespace impl {
 
 
-        enum ColorSpace {
+        enum WT_EXPORT_API ColorSpace {
             /**
              * Represents a color space where image data is given in a YUV 420 format, arranged to be compliant to the NV21 standard.
              * The data size is frame width * frame height * 3/2, meaning full luminance resolution and half the size for chroma red * chroma blue

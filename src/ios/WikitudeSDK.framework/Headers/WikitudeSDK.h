@@ -27,6 +27,7 @@ FOUNDATION_EXPORT const unsigned char WikitudeSDKVersionString[];
 //#import <WikitudeSDK/WTExternalCMMotionManagerDataAccessMode.h>
 
 #import <WikitudeSDK/ArchitectPlugin.hpp>
+#import <WikitudeSDK/CameraFocusMode.hpp>
 #import <WikitudeSDK/CameraFrame.hpp>
 #import <WikitudeSDK/CameraFrameInputPluginModule.hpp>
 #import <WikitudeSDK/CameraFramePlane.hpp>
@@ -40,6 +41,7 @@ FOUNDATION_EXPORT const unsigned char WikitudeSDKVersionString[];
 #import <WikitudeSDK/ErrorHandling.hpp>
 #import <WikitudeSDK/Geometry.hpp>
 #import <WikitudeSDK/ImageTarget.hpp>
+#import <WikitudeSDK/ImageTargetType.hpp>
 #import <WikitudeSDK/ImageTrackingPluginModule.hpp>
 #import <WikitudeSDK/InstantTarget.hpp>
 #import <WikitudeSDK/InstantTrackingPluginModule.hpp>
@@ -70,6 +72,7 @@ FOUNDATION_EXPORT const unsigned char WikitudeSDKVersionString[];
 #import <WikitudeSDK/RenderableCameraFrame.hpp>
 #import <WikitudeSDK/RenderableCameraFrameBucket.hpp>
 #import <WikitudeSDK/RenderingPluginModule.hpp>
+#import <WikitudeSDK/SDKEdition.hpp>
 #import <WikitudeSDK/SensorEvent.hpp>
 #import <WikitudeSDK/State.hpp>
 #import <WikitudeSDK/Timestamp.hpp>

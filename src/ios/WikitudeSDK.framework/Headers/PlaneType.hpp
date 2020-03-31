@@ -11,6 +11,8 @@
 
 #ifdef __cplusplus
 
+#include "CompilerAttributes.hpp"
+
 
 namespace wikitude { namespace sdk {
 
@@ -19,7 +21,7 @@ namespace wikitude { namespace sdk {
         /**
          * @brief Use this enum to determine the type of a plane that was detected by the instant tracker.
          */
-        enum class PlaneType {
+        enum class WT_EXPORT_API PlaneType {
             /** HorizontalUpward: The detected plane is horizontal and points upward (e.g. floor). */
             HorizontalUpward,
             /** HorizontalDownward: The detected plane is horizontal and points downward (e.g. ceiling). */

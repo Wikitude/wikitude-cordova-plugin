@@ -15,6 +15,7 @@
 
 #include "PlaneType.hpp"
 #include "Geometry.hpp"
+#include "CompilerAttributes.hpp"
 
 
 namespace wikitude { namespace sdk {
@@ -31,7 +32,7 @@ namespace wikitude { namespace sdk {
 
         class Matrix4;
         class Vector3;
-        class Plane {
+        class WT_EXPORT_API Plane {
         public:
             virtual ~Plane() = default;
 

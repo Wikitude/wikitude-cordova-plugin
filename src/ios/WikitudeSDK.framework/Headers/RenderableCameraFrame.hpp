@@ -13,6 +13,8 @@
 
 #include <vector>
 
+#include "CompilerAttributes.hpp"
+
 #include "CameraFramePlane.hpp"
 #include "CameraFrame.hpp"
 
@@ -21,7 +23,7 @@ namespace wikitude { namespace sdk {
 
     namespace impl {
 
-        class RenderableCameraFrame {
+        class WT_EXPORT_API RenderableCameraFrame {
         public:
             RenderableCameraFrame() = default;
             RenderableCameraFrame(RenderableCameraFrame& other_) = delete;

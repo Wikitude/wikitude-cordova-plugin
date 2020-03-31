@@ -79,6 +79,7 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 @property (nonatomic, strong) NSString                              *accessRequestCallbackId;
 @property (nonatomic, strong) NSString                              *deviceSensorsNeedCalibrationCallbackId;
 @property (nonatomic, strong) NSString                              *deviceSensorsFinishedCalibrationCallbackId;
+@property (nonatomic, strong) NSString                              *onBackButtonCallbackId;
 
 @property (nonatomic, assign) BOOL                                  isUsingInjectedLocation;
 @property (nonatomic, assign) BOOL                                  isDeviceSupported;
@@ -607,6 +608,18 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)setBackButtonCallback:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult* pluginResult = nil;
+
+    self.onBackButtonCallbackId = command.callbackId;
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+    [pluginResult setKeepCallbackAsBool:YES];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 - (void)onPause:(CDVInvokedUrlCommand *)command
 {
 
@@ -941,7 +954,11 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
 
 - (void)architectViewControllerWillDisappear:(WTArchitectViewController *)architectViewController
 {
-    [self close:nil];
+    CDVPluginResult* pluginResult = nil;
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [pluginResult setKeepCallbackAsBool:YES];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.onBackButtonCallbackId];
 }
 
 

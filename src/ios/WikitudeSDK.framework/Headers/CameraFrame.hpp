@@ -21,6 +21,7 @@
 #include "DepthDataFormat.hpp"
 #include "CameraFramePlane.hpp"
 #include "Matrix4.hpp"
+#include "CompilerAttributes.hpp"
 
 
 namespace wikitude { namespace sdk {
@@ -30,7 +31,7 @@ namespace wikitude { namespace sdk {
         /** @class DepthCameraFrameMetadata
          *  @brief A class that encapsulates additional information about depth camera frames.
          */
-        class DepthCameraFrameMetadata {
+        class WT_EXPORT_API DepthCameraFrameMetadata {
         public:
             DepthCameraFrameMetadata(float horizontalFov_, sdk::Size<int> pixelSize_, unsigned int dataSize_, DepthDataFormat depthDataFormat_, bool inverted_, std::int32_t timestampTimescale_);
 
@@ -74,7 +75,7 @@ namespace wikitude { namespace sdk {
             Atan = 3,
         };
 
-        class IntrinsicsCalibration {
+        class WT_EXPORT_API IntrinsicsCalibration {
         public:
             IntrinsicsCalibration(DistortionMode distortionMode_, Point<double> principalPoint_, Point<double> focalLength_, const std::vector<double>& distortion_);
 
@@ -93,7 +94,7 @@ namespace wikitude { namespace sdk {
         /** @class ColorCameraFrameMetadata
          *  @brief A class that encapsulates additional information about color camera frames.
          */
-        class ColorCameraFrameMetadata {
+        class WT_EXPORT_API ColorCameraFrameMetadata {
         public:
             ColorCameraFrameMetadata(float horizontalFov_, sdk::Size<int> pixelSize_, CameraPosition cameraPosition_, ColorSpace frameColorSpace_, std::int32_t timestampTimescale_);
 
@@ -141,7 +142,7 @@ namespace wikitude { namespace sdk {
         /** @class CameraFrame
          *  @brief A class that color and depth frames, along with their metadata and optional pose. The CameraFrame class doesn't copy or retain the color and depth data in any way.
          */
-        class CameraFrame {
+        class WT_EXPORT_API CameraFrame {
         public:
             CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_);
             CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_, const Matrix4& pose_);

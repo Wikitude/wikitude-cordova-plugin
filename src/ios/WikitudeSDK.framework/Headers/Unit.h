@@ -11,13 +11,16 @@
 
 #ifdef __cplusplus
 
+#include "CompilerAttributes.hpp"
+
+
 namespace wikitude { namespace sdk {
     
     namespace impl {
         
         
         template <typename T>
-        class Unit {
+        class WT_EXPORT_API Unit {
             
         public:
             class Millimeter;
@@ -58,7 +61,7 @@ namespace wikitude { namespace sdk {
         };
         
         template <typename T>
-        class Unit<T>::Millimeter : public Unit<T> {
+        class WT_EXPORT_API Unit<T>::Millimeter : public Unit<T> {
         
         public:
             Millimeter() : Unit<T>(0) {};

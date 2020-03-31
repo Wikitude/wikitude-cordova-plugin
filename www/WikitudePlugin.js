@@ -97,7 +97,7 @@
 		    "StartupConfiguration" : startupConfiguration
 		}]);
 
-		if (cordova.platformId == "android" && this.customBackButtonCallback == null) {
+		if (this.customBackButtonCallback == null) {
             cordova.exec(this.onBackButton, this.onWikitudeError, "WikitudePlugin", "setBackButtonCallback", []);
 		}
 
@@ -242,16 +242,11 @@
 	 */
 	WikitudePlugin.prototype.setBackButtonCallback = function(onBackButtonCallback)
 	{
-	    if ( cordova.platformId == "android" ) {
-	        var backButton = function(){
-	            this.customBackButtonCallback = onBackButtonCallback();
-	            this.onBackButton();
-	            onBackButtonCallback();
-	        }
-	        cordova.exec(backButton, this.onWikitudeError, "WikitudePlugin", "setBackButtonCallback", []);
-	    } else {
-	        alert('setBackButtonCallback is only available on Android and not on' + cordova.platformId);
-	    }
+		this.customBackButtonCallback = function() {
+			onBackButtonCallback();
+			WikitudePlugin.prototype.close();
+		}
+		cordova.exec(this.customBackButtonCallback, this.onWikitudeError, "WikitudePlugin", "setBackButtonCallback", []);
 	}
 
 	/**
@@ -300,13 +295,18 @@
 
 	/* Lifecycle updates */
 	/**
-	 *	This function gets called every time the application did become active.
+	 *	This function gets called when the application goes back to main
 	 */
 	WikitudePlugin.prototype.onBackButton = function() {
 
 		// Call the Wikitude SDK that it should resume.
 		//cordova.exec(this.onWikitudeOK, this.onWikitudeError, "WikitudePlugin", "close", [""]);
-		WikitudePlugin.prototype.close();
+		if (this.customBackButtonCallback != null) {
+			this.customBackButtonCallback();
+		}
+		else {
+			WikitudePlugin.prototype.close();
+		}
 	};
 
 	/**

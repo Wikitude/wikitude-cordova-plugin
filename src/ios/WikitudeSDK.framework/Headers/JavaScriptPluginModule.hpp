@@ -24,7 +24,7 @@ namespace wikitude { namespace sdk {
 
         
         class Positionable;
-        class JavaScriptPluginModule : public PluginModule {
+        class WT_EXPORT_API JavaScriptPluginModule : public PluginModule {
         public:
             class JavaScriptAPI {
             public:

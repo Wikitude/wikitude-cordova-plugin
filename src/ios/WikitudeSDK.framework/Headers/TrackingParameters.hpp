@@ -12,6 +12,7 @@
 #ifdef __cplusplus
 
 #include "PlatformTrackingHandler.hpp"
+#include "CompilerAttributes.hpp"
 
 
 namespace wikitude {
@@ -28,7 +29,7 @@ namespace wikitude { namespace sdk {
     namespace impl {
 
 
-        class TrackingParameters {
+        class WT_EXPORT_API TrackingParameters {
         public:
             long getProcessedFrameId();
             void addProcessedFrameIdChangedHandler(std::uintptr_t handleOwner_, ProcessedFrameIdChangedHandler processedFrameIdChangedHandler_);

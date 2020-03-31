@@ -11,6 +11,9 @@
 
 #ifdef __cplusplus
 
+#include "CompilerAttributes.hpp"
+
+
 namespace wikitude {
     namespace sdk {
         namespace impl {
@@ -31,7 +34,7 @@ namespace wikitude { namespace sdk {
     namespace impl {
 
 
-        class RenderingParameters {
+        class WT_EXPORT_API RenderingParameters {
         public:
             RenderingParameters(universal_sdk::RenderingParametersInternal& internalRenderingParameters_);
 

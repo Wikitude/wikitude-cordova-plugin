@@ -13,17 +13,19 @@
 #include <iomanip>
 #include <limits>
 
+#include "CompilerAttributes.hpp"
+
 
 namespace wikitude { namespace sdk {
 
     template <typename T>
-    struct Point {
+    struct WT_EXPORT_API Point {
         Point() : x(0), y(0) {}
         Point(T x_, T y_) : x(x_), y(y_) {}
         T x;
         T y;
 
-        friend std::ostream& operator<<(std::ostream& os_, const Point& point_) {
+        friend WT_EXPORT_API std::ostream& operator<<(std::ostream& os_, const Point& point_) {
             os_ << std::fixed << std::setprecision(3);
             os_ << "{" << std::setw(5) << point_.x << ", " << std::setw(5) << point_.y << "}";
             os_ << std::resetiosflags(std::ios_base::fixed | std::ios_base::floatfield);
@@ -32,14 +34,14 @@ namespace wikitude { namespace sdk {
     };
     
     template <typename T>
-    struct Point3D {
+    struct WT_EXPORT_API Point3D {
         T x;
         T y;
         T z;
     };
 
     template <typename T>
-    struct Size {
+    struct WT_EXPORT_API Size {
         Size() : width(0), height(0) {}
         Size(T width_, T height_) : width(width_), height(height_) {}
 
@@ -70,7 +72,7 @@ namespace wikitude { namespace sdk {
             }
         }
 
-        friend std::ostream& operator<<(std::ostream& os_, const Size& size_) {
+        friend WT_EXPORT_API std::ostream& operator<<(std::ostream& os_, const Size& size_) {
             os_ << std::fixed << std::setprecision(3);
             os_ << "{" << size_.width << ", " << size_.height << "}";
             os_ << std::resetiosflags(std::ios_base::fixed | std::ios_base::floatfield);
@@ -79,14 +81,14 @@ namespace wikitude { namespace sdk {
     };
 
     template <typename T>
-    struct Rectangle {
+    struct WT_EXPORT_API Rectangle {
         Rectangle() : origin({0, 0}), size(0, 0) {}
         Rectangle(Point<T> origin_, Size<T> size_) : origin(origin_), size(size_) {}
 
         Point<T>   origin;
         Size<T>    size;
 
-        friend std::ostream& operator<<(std::ostream& os_, const Rectangle& rectangle_) {
+        friend WT_EXPORT_API std::ostream& operator<<(std::ostream& os_, const Rectangle& rectangle_) {
             os_ << std::fixed << std::setprecision(3);
             os_ << "{{" << std::setw(5) << rectangle_.origin.x << ", " << std::setw(5) << rectangle_.origin.y << "}, {" << std::setw(5) << rectangle_.size.width << ", " << std::setw(5) << rectangle_.size.height << "}}";
             os_ << std::resetiosflags(std::ios_base::fixed | std::ios_base::floatfield);
@@ -95,13 +97,13 @@ namespace wikitude { namespace sdk {
     };
 
     template<typename T>
-    struct Rectangle3D {
+    struct WT_EXPORT_API Rectangle3D {
         Point3D<T>  min;
         Point3D<T>  max;
     };
 
     template <typename T>
-    struct Scale2D {
+    struct WT_EXPORT_API Scale2D {
         Scale2D()
         :
         x(0),
@@ -114,7 +116,7 @@ namespace wikitude { namespace sdk {
         y(y_)
         { /* Intentionally Left Blank */ }
 
-        friend std::ostream& operator<<(std::ostream& os_, const Scale2D& scale_) {
+        friend WT_EXPORT_API std::ostream& operator<<(std::ostream& os_, const Scale2D& scale_) {
             os_ << std::fixed << std::setprecision(3);
             os_ << "{" << std::setw(5) << scale_.x << ", " << std::setw(5) << scale_.y << "}";
             os_ << std::resetiosflags(std::ios_base::fixed | std::ios_base::floatfield);
@@ -126,7 +128,7 @@ namespace wikitude { namespace sdk {
     };
 
     template<typename T>
-    bool isScale2DContainingPositiveAndValidValues(const Scale2D<T>& scale_) {
+    bool WT_EXPORT_API isScale2DContainingPositiveAndValidValues(const Scale2D<T>& scale_) {
         if ( scale_.x <= 0 || scale_.y <= 0 ) {
             return false;
         }
@@ -140,7 +142,7 @@ namespace wikitude { namespace sdk {
     }
     
     template <typename T>
-    struct Scale3D {
+    struct WT_EXPORT_API Scale3D {
         Scale3D()
             :
             x(0),
@@ -157,7 +159,7 @@ namespace wikitude { namespace sdk {
         { /* Intentionally Left Blank */
         }
 
-        friend std::ostream& operator<<(std::ostream& os_, const Scale3D& scale_) {
+        friend WT_EXPORT_API std::ostream& operator<<(std::ostream& os_, const Scale3D& scale_) {
             os_ << std::fixed << std::setprecision(3);
             os_ << "{" << std::setw(5) << scale_.x << ", " << std::setw(5) << scale_.y << ", " << std::setw(5) << scale_.z << "}";
             os_ << std::resetiosflags(std::ios_base::fixed | std::ios_base::floatfield);
@@ -170,12 +172,12 @@ namespace wikitude { namespace sdk {
     };
 
     template <typename T>
-    bool operator==(const Scale3D<T>& a, const Scale3D<T>& b) {
+    bool WT_EXPORT_API operator==(const Scale3D<T>& a, const Scale3D<T>& b) {
         return a.x == b.x && a.y == b.y && a.z == b.z;
     }
     
     template <typename T>
-    struct Extent {
+    struct WT_EXPORT_API Extent {
         Extent()
         :
         min(0),
@@ -194,7 +196,7 @@ namespace wikitude { namespace sdk {
         max(extent_.max)
         { /* Intentionally Left Blank */ }
         
-        friend std::ostream& operator<<(std::ostream& os_, const Extent& extent_) {
+        friend WT_EXPORT_API std::ostream& operator<<(std::ostream& os_, const Extent& extent_) {
             os_ << std::fixed << std::setprecision(3);
             os_ << "{" << std::setw(5) << extent_.min << ", " << std::setw(5) << extent_.max << "}";
             os_ << std::resetiosflags(std::ios_base::fixed | std::ios_base::floatfield);
@@ -206,7 +208,7 @@ namespace wikitude { namespace sdk {
     };
 
     template <typename T>
-    bool operator==(const Extent<T>& a, const Extent<T>& b) {
+    bool WT_EXPORT_API operator==(const Extent<T>& a, const Extent<T>& b) {
         return a.min == b.min && a.max == b.max;
     }
 }}

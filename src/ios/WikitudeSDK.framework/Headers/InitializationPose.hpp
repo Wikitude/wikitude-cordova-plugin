@@ -11,6 +11,8 @@
 
 #ifdef __cplusplus
 
+#include "CompilerAttributes.hpp"
+
 
 namespace wikitude { namespace sdk {
     
@@ -24,7 +26,7 @@ namespace wikitude { namespace sdk {
          *  @brief A class that represents a gravity aligned plane, as reported by an instant tracker.
          */
         class Matrix4;
-        class InitializationPose {
+        class WT_EXPORT_API InitializationPose {
         public:
             virtual ~InitializationPose() = default;
             

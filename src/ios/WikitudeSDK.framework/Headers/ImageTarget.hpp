@@ -16,7 +16,8 @@
 
 #include "Geometry.hpp"
 #include "Vector3.hpp"
-
+#include "ImageTargetType.hpp"
+#include "CompilerAttributes.hpp"
 
 namespace wikitude { namespace sdk {
 
@@ -30,7 +31,8 @@ namespace wikitude { namespace sdk {
          *  @brief A class that represents image targets that are found by an image tracker.
          */
         class Matrix4;
-        class ImageTarget {
+        class ImageTracker;
+        class WT_EXPORT_API ImageTarget {
         public:
             using DistanceToTargetChangedHandler = std::function<void(int distance_, ImageTarget& firstTarget_, ImageTarget& secondTarget_)>;
             using RotationToTargetChangedHandler = std::function<void(std::array<float, 3> rotation_, ImageTarget& firstTarget_, ImageTarget& secondTarget_)>;
@@ -45,6 +47,12 @@ namespace wikitude { namespace sdk {
              */
             virtual const std::string& getName() const = 0;
 
+            /** @brief Gets the address of the Tracker the target has been created by. Use to distinguish between trackers in case multiple simultaneous trackers are used.
+             *
+             * @return The address of the tracker the target has been created by
+             */
+            virtual const ImageTracker* getTracker() const = 0;
+            
             /** @brief Gets the unique id of the ImageTarget. This unique id is incremented with every recognition of the same target.
              *
              * @return The unique id of the image target.
@@ -140,6 +148,26 @@ namespace wikitude { namespace sdk {
              * @return The matrix that transform the target from world space to camera space.
              */
             virtual const Matrix4& getViewMatrix() const = 0;
+
+            /** @brief Gets the type from the image target.
+             *
+             * Please refer to the ImageTargetType documentation for more details.
+             *
+             * @return The image target type.
+             */
+            virtual ImageTargetType getImageTargetType() const = 0;
+
+            /** @brief Gets the base circumference of the cylinder target as it is defined in the .metadata file through the "circumference"->"base" value
+             *
+             * @return The cylinder target base circumference in millimeter.
+             */
+            virtual int getCircumferenceBase() const = 0;
+
+            /** @brief Gets the top circumference of the cylinder target as it is defined in the .metadata file through the "circumference"->"top" value
+             *
+             * @return The cylinder target top circumference in millimeter.
+             */
+            virtual int getCircumferenceTop() const = 0;
         };
         /** @}*/
     }    

@@ -11,12 +11,14 @@
 
 #ifdef __cplusplus
 
+#include "CompilerAttributes.hpp"
+
 
 namespace wikitude { namespace sdk {
     
     namespace impl {
         
-        enum InterfaceOrientation : int {
+        enum WT_EXPORT_API InterfaceOrientation : int {
             InterfaceOrientationLandscapeLeft = 90,
             InterfaceOrientationLandscapeRight = -90,
             InterfaceOrientationPortrait = 0,

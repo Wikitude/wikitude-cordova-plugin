@@ -49,7 +49,6 @@ import com.wikitude.architect.ArchitectView.ArchitectWorldLoadedListener;
 import com.wikitude.architect.ArchitectView.CaptureScreenCallback;
 import com.wikitude.architect.ArchitectStartupConfiguration;
 import com.wikitude.common.camera.CameraSettings;
-import com.wikitude.phonegap.WikitudePlugin.ArchitectViewPhoneGap.OnKeyUpDownListener;
 import com.wikitude.tools.device.features.MissingDeviceFeatures;
 
 
@@ -57,7 +56,7 @@ import com.wikitude.tools.device.features.MissingDeviceFeatures;
 /**
  * Basic PhoneGap Wikitude ARchitect Plugin
  *
- * You must add "<plugin name="WikitudePlugin" value="com.wikitude.phonegap.WikitudePlugin"/>"
+ * You must add "<plugin name="wikitudeplugin" value="com.wikitude.phonegap.wikitudeplugin"/>"
  * in config.xml to enable this plug-in in your project
  *
  * Also ensure to have wikitudesdk.jar in your libs folder
@@ -834,7 +833,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectJavaScript
 
             WikitudePlugin.releaseFocusInCordovaWebView(cordova.getActivity().getWindow().getDecorView().findViewById(android.R.id.content));
 
-            this.architectView = new ArchitectViewPhoneGap( this.cordova.getActivity() , new OnKeyUpDownListener() {
+            this.architectView = new ArchitectViewPhoneGap( this.cordova.getActivity() , new ArchitectViewPhoneGap.OnKeyUpDownListener() {
 
                 @Override
                 public boolean onKeyUp(int keyCode, KeyEvent event) {
