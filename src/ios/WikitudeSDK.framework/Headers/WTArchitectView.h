@@ -385,7 +385,7 @@ extern NSString * const kWTScreenshotImageKey;
  * This method can be called to force a layout of this view including all it's subviews.
  * In general this is not necessary as this view overrides layoutSubviews to handle view size changes automatically
  */
-- (void)shouldTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)transitionCoordinator;
+- (void)shouldTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)transitionCoordinator WT_DEPRECATED_SINCE(9.1.0, "This class implements -layoutSubviews to handle layout changes automatically. Please use `-setNeedsLayout` instead.");
 
 /**
  * Use this method to set the auto rotation behavior for the WTArchitectview.

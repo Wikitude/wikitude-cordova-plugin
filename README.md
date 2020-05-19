@@ -14,7 +14,7 @@ The Wikitude Plugin is under Apache 2.0 license (see below), where the Wikitude 
 
 
 ``` 
-   Copyright 2012-2020 Wikitude GmbH, http://www.wikitude.com
+   Copyright 2012-2019 Wikitude GmbH, http://www.wikitude.com
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
