@@ -18,10 +18,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         /** @addtogroup InstantTracking
          *  @{
@@ -106,10 +103,7 @@ namespace wikitude { namespace sdk {
              */
             virtual const std::vector<Point<float>>& getConvexHull() const = 0;
         };
-    }
-
-    using impl::Plane;
-}}
+}
 
 #endif /* __cplusplus */
 

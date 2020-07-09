@@ -15,18 +15,13 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         class WT_EXPORT_API RenderingPluginModule : public PluginModule {
         public:
             virtual ~RenderingPluginModule() = default;
         };
-    }
-    using impl::RenderingPluginModule;
-}}
+}
 
 #endif /* __cplusplus */
 

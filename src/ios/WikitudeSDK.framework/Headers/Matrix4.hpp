@@ -15,9 +15,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         /**
         * A four by four, float based matrix providing methods for spatial transformations in three dimensions. The matrix data is arranged in column-major order.
@@ -384,9 +382,7 @@ namespace wikitude { namespace sdk {
 
             float m[16];
         };
-    }
-    using impl::Matrix4;
-}}
+}
             
 #endif /* __cplusplus */
 

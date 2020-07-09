@@ -19,10 +19,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         class CameraFramePlane;
         class WT_EXPORT_API ManagedCameraFrame {
@@ -73,9 +70,7 @@ namespace wikitude { namespace sdk {
             std::shared_ptr<std::mutex>                         _safeStorageMutex;
             std::shared_ptr<int>                                _refCount = nullptr;
         };
-    }
-    using impl::ManagedCameraFrame;
-}}
+}
 
 #endif /* ManagedCameraFrame_hpp */
 

@@ -14,9 +14,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         /** @enum CameraPosition
          *  @brief An enum indicating the physical position of the camera used to capture frames.
@@ -32,9 +30,7 @@ namespace wikitude { namespace sdk {
              */
             Front
         };
-    }
-    using impl::CameraPosition;
-}}
+}
 
 #endif /* __cplusplus */
 

@@ -14,10 +14,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         enum class WT_EXPORT_API DepthDataFormat {
             FLOAT_32,
@@ -26,9 +23,7 @@ namespace wikitude { namespace sdk {
             INTEGER_16,
             INTEGER_32
         };
-    }
-    using impl::DepthDataFormat;
-}}
+}
 
 #endif /* __cplusplus */
 

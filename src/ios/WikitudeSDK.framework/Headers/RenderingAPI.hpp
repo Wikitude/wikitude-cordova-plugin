@@ -13,9 +13,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-    
-    namespace impl {
+namespace wikitude::sdk {
         
         enum class WT_EXPORT_API RenderingAPI {
             OpenGL_ES_2,
@@ -25,9 +23,7 @@ namespace wikitude { namespace sdk {
             None,
             RenderingAPIs
         };    
-    }
-    using impl::RenderingAPI;
-}}
+}
 
 #endif /* __cplusplus */
 

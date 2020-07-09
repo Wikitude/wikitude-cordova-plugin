@@ -21,9 +21,7 @@
 #include "InstantTrackingState.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         class WT_EXPORT_API InstantTrackingPluginModule : public TrackingPluginModule {
         public:
@@ -32,9 +30,7 @@ namespace wikitude { namespace sdk {
             virtual universal_sdk::InstantState getInitializationState(/*float deviceHeightAboveGround*/) const = 0;
             virtual universal_sdk::InstantState getTrackingState() const = 0;
         };
-    }
-    using impl::InstantTrackingPluginModule;
-}}
+}
 
 #endif /* __cplusplus */
 

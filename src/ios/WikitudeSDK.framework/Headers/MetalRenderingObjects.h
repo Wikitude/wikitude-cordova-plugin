@@ -19,9 +19,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-    
-        namespace impl {
+namespace wikitude::sdk {
             
             class WT_EXPORT_API MetalRenderingObjects {
             public:
@@ -36,10 +34,7 @@ namespace wikitude { namespace sdk {
                 id<MTLRenderCommandEncoder>     _commandEncoder;
                 MTLPixelFormat                  _pixelFormat;
             };
-            
-        }
-        using impl::MetalRenderingObjects;
-}}
+}
 
 #endif /* __cplusplus */
 

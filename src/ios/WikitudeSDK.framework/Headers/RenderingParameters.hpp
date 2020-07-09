@@ -12,28 +12,13 @@
 #ifdef __cplusplus
 
 #include "CompilerAttributes.hpp"
-
-
-namespace wikitude {
-    namespace sdk {
-        namespace impl {
-            enum class RenderingAPI;
-        }
-        using impl::RenderingAPI;
-    }
-    namespace universal_sdk {
-        namespace impl {
-            class RenderingParametersInternal;
-        }
-        using impl::RenderingParametersInternal;
-    }
+namespace wikitude::universal_sdk {
+    class RenderingParametersInternal;
 }
 
-namespace wikitude { namespace sdk {
+namespace wikitude::sdk {
 
-    namespace impl {
-
-
+        enum class RenderingAPI;
         class WT_EXPORT_API RenderingParameters {
         public:
             RenderingParameters(universal_sdk::RenderingParametersInternal& internalRenderingParameters_);
@@ -45,9 +30,7 @@ namespace wikitude { namespace sdk {
         protected:
             universal_sdk::RenderingParametersInternal&     _internalRenderingParameters;
         };
-    }
-    using impl::RenderingParameters;
-}}
+}
 
 #endif /* __cplusplus */
 

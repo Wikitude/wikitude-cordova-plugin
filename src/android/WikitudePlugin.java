@@ -17,8 +17,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -135,6 +137,8 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectJavaScript
     private static final String ACTION_REQUEST_ACCESS   = "requestAccess";
 
     private static final String ACTION_OPEN_APP_SETTINGS = "openAppSettings";
+
+    private static final String ACTION_SHOW_ALERT = "showAlert";
 
     /**
      * check if view is on view-stack (no matter if visible or not)
@@ -552,6 +556,24 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectJavaScript
             i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             cordova.getActivity().startActivity(i);
+            return true;
+        }
+
+        if ( WikitudePlugin.ACTION_SHOW_ALERT.equals( action ) ) {
+            try {
+                final String alertString = args.getString( 0 );
+                AlertDialog.Builder builder = new AlertDialog.Builder(cordova.getActivity());
+                builder.setMessage(alertString)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            } catch (JSONException e) {
+                callContext.error( action + ": exception thrown, " + e != null ? e.getMessage() : "(exception is NULL)" );
+                return true;
+            }
             return true;
         }
 

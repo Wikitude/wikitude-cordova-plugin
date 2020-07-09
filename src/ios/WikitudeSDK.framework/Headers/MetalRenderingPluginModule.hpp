@@ -15,27 +15,16 @@
 #include "RenderingPluginModule.hpp"
 
 
-namespace wikitude { namespace sdk {
-    
-    namespace impl {
-        class RenderableCameraFrameBucket;
-    }
-    using impl::RenderableCameraFrameBucket;
-}}
-
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         class MetalRenderingObjects;
+        class RenderableCameraFrameBucket;
         class WT_EXPORT_API MetalRenderingPluginModule : public RenderingPluginModule {
         public:
             virtual void startRender(const MetalRenderingObjects& metalRenderingObjects, RenderableCameraFrameBucket& frameBucket_) = 0;
             virtual void endRender(const MetalRenderingObjects& metalRenderingObjects, RenderableCameraFrameBucket& frameBucket_) = 0;
         };
-    }
-    using impl::MetalRenderingPluginModule;
-}}
+}
 
 #endif /* __cplusplus */
 

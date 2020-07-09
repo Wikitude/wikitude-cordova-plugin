@@ -14,9 +14,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         /**
          * @brief Use this enum to determine the type of a plane that was detected by the instant tracker.
@@ -31,9 +29,7 @@ namespace wikitude { namespace sdk {
             /** Arbitrary: The detected plane has an arbitrary orientation. */
             Arbitrary,
         };
-    }
-    using impl::PlaneType;
-}}
+}
 
 #endif /* __cplusplus */
 

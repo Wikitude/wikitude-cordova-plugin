@@ -46,7 +46,7 @@ FOUNDATION_EXPORT const unsigned char WikitudeSDKVersionString[];
 #import <WikitudeSDK/InstantTarget.hpp>
 #import <WikitudeSDK/InstantTrackingPluginModule.hpp>
 #import <WikitudeSDK/InstantTrackingState.hpp>
-#import <WikitudeSDK/InterfaceOrientation.h>
+#import <WikitudeSDK/InterfaceOrientation.hpp>
 #import <WikitudeSDK/InitializationPose.hpp>
 #import <WikitudeSDK/JavaScriptPluginModule.hpp>
 #import <WikitudeSDK/ManagedCameraFrame.hpp>
@@ -78,5 +78,5 @@ FOUNDATION_EXPORT const unsigned char WikitudeSDKVersionString[];
 #import <WikitudeSDK/Timestamp.hpp>
 #import <WikitudeSDK/TrackingParameters.hpp>
 #import <WikitudeSDK/TrackingPluginModule.hpp>
-#import <WikitudeSDK/Unit.h>
+#import <WikitudeSDK/Unit.hpp>
 #import <WikitudeSDK/Vector3.hpp>

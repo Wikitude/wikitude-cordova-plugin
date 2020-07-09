@@ -18,10 +18,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         /**
          * A simple data type to represent an error. Domains help to reduce the amount of unique codes by introducing an additional layer of separation.
@@ -87,9 +84,7 @@ namespace wikitude { namespace sdk {
 
             std::unique_ptr<Error>  _underlyingError;
         };
-    }
-    using impl::Error;
-}}
+}
 
 #endif /* __cplusplus */
 

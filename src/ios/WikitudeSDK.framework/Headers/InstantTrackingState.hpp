@@ -14,11 +14,8 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
+namespace wikitude::sdk {
     
-    namespace impl {
-
-        
         /** @addtogroup InstantTracking
          *  @{
          */
@@ -34,9 +31,7 @@ namespace wikitude { namespace sdk {
             Tracking
         };
         /** @}*/
-    }
-    using impl::InstantTrackingState;
-}}
+}
 
 #endif /* __cplusplus */
 

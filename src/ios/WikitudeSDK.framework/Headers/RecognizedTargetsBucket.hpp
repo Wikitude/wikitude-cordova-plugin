@@ -21,9 +21,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         class Matrix4;
         class WT_EXPORT_API RecognizedTargetsBucket {
@@ -39,9 +37,7 @@ namespace wikitude { namespace sdk {
             virtual const std::vector<Plane*>& getPlanes() const = 0;
             virtual const Matrix4& getViewMatrix() const = 0;
         };
-    }
-    using impl::RecognizedTargetsBucket;
-}}
+}
 
 #endif /* __cplusplus */
 

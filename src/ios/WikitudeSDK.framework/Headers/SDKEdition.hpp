@@ -14,9 +14,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         /**
          * @brief Use this enum to determine which edition of the SDK is running.
@@ -27,9 +25,7 @@ namespace wikitude { namespace sdk {
             /** ExpertEdition: The Expert edition of the SDK enables additional features. */
             ExpertEdition
         };
-    }
-    using impl::SDKEdition;
-}}
+}
 
 #endif /* __cplusplus */
 

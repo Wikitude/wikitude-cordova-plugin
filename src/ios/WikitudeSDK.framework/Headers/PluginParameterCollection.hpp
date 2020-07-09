@@ -14,11 +14,8 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
+namespace wikitude::sdk {
 
-    namespace impl {
-
-        
         class RuntimeParameters;
         class CameraParameters;
         class TrackingParameters;
@@ -35,9 +32,7 @@ namespace wikitude { namespace sdk {
             virtual const TrackingParameters& getTrackingParameters() const = 0;
             virtual TrackingParameters& getTrackingParameters() = 0;
         };
-    }
-    using impl::PluginParameterCollection;
-}}
+}
 
 #endif /* __cplusplus */
 

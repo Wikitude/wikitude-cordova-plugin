@@ -16,10 +16,7 @@
 #include "JavaScriptPluginModule.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         class WT_EXPORT_API ArchitectPlugin : public Plugin {
         public:
@@ -36,9 +33,7 @@ namespace wikitude { namespace sdk {
         private:
             std::unique_ptr<JavaScriptPluginModule>     _javaScriptPluginModule;
         };
-    }
-    using impl::ArchitectPlugin;
-}}
+}
 
 #endif /* __cplusplus */
 

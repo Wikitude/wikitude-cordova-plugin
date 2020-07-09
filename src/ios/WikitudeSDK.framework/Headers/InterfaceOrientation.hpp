@@ -1,5 +1,5 @@
 //
-//  InterfaceOrientation.h
+//  InterfaceOrientation.hpp
 //  CommonLibrary
 //
 //  Created by Daniel Guttenberg on 08/04/16.
@@ -14,9 +14,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-    
-    namespace impl {
+namespace wikitude::sdk {
         
         enum WT_EXPORT_API InterfaceOrientation : int {
             InterfaceOrientationLandscapeLeft = 90,
@@ -25,9 +23,7 @@ namespace wikitude { namespace sdk {
             InterfaceOrientationPortraitUpsideDown = 180,
             InterfaceOrientationUnknown
         };
-    }
-    using impl::InterfaceOrientation;
-}}
+}
 
 #endif /* __cplusplus */
 

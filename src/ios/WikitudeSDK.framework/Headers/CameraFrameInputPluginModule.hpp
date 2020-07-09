@@ -23,11 +23,8 @@
 #include "PluginModule.hpp"
 
 
-namespace wikitude { namespace sdk {
+namespace wikitude::sdk {
     
-    namespace impl {
-
-
         class WT_EXPORT_API CameraFrameInputPluginModule : public PluginModule {
         public:
             CameraFrameInputPluginModule() noexcept = default;
@@ -92,9 +89,7 @@ namespace wikitude { namespace sdk {
             std::function<void(float)>                      _cameraToSurfaceAngleChangedHandler;
             std::function<void(const sdk::Error&)>          _onPluginCameraErrorHandler;
         };
-    }
-    using impl::CameraFrameInputPluginModule;
-}}
+}
 
 #endif /* __cplusplus */
 

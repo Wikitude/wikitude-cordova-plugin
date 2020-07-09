@@ -14,9 +14,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         /**
          * @brief Use this enum to determine the type of a image target that was detected by the image tracker.
@@ -27,9 +25,7 @@ namespace wikitude { namespace sdk {
             /** Cylinder: The detected image target is a cylinder. */
             Cylinder
         };
-    }
-    using impl::ImageTargetType;
-}}
+}
 
 #endif /* __cplusplus */
 

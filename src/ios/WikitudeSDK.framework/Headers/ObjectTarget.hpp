@@ -16,11 +16,7 @@
 #include "Geometry.hpp"
 #include "CompilerAttributes.hpp"
 
-
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         /** @addtogroup ObjectTracking
         *  @{
@@ -102,9 +98,7 @@ namespace wikitude { namespace sdk {
             virtual const Matrix4& getViewMatrix() const = 0;
         };
         /** @}*/
-    }
-    using impl::ObjectTarget;
-}}
+}
 
 #endif /* __cplusplus */
 

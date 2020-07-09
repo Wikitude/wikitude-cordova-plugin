@@ -13,20 +13,9 @@
 
 #include "CompilerAttributes.hpp"
 
-namespace wikitude {
-    namespace sdk {
-        namespace impl {
-            class ManagedCameraFrame;
-        }
-        using impl::ManagedCameraFrame;
-    }
-}
+namespace wikitude::sdk {
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
-
+        class ManagedCameraFrame;
         class WT_EXPORT_API PluginModule {
         public:
             virtual ~PluginModule() = default;
@@ -44,9 +33,7 @@ namespace wikitude { namespace sdk {
         protected:
             bool    _isEnabled = true;
         };
-    }
-    using impl::PluginModule;
-}}
+}
 
 #endif /* __cplusplus */
 

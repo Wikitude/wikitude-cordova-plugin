@@ -14,9 +14,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         /**
          * @brief Use this enum to determine the focus mode of the camera.
@@ -29,9 +27,7 @@ namespace wikitude { namespace sdk {
             /** Off: The device has its focus locked */
             Off
         };
-    }
-    using impl::CameraFocusMode;
-}}
+}
 
 #endif /* __cplusplus */
 

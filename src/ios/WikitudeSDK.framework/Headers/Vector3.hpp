@@ -17,9 +17,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-    
-    namespace impl {
+namespace wikitude::sdk {
         
         /**
          * A three component float based vector providing utility methods for working with and manipulating 3D vectors. Compatible with Matrix4.
@@ -271,9 +269,7 @@ namespace wikitude { namespace sdk {
              */
             float z;
         };
-    }
-    using impl::Vector3;
-}}
+}
 
 #endif /* __cplusplus */
 

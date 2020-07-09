@@ -14,10 +14,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         enum WT_EXPORT_API ColorSpace {
             /**
@@ -83,9 +80,7 @@ namespace wikitude { namespace sdk {
             */
             UNKNOWN
         };
-    }
-    using impl::ColorSpace;
-}}
+}
 
 #endif /* __cplusplus */
 

@@ -17,19 +17,11 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude {
-    namespace universal_sdk {
-        namespace impl {
-            class BaseTracker;
-        }
-        using impl::BaseTracker;
-    }
+namespace wikitude::universal_sdk {
+    class BaseTracker;
 }
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         class WT_EXPORT_API TrackingPluginModule : public PluginModule {
         public:
@@ -43,9 +35,7 @@ namespace wikitude { namespace sdk {
             virtual void addTracker(universal_sdk::BaseTracker& tracker_) = 0;
             virtual void removeTracker(universal_sdk::BaseTracker& tracker_) = 0;
         };
-    }
-    using impl::TrackingPluginModule;
-}}
+}
 
 #endif /* __cplusplus */
 

@@ -36,14 +36,9 @@
 #include "D3D11RenderingPluginModule.hpp"
 #endif
 
-
-namespace wikitude {
-    namespace sdk {
-        namespace impl {
-
+namespace wikitude::sdk {
 
             class CameraFrame;
-            class ManagedCameraFrame;
             class RuntimeParameters;
             class CameraParameters;
             class TrackingParameters;
@@ -51,6 +46,7 @@ namespace wikitude {
             class PluginParameterCollection;
             class DeviceRotationEvent;
             class DeviceOrientationEvent;
+            class ManagedCameraFrame;
 
             enum class WT_EXPORT_API PluginType {
                 Plugin,
@@ -205,11 +201,6 @@ namespace wikitude {
                 std::unique_ptr<D3D11RenderingPluginModule>     _d3d11RenderingModule;
 #endif
             };
-        }
-        using impl::PluginParameterCollection;
-        using impl::Plugin;
-        using impl::PluginType;
-    }
 }
 
 #endif /* __cplusplus */

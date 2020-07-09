@@ -16,10 +16,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         /** @struct Timestamp
          * @brief Timestamp represents a single point in time. _value/_timescale = seconds.
@@ -29,9 +26,7 @@ namespace wikitude { namespace sdk {
             std::int64_t    _value = 0;
             std::int32_t    _timescale = 0;
         };
-    }
-    using impl::Timestamp;
-}}
+}
 
 #endif /* __cplusplus */
 

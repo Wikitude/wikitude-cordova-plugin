@@ -24,9 +24,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         /** @class DepthCameraFrameMetadata
          *  @brief A class that encapsulates additional information about depth camera frames.
@@ -147,6 +145,7 @@ namespace wikitude { namespace sdk {
             CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_);
             CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_, const Matrix4& pose_);
             CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_, std::int64_t depthTimestamp_, DepthCameraFrameMetadata depthMetadata_, const void* depthData_);
+            CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_, std::int64_t depthTimestamp_, DepthCameraFrameMetadata depthMetadata_, const void* depthData_, const Matrix4& pose_);
 
             /** @brief Returns unique id used to identify individual frames.
              */
@@ -199,14 +198,7 @@ namespace wikitude { namespace sdk {
             bool                                    _hasPose;
         };
         /** @}*/
-    }
-    using impl::DepthDataFormat;
-    using impl::DepthCameraFrameMetadata;
-    using impl::ColorCameraFrameMetadata;
-    using impl::DistortionMode;
-    using impl::IntrinsicsCalibration;
-    using impl::CameraFrame;
-}}
+}
 
 #endif /* __cplusplus */
 

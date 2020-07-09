@@ -18,19 +18,11 @@
 #include "PlatformCameraHandler.hpp"
 
 
-namespace wikitude {
-    namespace universal_sdk {
-        namespace impl {
-            class CameraParametersInternal;
-        }
-        using impl::CameraParametersInternal;
-    }
+namespace wikitude::universal_sdk {
+    class CameraParametersInternal;
 }
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         /**
          * @brief CameraParameters provide access to camera specific information.
@@ -73,9 +65,7 @@ namespace wikitude { namespace sdk {
         protected:
             universal_sdk::CameraParametersInternal*    _internalCameraParameters = nullptr;
         };
-    }
-    using impl::CameraParameters;
-}}
+}
 
 #endif /* __cplusplus */
 

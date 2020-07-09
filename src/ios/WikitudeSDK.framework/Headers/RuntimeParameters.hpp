@@ -15,18 +15,11 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude {
-    namespace universal_sdk {
-        namespace impl {
-            class RuntimeParametersInternal;
-        }
-        using impl::RuntimeParametersInternal;
-    }
+namespace wikitude::universal_sdk {
+    class RuntimeParametersInternal;
 }
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         /**
          * @brief RuntimeParameters provide access to runtime specific information.
@@ -98,9 +91,7 @@ namespace wikitude { namespace sdk {
         protected:
             universal_sdk::RuntimeParametersInternal*   _internalRuntimeParameters;
         };
-    }
-    using impl::RuntimeParameters;
-}}
+}
 
 #endif /* __cplusplus */
 

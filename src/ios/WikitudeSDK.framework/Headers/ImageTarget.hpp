@@ -19,10 +19,8 @@
 #include "ImageTargetType.hpp"
 #include "CompilerAttributes.hpp"
 
-namespace wikitude { namespace sdk {
 
-    namespace impl {
-
+namespace wikitude::sdk {
 
         /** @addtogroup ImageTracking
         *  @{
@@ -30,8 +28,8 @@ namespace wikitude { namespace sdk {
         /** @class ImageTarget
          *  @brief A class that represents image targets that are found by an image tracker.
          */
-        class Matrix4;
         class ImageTracker;
+        class Matrix4;
         class WT_EXPORT_API ImageTarget {
         public:
             using DistanceToTargetChangedHandler = std::function<void(int distance_, ImageTarget& firstTarget_, ImageTarget& secondTarget_)>;
@@ -170,9 +168,7 @@ namespace wikitude { namespace sdk {
             virtual int getCircumferenceTop() const = 0;
         };
         /** @}*/
-    }    
-    using impl::ImageTarget;
-}}
+}
 
 #endif /* __cplusplus */
 

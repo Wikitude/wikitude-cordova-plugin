@@ -16,19 +16,12 @@
 #include "Geometry.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         using SurfaceSizeChangedHandler = std::function<void(const sdk::Size<int> surfaceSize_)>;
         using CameraToSurfaceScalingChangedHandler = std::function<void(const sdk::Scale2D<float> cameraToSurfaceScaling_)>;
         using CameraToSurfaceAngleChangedHandler = std::function<void(const float cameraToSurfaceAngle_)>;
-    }
-    using impl::SurfaceSizeChangedHandler;
-    using impl::CameraToSurfaceScalingChangedHandler;
-    using impl::CameraToSurfaceAngleChangedHandler;
-}}
+}
 
 #endif /* __cplusplus */
 

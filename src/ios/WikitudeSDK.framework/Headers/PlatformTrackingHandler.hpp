@@ -14,15 +14,10 @@
 #include <functional>
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         using ProcessedFrameIdChangedHandler = std::function<void(const long processedFrameId_)>;
-    }
-    using impl::ProcessedFrameIdChangedHandler;
-}}
+}
 
 #endif /* __cplusplus */
 

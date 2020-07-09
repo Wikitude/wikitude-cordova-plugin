@@ -18,10 +18,7 @@
 #include "SensorEvent.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         class WT_EXPORT_API DeviceMotionInputPluginModule : public PluginModule {
         public:
@@ -46,9 +43,7 @@ namespace wikitude { namespace sdk {
             std::function<void(sdk::DeviceRotationEvent)>       _notifyNewDeviceRotationEventHandler;
             std::function<void(sdk::DeviceOrientationEvent)>    _notifyNewDeviceOrientationEventHandler;
         };
-    }
-    using impl::DeviceMotionInputPluginModule;
-}}
+}
 
 #endif /* __cplusplus */
 

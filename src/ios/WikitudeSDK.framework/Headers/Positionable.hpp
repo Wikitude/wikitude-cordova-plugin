@@ -16,9 +16,7 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         class PositionableFunctionCollection
         {
@@ -119,10 +117,7 @@ namespace wikitude { namespace sdk {
         private:
             PositionableFunctionCollection _positionableFunctionCollection;
         };
-    }
-    using impl::PositionableFunctionCollection;
-    using impl::Positionable;
-}}
+}
 
 #endif /* __cplusplus */
 

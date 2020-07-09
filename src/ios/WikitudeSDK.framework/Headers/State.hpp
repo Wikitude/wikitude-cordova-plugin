@@ -15,7 +15,7 @@
 #include <vector>
 #include <string>
 
-#include "Unit.h"
+#include "Unit.hpp"
 #include "Geometry.hpp"
 #include "Matrix4.hpp"
 #include "Timestamp.hpp"
@@ -30,10 +30,7 @@ namespace aramis {
     struct Plane;
 }
 
-namespace wikitude { namespace universal_sdk {
-
-    namespace impl {
-
+namespace wikitude::universal_sdk {
 
         struct WT_EXPORT_API CommonProperties {
         public:
@@ -144,14 +141,7 @@ namespace wikitude { namespace universal_sdk {
             std::vector<InstantTargetState>      _targetStates;
             std::vector<PlaneState>              _planeStates;
         };
-    }
-    using impl::ImageTargetState;
-    using impl::ObjectTargetState;
-    using impl::InstantTargetState;
-    using impl::ImageState;
-    using impl::InstantState;
-    using impl::ObjectState;
-}}
+}
 
 #endif /* __cplusplus */
 

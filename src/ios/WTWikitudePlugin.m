@@ -769,6 +769,24 @@ NSString * const kWTWikitudePlugin_localPathPrefix                  = @"WTCordov
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)showAlert:(CDVInvokedUrlCommand *)command
+{
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+
+    NSString* message = [NSString stringWithFormat:@"%@", command.arguments.firstObject];
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:nil
+                                                                    message:message
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* okButton = [UIAlertAction actionWithTitle:@"OK"
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:nil];
+    [alert addAction:okButton];
+
+    [self.arViewController presentViewController:alert animated:YES completion:nil];
+
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 #pragma mark Device sensor calibration
 - (void)setDeviceSensorsNeedCalibrationHandler:(CDVInvokedUrlCommand *)command
 {

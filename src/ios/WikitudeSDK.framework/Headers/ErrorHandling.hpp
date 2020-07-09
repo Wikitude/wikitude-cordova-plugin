@@ -15,10 +15,7 @@
 #include "Error.hpp"
 
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         struct WT_EXPORT_API CallStatus {
         public:
@@ -65,10 +62,7 @@ namespace wikitude { namespace sdk {
             T           _value;
             CallStatus  _status;
         };
-    }
-    using impl::CallStatus;
-    using impl::CallValue;
-}}
+}
 
 #endif /* __cplusplus */
 

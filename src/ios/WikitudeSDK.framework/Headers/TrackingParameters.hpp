@@ -15,19 +15,11 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude {
-    namespace universal_sdk {
-        namespace impl {
-            class TrackingParametersInternal;
-        }
-        using impl::TrackingParametersInternal;
-    }
+namespace wikitude::universal_sdk {
+    class TrackingParametersInternal;
 }
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
-
+namespace wikitude::sdk {
 
         class WT_EXPORT_API TrackingParameters {
         public:
@@ -40,9 +32,7 @@ namespace wikitude { namespace sdk {
         protected:
             universal_sdk::TrackingParametersInternal*  _internalTrackingParameters;
         };
-    }
-    using impl::TrackingParameters;
-}}
+}
 
 #endif /* __cplusplus */
 

@@ -15,11 +15,8 @@
 #include "CompilerAttributes.hpp"
 
 
-namespace wikitude { namespace sdk {
+namespace wikitude::sdk {
     
-    namespace impl {
-
-
         struct WT_EXPORT_API DeviceMotionData {
             DeviceMotionData(std::shared_ptr<float> motion_)
             :
@@ -123,16 +120,7 @@ namespace wikitude { namespace sdk {
         private:
             HeadingData     _heading;
         };
-    }
-    using impl::SensorEvent;
-    using impl::DeviceMotionData;
-    using impl::AccelerationData;
-    using impl::HeadingData;
-    using impl::DeviceRotationEvent;
-    using impl::DeviceOrientationEvent;
-    using impl::AccelerationEvent;
-    using impl::HeadingEvent;
-}}
+}
 
 #endif /* __cplusplus */
 

@@ -13,9 +13,7 @@
 
 #include "CompilerAttributes.hpp"
 
-namespace wikitude { namespace sdk {
-
-    namespace impl {
+namespace wikitude::sdk {
 
         /** @class CameraFramePlane
          *  @brief A single plane of image data.
@@ -48,9 +46,7 @@ namespace wikitude { namespace sdk {
             int             _pixelStride;
             int             _rowStride;
         };
-    }
-    using impl::CameraFramePlane;
-}}
+}
 
 #endif /* __cplusplus */
 

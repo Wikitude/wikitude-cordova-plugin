@@ -14,13 +14,8 @@
 #include <memory>
 
 
-namespace wikitude {
-    namespace sdk {
-        namespace impl {
-            class Plugin;
-        }
-        using impl::Plugin;
-    }
+namespace wikitude::sdk {
+    class Plugin;
 }
 
 /**
