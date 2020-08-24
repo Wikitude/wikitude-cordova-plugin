@@ -145,6 +145,7 @@ namespace wikitude::sdk {
             CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_);
             CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_, const Matrix4& pose_);
             CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_, std::int64_t depthTimestamp_, DepthCameraFrameMetadata depthMetadata_, const void* depthData_);
+            CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_, std::int64_t depthTimestamp_, DepthCameraFrameMetadata depthMetadata_, const void* depthData_, const void* confidenceDepthData_);
             CameraFrame(long id_, std::int64_t colorTimestamp_, ColorCameraFrameMetadata colorMetadata_, const std::vector<CameraFramePlane>& colorData_, std::int64_t depthTimestamp_, DepthCameraFrameMetadata depthMetadata_, const void* depthData_, const Matrix4& pose_);
 
             /** @brief Returns unique id used to identify individual frames.
@@ -174,6 +175,10 @@ namespace wikitude::sdk {
             /** @brief Returns a pointer to the depth data, as it was passed through the constructor. When passed to the constructor, it may be nullptr to indicate the absence of depth data.
              */
             const void* getDepthData() const;
+            
+            /** @brief Returns a pointer to the confidence depth data, as it was passed through the constructor. When passed to the constructor, it may be nullptr to indicate the absence of confidence depth data.
+             */
+            const void* getConfidenceDepthData() const;
 
             /** @brief Returns whether this camera frame was initialized with a camera pose. Accessing the camera pose when this method returns false is undefined behaviour.
              */
@@ -193,6 +198,7 @@ namespace wikitude::sdk {
             std::int64_t                            _depthTimestamp;
             DepthCameraFrameMetadata                _depthMetadata;
             const void*                             _depthData;
+            const void*                             _confidenceDepthData;
 
             Matrix4                                 _pose;
             bool                                    _hasPose;
