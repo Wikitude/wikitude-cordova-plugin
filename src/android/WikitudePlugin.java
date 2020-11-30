@@ -860,18 +860,21 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectJavaScript
                 @Override
                 public boolean onKeyUp(int keyCode, KeyEvent event) {
                     if (architectView!=null && keyCode == KeyEvent.KEYCODE_BACK) {
-                        if ( WikitudePlugin.this.onBackButtonCallback != null ) {
-                            try {
-                                /* pass called url as String to callback-method */
-                                final PluginResult res = new PluginResult( PluginResult.Status.OK);
-                                res.setKeepCallback(true);
-                                WikitudePlugin.this.onBackButtonCallback.sendPluginResult( res );
-                            } catch ( Exception e ) {
-                                WikitudePlugin.this.onBackButtonCallback.error( "onBackButton result could not be send." );
+                        if (architectView.webViewGoBack()) {
+                            return false;
+                        } else {
+                            if ( WikitudePlugin.this.onBackButtonCallback != null ) {
+                                try {
+                                    /* pass called url as String to callback-method */
+                                    final PluginResult res = new PluginResult( PluginResult.Status.OK);
+                                    res.setKeepCallback(true);
+                                    WikitudePlugin.this.onBackButtonCallback.sendPluginResult( res );
+                                } catch ( Exception e ) {
+                                    WikitudePlugin.this.onBackButtonCallback.error( "onBackButton result could not be send." );
+                                }
                             }
+                            return true;
                         }
-                        return true;
-
                     } else {
                         return false;
                     }
@@ -1244,7 +1247,7 @@ public class WikitudePlugin extends CordovaPlugin implements ArchitectJavaScript
                     {
                         if (fileName.equals(""))
                         {
-                            final File imageDirectory = Environment.getExternalStorageDirectory();
+                            final File imageDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
                             if (imageDirectory == null)
                             {
                                 callContext.error("External storage not available");
