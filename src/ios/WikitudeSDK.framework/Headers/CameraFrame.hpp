@@ -26,12 +26,39 @@
 
 namespace wikitude::sdk {
 
+
+        enum class DistortionMode {
+            None = 0,
+            Equidistant = 1,
+            RadialTangential = 2,
+            Atan = 3,
+        };
+
+        class WT_EXPORT_API IntrinsicsCalibration {
+        public:
+            IntrinsicsCalibration(DistortionMode distortionMode_, Point<double> principalPoint_, Point<double> focalLength_, const std::vector<double>& distortion_);
+
+            DistortionMode getDistortionMode() const;
+            Point<double> getPrincipalPoint() const;
+            Point<double> getFocalLength() const;
+            const std::vector<double> getDistortion() const;
+            double getHorizontalFov() const;
+
+        protected:
+            DistortionMode              _distortionMode;
+            Point<double>                _principalPoint;
+            Point<double>                _focalLength;
+            std::vector<double>          _distortion;
+        };
+
         /** @class DepthCameraFrameMetadata
          *  @brief A class that encapsulates additional information about depth camera frames.
          */
         class WT_EXPORT_API DepthCameraFrameMetadata {
         public:
             DepthCameraFrameMetadata(float horizontalFov_, sdk::Size<int> pixelSize_, unsigned int dataSize_, unsigned int confidenceDataSize_, DepthDataFormat depthDataFormat_, bool inverted_, std::int32_t timestampTimescale_);
+            
+            DepthCameraFrameMetadata(IntrinsicsCalibration intrinsicsCalibration_, sdk::Size<int> pixelSize_, unsigned int dataSize_, unsigned int confidenceDataSize_, DepthDataFormat depthDataFormat_, bool inverted_, std::int32_t timestampTimescale_);
 
             /** @brief Returns the horizontal field of view in degrees of the depth camera used to capture the depth frame.
              */
@@ -69,29 +96,6 @@ namespace wikitude::sdk {
             DepthDataFormat         _depthDataFormat;
             bool                    _inverted;
             std::int32_t            _timestampTimescale;
-        };
-
-        enum class DistortionMode {
-            None = 0,
-            Equidistant = 1,
-            RadialTangential = 2,
-            Atan = 3,
-        };
-
-        class WT_EXPORT_API IntrinsicsCalibration {
-        public:
-            IntrinsicsCalibration(DistortionMode distortionMode_, Point<double> principalPoint_, Point<double> focalLength_, const std::vector<double>& distortion_);
-
-            DistortionMode getDistortionMode() const;
-            Point<double> getPrincipalPoint() const;
-            Point<double> getFocalLength() const;
-            const std::vector<double> getDistortion() const;
-
-        protected:
-            DistortionMode              _distortionMode;
-            Point<double>                _principalPoint;
-            Point<double>                _focalLength;
-            std::vector<double>          _distortion;
         };
 
         /** @class ColorCameraFrameMetadata
