@@ -2,7 +2,7 @@
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.wikitude.phonegap.wikitudeplugin"
-    version="9.8.0">
+    version="9.9.0">
 
     <name>Augmented Reality - Wikitude SDK Plugin</name>
     
@@ -101,7 +101,7 @@
         <header-file src="src/ios/WTARViewController.h" />
         <source-file src="src/ios/WTARViewController.m" />
 
-        <framework src="src/ios/WikitudeSDK.framework" custom="true" embed="true" />
+        <framework src="src/ios/WikitudeSDK.xcframework" custom="true" embed="true" />
 
 
         <!-- Additional WikitudePlugin libraries and frameworks -->
@@ -135,8 +135,6 @@
                 <param name="ios-package" value="WTWikitudePlugin"/>
             </feature>
         </config-file>
-
-        <hook type="after_plugin_install" src="scripts/configure_wikitude_sdk_framework.sh" />
 
         <!-- visible after installation -->
         <info>

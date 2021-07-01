@@ -1,6 +1,0 @@
-framework module WikitudeSDK {
-  umbrella header "WikitudeSDK.h"
-
-  export *
-  module * { export * }
-}
