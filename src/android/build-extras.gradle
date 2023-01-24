@@ -1,6 +1,6 @@
 dependencies {
-    compile (name: 'wikitudesdk', ext:'aar')
-    compile 'com.google.ar:core:1.19.0'
+    implementation (name: 'wikitudesdk', ext:'aar')
+    implementation 'com.google.ar:core:1.19.0'
 }
 
 repositories {
